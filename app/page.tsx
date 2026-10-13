@@ -119,27 +119,17 @@ export default async function HomePage() {
         <ServiceShowcase services={serviceCards} />
       </div>
 
-      {/* Dark finale: a soft fade into matte deep brown (#2F221B) just above "What clients say",
-          then solid brown to the bottom (it also runs under the nav padding). */}
+      {/* Dark panel: a clean black section with rounded top corners that
+          simply begins under the services (no gradient). It also runs under
+          the nav padding so no light strip shows behind the bottom bar. */}
       <div
-        className="relative mt-28 bg-[#2F221B]"
+        className="relative mt-10 rounded-t-[32px] bg-[#0a0a0b]"
         style={{
           marginBottom: "calc(-1 * (88px + env(safe-area-inset-bottom, 0px)))",
           paddingBottom: "calc(88px + env(safe-area-inset-bottom, 0px))",
         }}
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0"
-          style={{
-            top: -220,
-            height: 221, // 1px overlap so there is never a seam with the section below
-            // Eased (smoothstep-like) ramp: no visible start or end edge.
-            background:
-              "linear-gradient(to bottom, rgba(47,34,27,0) 0%, rgba(47,34,27,0.012) 10%, rgba(47,34,27,0.05) 22%, rgba(47,34,27,0.13) 34%, rgba(47,34,27,0.27) 46%, rgba(47,34,27,0.45) 58%, rgba(47,34,27,0.65) 70%, rgba(47,34,27,0.82) 81%, rgba(47,34,27,0.94) 91%, rgba(47,34,27,0.99) 97%, #2F221B 100%)",
-          }}
-        />
-        <div className="relative space-y-9 px-5 pb-8 pt-2">
+        <div className="space-y-9 px-5 pb-8 pt-10">
           <ClientVoices items={testimonials} images={images} />
         </div>
       </div>

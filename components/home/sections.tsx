@@ -381,10 +381,10 @@ export function ClientVoices({
       <SectionHead title="What clients say" tone="dark" />
       <Carousel label="Client testimonials" itemClassName="w-[82%]" dots={items.length > 1} dotsTone="light">
         {items.map((t) => (
-          <figure key={t.author} className="h-full overflow-hidden rounded-[28px] border border-white/[0.07] bg-[#1d1511]">
+          <figure key={t.author} className="h-full overflow-hidden rounded-[28px] border border-white/10 bg-[#161618]">
             <div className="relative">
               <Photo src={images[t.imageKey]} className="h-40 w-full" sizes="(max-width: 448px) 82vw, 340px" />
-              <span className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full bg-brand-red text-white ring-4 ring-[#1d1511]">
+              <span className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full bg-brand-red text-white ring-4 ring-[#161618]">
                 <Quote size={18} fill="currentColor" />
               </span>
             </div>
