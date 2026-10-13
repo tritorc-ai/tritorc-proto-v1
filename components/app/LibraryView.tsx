@@ -54,10 +54,10 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search by product, series, or keyword..."
-        className="mt-3.5 w-full rounded-lg border border-black/8 bg-white px-4 py-3 text-[13.5px] text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03),0_6px_14px_rgba(0,0,0,.05)] outline-none"
+        className="mt-3.5 w-full rounded-full border-0 bg-white px-5 py-3.5 text-[14px] text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03),0_6px_14px_rgba(0,0,0,.05)] outline-none"
       />
 
-      <div className="mt-3.5 rounded-[10px] border border-black/6 bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,.03),0_8px_18px_rgba(0,0,0,.05)]">
+      <div className="mt-3.5 rounded-[26px] bg-white p-3.5">
         <div className="flex gap-1.5 pb-2.5">
           {TYPES.map((t) => {
             const active = t === typeFilter;
@@ -109,7 +109,7 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
               onClick={() => canPreview && setPreviewIndex(previewableResults.indexOf(a))}
               disabled={!canPreview}
               className={cn(
-                "flex flex-col overflow-hidden rounded-lg border border-black/6 bg-white text-left shadow-[0_1px_2px_rgba(0,0,0,.03),0_6px_14px_rgba(0,0,0,.05)]",
+                "press flex flex-col overflow-hidden rounded-[22px] bg-white text-left",
                 !canPreview && "cursor-default"
               )}
             >

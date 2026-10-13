@@ -13,6 +13,7 @@ import "server-only";
 
 import { strapiFetch } from "./strapiClient";
 import { IMAGE_NAMES, type ImageKey } from "./mock/images";
+import { IMAGE_FALLBACK_URLS } from "./mock/imageFallbacks";
 import { VIDEO_NAMES, type VideoKey } from "./mock/videos";
 import {
   CASE_STUDIES,
@@ -244,10 +245,10 @@ export async function getImageUrls(): Promise<Partial<Record<ImageKey, string>>>
     "/api/upload/files",
     params
   );
-  if (files === null) return {};
+  if (files === null) return { ...IMAGE_FALLBACK_URLS };
 
   const urlByName = new Map(files.map((f) => [f.name, resolveMediaUrl(f.url)]));
-  const result: Partial<Record<ImageKey, string>> = {};
+  const result: Partial<Record<ImageKey, string>> = { ...IMAGE_FALLBACK_URLS };
   for (const [key, name] of Object.entries(IMAGE_NAMES) as [ImageKey, string][]) {
     const url = urlByName.get(name);
     if (url) result[key] = url;

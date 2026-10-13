@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { Search } from "lucide-react";
 import {
   getBrand,
   getCaseStudies,
@@ -8,20 +10,46 @@ import {
   getJourney,
   getProducts,
   getServices,
-  getServiceSections,
   getTestimonials,
 } from "@/lib/strapi";
-import { Hero } from "@/components/app/Hero";
-import { ImpactStatStrip } from "@/components/app/ImpactStatStrip";
-import { CaseStudyCarousel } from "@/components/app/CaseStudyCarousel";
-import { CertificationsSection } from "@/components/app/CertificationsSection";
-import { JourneyTimeline } from "@/components/app/JourneyTimeline";
-import { ServicesPreviewGrid } from "@/components/app/ServicesPreviewGrid";
-import { FeaturedProductsRow } from "@/components/app/FeaturedProductsRow";
-import { TestimonialsSection } from "@/components/app/TestimonialsSection";
+import { HeroCarousel } from "@/components/home/HeroCarousel";
+import {
+  AchievementsBlock,
+  CaseStudies,
+  CertificationRow,
+  ContactCta,
+  ContactStrip,
+  Eyebrow,
+  FieldStories,
+  IndustriesBlock,
+  Journey,
+  NotificationsList,
+  ProductShowcase,
+  ServiceShowcase,
+  SpotlightBlock,
+  SupportGrid,
+} from "@/components/home/sections";
+
+const FEATURED_PRODUCTS = [
+  "tsl-20",
+  "btl-19",
+  "wbt-series",
+  "pipe-cold-cutting-beveling-machines",
+  "flange-facing-machines",
+  "tube-expanders",
+  "heavy-impact-sockets",
+];
+const FEATURED_SERVICES = [
+  "onsite-controlled-bolting",
+  "hot-tapping-line-stopping",
+  "flange-facing",
+  "hydro-testing-services",
+  "retubing-services",
+  "pipe-freezing",
+];
 
 export default async function HomePage() {
-  const [brand, stats, caseStudies, certifications, journey, services, sections, products, testimonials, images] =
+  const [brand, stats, caseStudies, certifications, journey, services, products, testimonials, images] =
     await Promise.all([
       getBrand(),
       getImpactStats(),
@@ -29,81 +57,120 @@ export default async function HomePage() {
       getCertifications(),
       getJourney(),
       getServices(),
-      getServiceSections(),
       getProducts(),
       getTestimonials(),
       getImageUrls(),
     ]);
 
-  // One card per top-level category (not per sub-service) — links to that
-  // category's first real sub-service, since services don't have their own
-  // landing page, only individual detail pages.
-  const servicePreviews = sections
-    .map((section) => {
-      const first = services.find((s) => section.categories.includes(s.category));
-      if (!first) return null;
-      return {
-        slug: first.slug,
-        name: section.name,
-        tagline: first.tagline,
-        imageUrl: first.directImageUrl ?? (first.imageKey ? images[first.imageKey] : undefined),
-      };
-    })
-    .filter((s): s is NonNullable<typeof s> => s !== null);
+  const productCards = FEATURED_PRODUCTS.map((slug) => products.find((p) => p.slug === slug))
+    .filter((p): p is NonNullable<typeof p> => !!p)
+    .map((p) => ({
+      href: `/products/${p.slug}`,
+      title: p.name,
+      kicker: p.series,
+      body: p.tagline,
+      image: p.directImageUrl ?? (p.heroImageKey ? images[p.heroImageKey] : undefined),
+    }));
+
+  const serviceCards = FEATURED_SERVICES.map((slug) => services.find((s) => s.slug === slug))
+    .filter((s): s is NonNullable<typeof s> => !!s)
+    .map((s) => ({
+      href: `/services/${s.slug}`,
+      title: s.name,
+      body: s.tagline,
+      image: s.directImageUrl ?? (s.imageKey ? images[s.imageKey] : undefined),
+    }));
+
+  const slides = [
+    {
+      title: "Precision bolting, delivered.",
+      tagline: brand.since,
+      image: images.homeHero,
+      primary: { href: "/products", label: "Explore products" },
+      secondary: { href: "/services", label: "Our services" },
+    },
+    {
+      title: "Power for wind & energy.",
+      tagline: "Foundation bolt tensioning",
+      image: images.caseAdani ?? images.catWindTurbine,
+      primary: { href: "/products/wbt-series", label: "WBT Series" },
+      secondary: { href: "/library", label: "Learn more" },
+    },
+    {
+      title: "Live pipelines. Zero downtime.",
+      tagline: "Hot tapping & line stopping",
+      image: images.hotTappingOngc ?? images.svcHotTapping,
+      primary: { href: "/services/hot-tapping-line-stopping", label: "Explore service" },
+      secondary: { href: "/company", label: "Case studies" },
+    },
+  ];
+
+  const certs = certifications.map((c) => ({
+    ...c,
+    imageUrl: c.code === "ISO" ? images.certIso : c.code === "CE" ? images.certCe : undefined,
+  }));
 
   return (
-    <div>
-      <div className="sticky top-0 z-10 flex items-center justify-between bg-brand-surface px-5 pb-4 pt-safe-header">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-brand-red text-[15px] font-extrabold leading-none text-white">
-            T
-          </div>
-          <div className="text-[19px] font-extrabold tracking-[0.03em] text-brand-dark">
-            TRITORC
-          </div>
-        </div>
+    <div className="relative">
+      <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 pt-safe">
+        <Image
+          src="/brand/tritorc-logo.png"
+          alt="Tritorc"
+          width={133}
+          height={18}
+          priority
+          className="h-[18px] w-auto brightness-0 invert"
+        />
         <Link
           href="/library"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-black/15 bg-white shadow-[0_1px_2px_rgba(0,0,0,.06)]"
-          aria-label="Search Library"
+          aria-label="Search the library"
+          className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
         >
-          <div className="relative h-3.5 w-3.5 rounded-full border-2 border-brand-dark">
-            <div className="absolute -bottom-1.5 -right-1.5 h-1.5 w-0.5 rotate-45 bg-brand-dark" />
-          </div>
+          <Search size={18} />
         </Link>
-      </div>
+      </header>
 
-      <div className="px-5">
-        <Hero quote={brand.quote} since={brand.since} imageUrl={images.homeHero} />
-        <TestimonialsSection testimonials={testimonials} images={images} />
-        <ImpactStatStrip stats={stats} imageUrl={images.impactBg} />
-        <CaseStudyCarousel
-          caseStudies={caseStudies.map((cs) => ({
-            ...cs,
-            imageUrl: cs.directImageUrl ?? (cs.imageKey ? images[cs.imageKey] : undefined),
-          }))}
-        />
-        <CertificationsSection
-          certifications={certifications.map((c) => ({
+      {/* ---------- Scroll 1 — Hero & Products ---------- */}
+      <section aria-label="Hero and products">
+        <HeroCarousel slides={slides} />
+        <div className="space-y-10 px-5 pt-8">
+          <Eyebrow index={1} label="Discover" />
+          <SpotlightBlock
+            title="Controlled bolting"
+            subtitle="Torque wrenches, tensioners and impact sockets."
+            image={images.catTorqueWrenches ?? images.productTorqueHero}
+            productHref="/products/tsl-20"
+            productName="TSL Series Hydraulic Torque Wrenches"
+          />
+          <ProductShowcase products={productCards} />
+        </div>
+      </section>
+
+      {/* ---------- Scroll 2 — Notifications & Services ---------- */}
+      <section aria-label="Notifications and services" className="mt-12 space-y-10 px-5">
+        <Eyebrow index={2} label="Updates & services" />
+        <NotificationsList />
+        <ServiceShowcase services={serviceCards} />
+        <SupportGrid image={images.svcOnSiteMachining} />
+        <ContactStrip />
+      </section>
+
+      {/* ---------- Scroll 3 — Achievements & Company ---------- */}
+      <section aria-label="Achievements and company" className="mt-12 space-y-10 px-5">
+        <Eyebrow index={3} label="Proof & people" />
+        <AchievementsBlock stats={stats} image={images.impactBg} />
+        <CertificationRow certs={certs} />
+        <CaseStudies
+          items={caseStudies.map((c) => ({
             ...c,
-            imageUrl: c.code === "ISO" ? images.certIso : c.code === "CE" ? images.certCe : undefined,
+            imageUrl: c.directImageUrl ?? (c.imageKey ? images[c.imageKey] : undefined),
           }))}
         />
-        <JourneyTimeline journey={journey} />
-        <ServicesPreviewGrid services={servicePreviews} />
-        <FeaturedProductsRow
-          products={products.slice(0, 6).map((p) => ({
-            ...p,
-            imageUrl: p.heroImageKey ? images[p.heroImageKey] : undefined,
-          }))}
-        />
-        <Link
-          href="/products"
-          className="mb-6 block w-full rounded-lg bg-linear-to-br from-brand-red to-brand-red-bright py-3.5 text-center text-sm font-semibold text-white shadow-[0_10px_22px_rgba(214,49,47,.4)]"
-        >
-          Explore Products
-        </Link>
-      </div>
+        <FieldStories items={testimonials} images={images} />
+        <IndustriesBlock />
+        <Journey items={journey} />
+        <ContactCta />
+      </section>
     </div>
   );
 }

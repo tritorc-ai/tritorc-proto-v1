@@ -159,3 +159,86 @@
 @utility pb-safe-nav {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
+
+/* ---------------------------------------------------------------------------
+ * Tritorc mobile app shell — Ather-inspired layout primitives
+ * ------------------------------------------------------------------------- */
+:root {
+  --app-bg: #f3f3f2;
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Space reserved under every screen so content never hides behind the
+ * fixed bottom navigation (64px bar + device safe-area). */
+@utility pb-nav {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+
+@utility pt-safe {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+}
+
+@keyframes curtain-rise {
+  from { transform: translateY(0); }
+  to { transform: translateY(-101%); }
+}
+@keyframes splash-logo-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes splash-fade-out {
+  to { opacity: 0; visibility: hidden; }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes sheen {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(220%); }
+}
+
+.page-in {
+  animation: page-in 380ms var(--ease-premium) both;
+}
+
+.press {
+  transition: transform 180ms var(--ease-premium), opacity 180ms;
+  -webkit-tap-highlight-color: transparent;
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+html {
+  background: var(--app-bg);
+  overscroll-behavior-y: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-in { animation: none; }
+  * { scroll-behavior: auto !important; }
+}
+
+/* Splash: logo fades in, then the curtain lifts. Pure CSS so timing doesn't
+ * depend on hydration. Skipped entirely on repeat visits / reduced motion. */
+.splash-curtain {
+  animation: curtain-rise 850ms cubic-bezier(0.76, 0, 0.24, 1) 1.25s forwards;
+}
+.splash-logo {
+  animation: splash-logo-in 700ms var(--ease-premium) 150ms both;
+}
+html[data-splash-seen] .splash-curtain {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-curtain { animation: splash-fade-out 300ms ease 600ms forwards; }
+  .splash-logo { animation: none; }
+}
