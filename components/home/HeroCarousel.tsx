@@ -35,13 +35,13 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
             <div className="absolute inset-x-5 bottom-12 grid grid-cols-2 gap-3">
               <Link
                 href={s.primary.href}
-                className="press rounded-2xl bg-white py-3.5 text-center text-[16px] font-semibold text-brand-dark"
+                className="press btn-gloss rounded-full py-3.5 text-center text-[16px] font-semibold"
               >
                 {s.primary.label}
               </Link>
               <Link
                 href={s.secondary.href}
-                className="press rounded-2xl border border-white/70 py-3.5 text-center text-[16px] font-semibold text-white backdrop-blur-[2px]"
+                className="press btn-gloss-ghost rounded-full py-3.5 text-center text-[16px] font-semibold"
               >
                 {s.secondary.label}
               </Link>
