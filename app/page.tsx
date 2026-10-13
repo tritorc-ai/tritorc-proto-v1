@@ -123,13 +123,23 @@ export default async function HomePage() {
       {/* Dark finale: a soft fade into pure black just above "What clients say",
           then solid black to the bottom (it also runs under the nav padding). */}
       <div
-        className="relative mt-24 bg-black"
+        className="relative mt-28 bg-black"
         style={{
           marginBottom: "calc(-1 * (88px + env(safe-area-inset-bottom, 0px)))",
           paddingBottom: "calc(88px + env(safe-area-inset-bottom, 0px))",
         }}
       >
-        <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-28 h-28 bg-linear-to-b from-transparent to-black" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0"
+          style={{
+            top: -220,
+            height: 221, // 1px overlap so there is never a seam with the black below
+            // Eased (smoothstep-like) ramp: no visible start or end edge.
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.012) 10%, rgba(0,0,0,0.05) 22%, rgba(0,0,0,0.13) 34%, rgba(0,0,0,0.27) 46%, rgba(0,0,0,0.45) 58%, rgba(0,0,0,0.65) 70%, rgba(0,0,0,0.82) 81%, rgba(0,0,0,0.94) 91%, rgba(0,0,0,0.99) 97%, #000 100%)",
+          }}
+        />
         <div className="relative space-y-9 px-5 pb-8 pt-2">
           <ClientVoices items={testimonials} images={images} />
           <ContactCta stats={stats} />
