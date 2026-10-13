@@ -38,6 +38,23 @@ export function Dots({
   );
 }
 
+/** Index of the slide whose left edge is nearest the track's snap point. */
+function nearestIndex(el: HTMLElement): number {
+  const max = el.scrollWidth - el.clientWidth;
+  if (max > 0 && el.scrollLeft >= max - 4) return el.children.length - 1;
+  const pad = parseFloat(getComputedStyle(el).paddingLeft || "0");
+  let best = 0;
+  let bestDist = Infinity;
+  Array.from(el.children).forEach((child, i) => {
+    const dist = Math.abs((child as HTMLElement).offsetLeft - el.offsetLeft - el.scrollLeft - pad);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = i;
+    }
+  });
+  return best;
+}
+
 /**
  * Horizontal snap-scrolling row. `itemClassName` sets each slide's width —
  * anything under 100% leaves the next card partially visible. `bleed` lets
@@ -53,6 +70,7 @@ export function Carousel({
   className,
   trackClassName,
   label,
+  autoPlay,
 }: {
   children: React.ReactNode;
   itemClassName?: string;
@@ -62,6 +80,8 @@ export function Carousel({
   className?: string;
   trackClassName?: string;
   label?: string;
+  /** Advance every N ms, looping; pauses on touch and while off-screen. */
+  autoPlay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
@@ -69,30 +89,47 @@ export function Carousel({
 
   const onScroll = useCallback(() => {
     const el = ref.current;
-    if (!el) return;
-    const max = el.scrollWidth - el.clientWidth;
-    if (max <= 0) return;
-    // Last slide can't always reach the snap point; treat the end as final.
-    if (el.scrollLeft >= max - 4) {
-      setActive(items.length - 1);
-      return;
-    }
-    let best = 0;
-    let bestDist = Infinity;
-    Array.from(el.children).forEach((child, i) => {
-      const c = child as HTMLElement;
-      const dist = Math.abs(c.offsetLeft - el.offsetLeft - el.scrollLeft - parseFloat(getComputedStyle(el).paddingLeft || "0"));
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = i;
-      }
-    });
-    setActive(best);
-  }, [items.length]);
+    if (el) setActive(nearestIndex(el));
+  }, []);
 
   useEffect(() => {
     onScroll();
   }, [onScroll]);
+
+  const pausedUntil = useRef(0);
+  const visible = useRef(true);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!autoPlay || !el || items.length < 2) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const pause = () => {
+      pausedUntil.current = Date.now() + 7000;
+    };
+    el.addEventListener("pointerdown", pause);
+    el.addEventListener("wheel", pause, { passive: true });
+    el.addEventListener("focusin", pause);
+    const io = new IntersectionObserver(([e]) => (visible.current = e.isIntersecting), { threshold: 0.5 });
+    io.observe(el);
+
+    const timer = setInterval(() => {
+      if (!visible.current || document.hidden || Date.now() < pausedUntil.current) return;
+      const next = (nearestIndex(el) + 1) % items.length;
+      const child = el.children[next] as HTMLElement | undefined;
+      if (!child) return;
+      const pad = parseFloat(getComputedStyle(el).paddingLeft || "0");
+      el.scrollTo({ left: child.offsetLeft - el.offsetLeft - pad, behavior: "smooth" });
+    }, autoPlay);
+
+    return () => {
+      clearInterval(timer);
+      io.disconnect();
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("wheel", pause);
+      el.removeEventListener("focusin", pause);
+    };
+  }, [autoPlay, items.length]);
 
   return (
     <div className={cn("relative", className)}>

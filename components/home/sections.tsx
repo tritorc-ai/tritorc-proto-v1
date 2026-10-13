@@ -128,7 +128,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
         subtitle="Engineered for critical joints."
         action={{ href: "/products", label: "View all" }}
       />
-      <Carousel label="Featured products" itemClassName="w-[84%]">
+      <Carousel label="Featured products" itemClassName="w-[84%]" autoPlay={3800}>
         {products.map((p) => (
           <OverlayCard
             key={p.href}
@@ -136,7 +136,6 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             image={p.image}
             title={p.title}
             kicker={p.kicker}
-            body={p.body}
             aspect="aspect-[3/4]"
           />
         ))}
