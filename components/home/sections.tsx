@@ -27,7 +27,7 @@ export interface Card {
   body?: string;
   image?: string;
   kicker?: string;
-  contain?: boolean;
+  contain?: boolean | "white";
 }
 
 export function Eyebrow({ index, label }: { index: number; label: string }) {

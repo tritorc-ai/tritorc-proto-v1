@@ -22,6 +22,13 @@ const CAROUSEL_IMAGES: Record<string, { src: string; contain?: boolean }> = {
   "btl-19": { src: "/products/btl-9-bolt-tensioner.webp", contain: true },
 };
 
+// Carousel-only service renders.
+const SERVICE_IMAGES: Record<string, string> = {
+  "hot-tapping-line-stopping": "/services/hot-tapping.webp",
+  "flange-facing": "/services/flange-facing.webp",
+  "onsite-controlled-bolting": "/services/controlled-bolting.webp",
+};
+
 const FEATURED_SERVICES = [
   "hot-tapping-line-stopping",
   "flange-facing",
@@ -57,7 +64,7 @@ export default async function HomePage() {
       href: `/services/${s.slug}`,
       title: s.name,
       body: s.tagline,
-      image: s.directImageUrl ?? (s.imageKey ? images[s.imageKey] : undefined),
+      image: SERVICE_IMAGES[s.slug] ?? s.directImageUrl ?? (s.imageKey ? images[s.imageKey] : undefined),
     }));
 
   const slides = [
