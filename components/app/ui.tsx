@@ -74,7 +74,7 @@ export function OverlayCard({
   kicker,
   cta,
   aspect = "aspect-[4/5]",
-  framed,
+  frame,
   contain,
 }: {
   href: string;
@@ -84,8 +84,8 @@ export function OverlayCard({
   kicker?: string;
   cta?: string;
   aspect?: string;
-  /** Sleek black frame around the image. */
-  framed?: boolean;
+  /** Frame style: solid black border, or a fine gradient ring. */
+  frame?: "black" | "ring";
   /** Cut-out product shot: show it whole on a studio backdrop instead of cropping. */
   contain?: boolean | "white";
 }) {
@@ -94,7 +94,7 @@ export function OverlayCard({
       href={href}
       className={cn(
         "press group relative block overflow-hidden rounded-[28px] bg-brand-dark",
-        framed && "border-[3px] border-[#0b0b0c] shadow-[0_14px_32px_-10px_rgba(0,0,0,0.45)]",
+        frame === "black" && "border-[3px] border-[#0b0b0c] shadow-[0_14px_32px_-10px_rgba(0,0,0,0.45)]",
         aspect
       )}
     >
@@ -104,6 +104,18 @@ export function OverlayCard({
         imgClassName={cn("group-active:scale-105", contain && (cta ? "object-contain px-4 pt-6 pb-44" : "object-contain px-5 pt-8 pb-28"))}
       />
       <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />
+      {frame === "ring" && (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10 rounded-[28px] p-[2px]"
+          style={{
+            background: "linear-gradient(145deg, rgba(255,255,255,0.9), rgba(214,49,47,0.95) 45%, rgba(23,23,23,0.95))",
+            WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
+            WebkitMaskComposite: "xor",
+            mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
+          }}
+        />
+      )}
       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
         {kicker && (
           <div className="mb-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-white/65">

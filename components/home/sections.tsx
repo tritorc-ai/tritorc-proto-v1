@@ -140,7 +140,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             kicker={p.kicker}
             aspect="h-full"
             contain={p.contain}
-            framed
+            frame="black"
           />
         ))}
       </FocusCarousel>
@@ -201,6 +201,7 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
             title={s.title}
             body={s.body}
             cta="Learn more"
+            frame="ring"
             aspect="aspect-[3/4]"
           />
         ))}
