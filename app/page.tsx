@@ -17,6 +17,11 @@ const FEATURED_PRODUCTS = [
   "flange-facing-machines",
   "tube-expanders",
 ];
+// Carousel-only image overrides (cut-out shots shown whole, not cropped).
+const CAROUSEL_IMAGES: Record<string, { src: string; contain?: boolean }> = {
+  "btl-19": { src: "/products/btl-9-bolt-tensioner.webp", contain: true },
+};
+
 const FEATURED_SERVICES = [
   "hot-tapping-line-stopping",
   "flange-facing",
@@ -42,7 +47,8 @@ export default async function HomePage() {
       title: p.name,
       kicker: p.series,
       body: p.tagline,
-      image: p.directImageUrl ?? (p.heroImageKey ? images[p.heroImageKey] : undefined),
+      image: CAROUSEL_IMAGES[p.slug]?.src ?? p.directImageUrl ?? (p.heroImageKey ? images[p.heroImageKey] : undefined),
+      contain: CAROUSEL_IMAGES[p.slug]?.contain,
     }));
 
   const serviceCards = FEATURED_SERVICES.map((slug) => services.find((s) => s.slug === slug))

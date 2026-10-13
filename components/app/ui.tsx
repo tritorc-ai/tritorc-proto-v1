@@ -75,6 +75,7 @@ export function OverlayCard({
   cta,
   aspect = "aspect-[4/5]",
   framed,
+  contain,
 }: {
   href: string;
   image?: string;
@@ -85,6 +86,8 @@ export function OverlayCard({
   aspect?: string;
   /** Sleek black frame around the image. */
   framed?: boolean;
+  /** Cut-out product shot: show it whole on a studio backdrop instead of cropping. */
+  contain?: boolean;
 }) {
   return (
     <Link
@@ -95,7 +98,11 @@ export function OverlayCard({
         aspect
       )}
     >
-      <Photo src={image} className="absolute inset-0" imgClassName="group-active:scale-105" />
+      <Photo
+        src={image}
+        className={cn("absolute inset-0", contain && "bg-linear-to-b from-[#f7f8f9] to-[#d5d9dd]")}
+        imgClassName={cn("group-active:scale-105", contain && "object-contain px-5 pt-8 pb-28")}
+      />
       <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 p-5 text-white">
         {kicker && (

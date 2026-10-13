@@ -27,6 +27,7 @@ export interface Card {
   body?: string;
   image?: string;
   kicker?: string;
+  contain?: boolean;
 }
 
 export function Eyebrow({ index, label }: { index: number; label: string }) {
@@ -138,6 +139,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             title={p.title}
             kicker={p.kicker}
             aspect="h-full"
+            contain={p.contain}
             framed
           />
         ))}
