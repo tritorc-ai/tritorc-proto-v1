@@ -74,6 +74,7 @@ export function OverlayCard({
   kicker,
   cta,
   aspect = "aspect-[4/5]",
+  framed,
 }: {
   href: string;
   image?: string;
@@ -82,11 +83,17 @@ export function OverlayCard({
   kicker?: string;
   cta?: string;
   aspect?: string;
+  /** Sleek black frame around the image. */
+  framed?: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={cn("press group relative block overflow-hidden rounded-[28px] bg-brand-dark", aspect)}
+      className={cn(
+        "press group relative block overflow-hidden rounded-[28px] bg-brand-dark",
+        framed && "border-[3px] border-[#0b0b0c] shadow-[0_14px_32px_-10px_rgba(0,0,0,0.45)]",
+        aspect
+      )}
     >
       <Photo src={image} className="absolute inset-0" imgClassName="group-active:scale-105" />
       <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />

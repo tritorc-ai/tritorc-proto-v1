@@ -138,6 +138,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             title={p.title}
             kicker={p.kicker}
             aspect="h-full"
+            framed
           />
         ))}
       </FocusCarousel>
