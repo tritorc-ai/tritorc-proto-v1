@@ -193,7 +193,7 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
         subtitle="On-site expertise, anywhere."
         action={{ href: "/services", label: "View all" }}
       />
-      <Carousel label="Services" itemClassName="w-[84%]">
+      <FocusCarousel label="Services" autoPlay={2600}>
         {services.map((s) => (
           <OverlayCard
             key={s.href}
@@ -202,11 +202,11 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
             title={s.title}
             body={s.body}
             cta="Learn more"
-            frame="ring"
-            aspect="aspect-[3/4]"
+            frame="black"
+            aspect="h-full"
           />
         ))}
-      </Carousel>
+      </FocusCarousel>
     </div>
   );
 }

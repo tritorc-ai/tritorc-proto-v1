@@ -1,26 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { getBrand, getImageUrls, getProducts, getServices, getTestimonials } from "@/lib/strapi";
+import { getBrand, getImageUrls, getServices, getTestimonials } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { ClientVoices, ProductShowcase, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
+import { ClientVoices, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
 
-// Home is a short, image-led introduction: hero → products → services →
+// Home is a short, image-led introduction: hero → event → services →
 // contact. Everything detailed (credentials, case studies, industries,
 // journey, the full catalogue) lives behind the bottom-nav tabs.
-
-const FEATURED_PRODUCTS = [
-  "tsl-20",
-  "btl-19",
-  "wbt-series",
-  "pipe-cold-cutting-beveling-machines",
-  "flange-facing-machines",
-  "tube-expanders",
-];
-// Carousel-only image overrides (cut-out shots shown whole, not cropped).
-const CAROUSEL_IMAGES: Record<string, { src: string; contain?: boolean }> = {
-  "btl-19": { src: "/products/btl-9-bolt-tensioner.webp", contain: true },
-};
 
 // Carousel-only service renders.
 const SERVICE_IMAGES: Record<string, string> = {
@@ -39,24 +26,12 @@ const FEATURED_SERVICES = [
 ];
 
 export default async function HomePage() {
-  const [brand, services, products, testimonials, images] = await Promise.all([
+  const [brand, services, testimonials, images] = await Promise.all([
     getBrand(),
     getServices(),
-    getProducts(),
     getTestimonials(),
     getImageUrls(),
   ]);
-
-  const productCards = FEATURED_PRODUCTS.map((slug) => products.find((p) => p.slug === slug))
-    .filter((p): p is NonNullable<typeof p> => !!p)
-    .map((p) => ({
-      href: `/products/${p.slug}`,
-      title: p.name,
-      kicker: p.series,
-      body: p.tagline,
-      image: CAROUSEL_IMAGES[p.slug]?.src ?? p.directImageUrl ?? (p.heroImageKey ? images[p.heroImageKey] : undefined),
-      contain: CAROUSEL_IMAGES[p.slug]?.contain,
-    }));
 
   const serviceCards = FEATURED_SERVICES.map((slug) => services.find((s) => s.slug === slug))
     .filter((s): s is NonNullable<typeof s> => !!s)
@@ -115,7 +90,6 @@ export default async function HomePage() {
 
       <div className="space-y-9 px-5 pt-8">
         <UpcomingEvents />
-        <ProductShowcase products={productCards} />
         <ServiceShowcase services={serviceCards} />
       </div>
 
