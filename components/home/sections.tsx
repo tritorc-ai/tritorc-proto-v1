@@ -378,21 +378,21 @@ export function ClientVoices({
   if (items.length === 0) return null;
   return (
     <div>
-      <SectionHead title="What clients say" />
-      <Carousel label="Client testimonials" itemClassName="w-[82%]" dots={items.length > 1}>
+      <SectionHead title="What clients say" tone="dark" />
+      <Carousel label="Client testimonials" itemClassName="w-[82%]" dots={items.length > 1} dotsTone="light">
         {items.map((t) => (
-          <figure key={t.author} className="h-full overflow-hidden rounded-[28px] bg-white shadow-[0_10px_28px_-14px_rgba(0,0,0,0.25)]">
+          <figure key={t.author} className="h-full overflow-hidden rounded-[28px] border border-white/10 bg-[#141415]">
             <div className="relative">
               <Photo src={images[t.imageKey]} className="h-40 w-full" sizes="(max-width: 448px) 82vw, 340px" />
-              <span className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full bg-brand-red text-white shadow-[0_6px_14px_rgba(214,49,47,0.45)] ring-4 ring-white">
+              <span className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full bg-brand-red text-white shadow-[0_6px_14px_rgba(214,49,47,0.45)] ring-4 ring-[#141415]">
                 <Quote size={18} fill="currentColor" />
               </span>
             </div>
             <figcaption className="px-5 pb-5 pt-9">
-              <blockquote className="text-[18px] font-semibold leading-snug tracking-[-0.01em] text-brand-dark">
+              <blockquote className="text-[18px] font-semibold leading-snug tracking-[-0.01em] text-white">
                 {t.quote}
               </blockquote>
-              <div className="mt-3 flex items-center gap-2 text-[12.5px] font-medium text-brand-text-tertiary">
+              <div className="mt-3 flex items-center gap-2 text-[12.5px] font-medium text-white/60">
                 <span className="h-px w-5 bg-brand-red" />
                 {t.author}
               </div>
@@ -438,8 +438,8 @@ export function Journey({ items }: { items: JourneyMilestone[] }) {
 
 export function ContactCta({ stats }: { stats?: ImpactStat[] }) {
   return (
-    <div className="relative overflow-hidden rounded-[30px] bg-brand-dark p-6 text-white">
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-red/30 blur-2xl" />
+    <div className="relative overflow-hidden rounded-[30px] border border-white/12 bg-linear-to-br from-[#222224] to-[#121213] p-6 text-white">
+      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-red/35 blur-2xl" />
       <div className="relative">
         {stats && (
           <Link

@@ -118,8 +118,22 @@ export default async function HomePage() {
         <UpcomingEvents />
         <ProductShowcase products={productCards} />
         <ServiceShowcase services={serviceCards} />
-        <ClientVoices items={testimonials} images={images} />
-        <ContactCta stats={stats} />
+      </div>
+
+      {/* Dark finale: a soft fade into pure black just above "What clients say",
+          then solid black to the bottom (it also runs under the nav padding). */}
+      <div
+        className="relative mt-24 bg-black"
+        style={{
+          marginBottom: "calc(-1 * (88px + env(safe-area-inset-bottom, 0px)))",
+          paddingBottom: "calc(88px + env(safe-area-inset-bottom, 0px))",
+        }}
+      >
+        <div aria-hidden className="pointer-events-none absolute inset-x-0 -top-28 h-28 bg-linear-to-b from-transparent to-black" />
+        <div className="relative space-y-9 px-5 pb-8 pt-2">
+          <ClientVoices items={testimonials} images={images} />
+          <ContactCta stats={stats} />
+        </div>
       </div>
     </div>
   );

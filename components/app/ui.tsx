@@ -8,16 +8,25 @@ export function SectionHead({
   title,
   subtitle,
   action,
+  tone = "light",
 }: {
   title: string;
   subtitle?: string;
   action?: { href: string; label: string };
+  /** "dark" is for sections that sit on a black background. */
+  tone?: "light" | "dark";
 }) {
   return (
     <div className="mb-4 flex items-end justify-between gap-3">
       <div className="min-w-0">
-        <h2 className="text-[26px] font-bold leading-[1.1] tracking-[-0.02em] text-brand-dark">{title}</h2>
-        {subtitle && <p className="mt-1 text-[14px] leading-snug text-brand-text-tertiary">{subtitle}</p>}
+        <h2 className={cn("text-[26px] font-bold leading-[1.1] tracking-[-0.02em]", tone === "dark" ? "text-white" : "text-brand-dark")}>
+          {title}
+        </h2>
+        {subtitle && (
+          <p className={cn("mt-1 text-[14px] leading-snug", tone === "dark" ? "text-white/60" : "text-brand-text-tertiary")}>
+            {subtitle}
+          </p>
+        )}
       </div>
       {action && (
         <Link

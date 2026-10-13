@@ -67,6 +67,7 @@ export function Carousel({
   dots = true,
   bleed = true,
   overlayDots = false,
+  dotsTone = "dark",
   className,
   trackClassName,
   label,
@@ -77,6 +78,8 @@ export function Carousel({
   dots?: boolean;
   bleed?: boolean;
   overlayDots?: boolean;
+  /** Dot colour when not overlaid: "light" for dark backgrounds. */
+  dotsTone?: "dark" | "light";
   className?: string;
   trackClassName?: string;
   label?: string;
@@ -154,7 +157,7 @@ export function Carousel({
         <Dots
           count={items.length}
           active={active}
-          tone={overlayDots ? "light" : "dark"}
+          tone={overlayDots ? "light" : dotsTone}
           className={overlayDots ? "absolute inset-x-0 bottom-4" : "mt-3"}
         />
       )}
