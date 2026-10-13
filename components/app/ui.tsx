@@ -109,7 +109,7 @@ export function OverlayCard({
           aria-hidden
           className="pointer-events-none absolute inset-0 z-10 rounded-[28px] p-[2px]"
           style={{
-            background: "linear-gradient(145deg, rgba(255,255,255,0.9), rgba(214,49,47,0.95) 45%, rgba(23,23,23,0.95))",
+            background: "linear-gradient(145deg, #DAB58F 0%, #DAB58F 30%, #563F32 100%)",
             WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
             WebkitMaskComposite: "xor",
             mask: "linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)",
