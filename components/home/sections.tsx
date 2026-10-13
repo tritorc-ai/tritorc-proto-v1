@@ -13,6 +13,7 @@ import {
   Headset,
   CalendarDays,
   ChevronRight,
+  Quote,
 } from "lucide-react";
 import { Carousel } from "@/components/app/Carousel";
 import { FocusCarousel } from "@/components/app/FocusCarousel";
@@ -360,6 +361,43 @@ export function FieldStories({
               <div className="mt-3 text-[12.5px] font-semibold text-brand-text-tertiary">{t.author}</div>
             </div>
           </div>
+        ))}
+      </Carousel>
+    </div>
+  );
+}
+
+/** Short, image-led client quotes for Home (full stories live on Company). */
+export function ClientVoices({
+  items,
+  images,
+}: {
+  items: Testimonial[];
+  images: Partial<Record<string, string>>;
+}) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <SectionHead title="What clients say" />
+      <Carousel label="Client testimonials" itemClassName="w-[82%]" dots={items.length > 1}>
+        {items.map((t) => (
+          <figure key={t.author} className="h-full overflow-hidden rounded-[28px] bg-white shadow-[0_10px_28px_-14px_rgba(0,0,0,0.25)]">
+            <div className="relative">
+              <Photo src={images[t.imageKey]} className="h-40 w-full" sizes="(max-width: 448px) 82vw, 340px" />
+              <span className="absolute -bottom-5 left-5 flex h-11 w-11 items-center justify-center rounded-full bg-brand-red text-white shadow-[0_6px_14px_rgba(214,49,47,0.45)] ring-4 ring-white">
+                <Quote size={18} fill="currentColor" />
+              </span>
+            </div>
+            <figcaption className="px-5 pb-5 pt-9">
+              <blockquote className="text-[18px] font-semibold leading-snug tracking-[-0.01em] text-brand-dark">
+                {t.quote}
+              </blockquote>
+              <div className="mt-3 flex items-center gap-2 text-[12.5px] font-medium text-brand-text-tertiary">
+                <span className="h-px w-5 bg-brand-red" />
+                {t.author}
+              </div>
+            </figcaption>
+          </figure>
         ))}
       </Carousel>
     </div>

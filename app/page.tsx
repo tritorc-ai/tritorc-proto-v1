@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { getBrand, getImageUrls, getImpactStats, getProducts, getServices } from "@/lib/strapi";
+import { getBrand, getImageUrls, getImpactStats, getProducts, getServices, getTestimonials } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { ContactCta, ProductShowcase, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
+import { ClientVoices, ContactCta, ProductShowcase, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
 
 // Home is a short, image-led introduction: hero → products → services →
 // contact. Everything detailed (credentials, case studies, industries,
@@ -39,11 +39,12 @@ const FEATURED_SERVICES = [
 ];
 
 export default async function HomePage() {
-  const [brand, stats, services, products, images] = await Promise.all([
+  const [brand, stats, services, products, testimonials, images] = await Promise.all([
     getBrand(),
     getImpactStats(),
     getServices(),
     getProducts(),
+    getTestimonials(),
     getImageUrls(),
   ]);
 
@@ -117,6 +118,7 @@ export default async function HomePage() {
         <UpcomingEvents />
         <ProductShowcase products={productCards} />
         <ServiceShowcase services={serviceCards} />
+        <ClientVoices items={testimonials} images={images} />
         <ContactCta stats={stats} />
       </div>
     </div>
