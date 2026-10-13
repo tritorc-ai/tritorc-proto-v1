@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { getBrand, getImageUrls, getImpactStats, getProducts, getServices } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { ContactCta, ProductShowcase, ServiceShowcase } from "@/components/home/sections";
+import { ContactCta, ProductShowcase, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
 
 // Home is a short, image-led introduction: hero → products → services →
 // contact. Everything detailed (credentials, case studies, industries,
@@ -101,6 +101,7 @@ export default async function HomePage() {
       <HeroCarousel slides={slides} />
 
       <div className="space-y-9 px-5 pt-8">
+        <UpcomingEvents />
         <ProductShowcase products={productCards} />
         <ServiceShowcase services={serviceCards} />
         <ContactCta stats={stats} />

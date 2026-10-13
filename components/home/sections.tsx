@@ -11,10 +11,12 @@ import {
   Wrench,
   Layers,
   Headset,
+  CalendarDays,
+  ChevronRight,
 } from "lucide-react";
 import { Carousel } from "@/components/app/Carousel";
 import { OverlayCard, Photo, SectionHead } from "@/components/app/ui";
-import { CONTACT, INDUSTRIES, NOTIFICATIONS } from "@/lib/mock/appContent";
+import { CONTACT, INDUSTRIES, NOTIFICATIONS, UPCOMING_EVENTS } from "@/lib/mock/appContent";
 import type { CaseStudy, Certification, ImpactStat, JourneyMilestone, Testimonial } from "@/lib/mock/content";
 import { cn } from "@/lib/utils";
 
@@ -45,6 +47,32 @@ export function Eyebrow({ index, label }: { index: number; label: string }) {
 }
 
 /* ---------------- Scroll 1 ---------------- */
+
+/** Compact announcement card shown right under the hero. */
+export function UpcomingEvents() {
+  return (
+    <div className="space-y-3">
+      {UPCOMING_EVENTS.map((e) => (
+        <Link
+          key={e.id}
+          href={e.href}
+          className="press flex items-center justify-between gap-4 rounded-[26px] bg-[#e4e5e7] px-5 py-4"
+        >
+          <span className="min-w-0">
+            <span className="flex items-center gap-2 text-[13px] text-brand-text-secondary">
+              <CalendarDays size={15} />
+              Upcoming event
+            </span>
+            <span className="mt-1.5 block text-[16px] font-semibold leading-snug text-brand-dark">{e.title}</span>
+          </span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark">
+            <ChevronRight size={18} />
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
 
 /** Ather "Halo" block: two compact tiles beside one large product visual. */
 export function SpotlightBlock({

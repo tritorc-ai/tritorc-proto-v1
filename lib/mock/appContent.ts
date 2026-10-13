@@ -20,14 +20,37 @@ export const CONTACT = {
 
 export interface AppNotification {
   id: string;
-  tag: "Library" | "Project" | "Video";
+  tag: "Event" | "Library" | "Project" | "Video";
   title: string;
   body: string;
   when: string;
   href: string;
 }
 
+export interface UpcomingEvent {
+  id: string;
+  title: string;
+  href: string;
+}
+
+// Shown on Home between the hero and the product range.
+export const UPCOMING_EVENTS: UpcomingEvent[] = [
+  {
+    id: "adipec-2026",
+    title: "ADIPEC 2026 in Abu Dhabi, Hall 12, booth 12200",
+    href: "/company#updates",
+  },
+];
+
 export const NOTIFICATIONS: AppNotification[] = [
+  {
+    id: "adipec-2026",
+    tag: "Event",
+    title: "Meet us at ADIPEC 2026",
+    body: "Abu Dhabi, Hall 12, booth 12200.",
+    when: "Upcoming",
+    href: "/company#updates",
+  },
   {
     id: "catalogues-aug-2026",
     tag: "Library",
