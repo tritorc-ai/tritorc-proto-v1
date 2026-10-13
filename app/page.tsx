@@ -1,34 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import {
-  getBrand,
-  getCaseStudies,
-  getCertifications,
-  getImageUrls,
-  getImpactStats,
-  getJourney,
-  getProducts,
-  getServices,
-  getTestimonials,
-} from "@/lib/strapi";
+import { getBrand, getImageUrls, getImpactStats, getProducts, getServices } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
-import {
-  AchievementsBlock,
-  CaseStudies,
-  CertificationRow,
-  ContactCta,
-  ContactStrip,
-  Eyebrow,
-  FieldStories,
-  IndustriesBlock,
-  Journey,
-  NotificationsList,
-  ProductShowcase,
-  ServiceShowcase,
-  SpotlightBlock,
-  SupportGrid,
-} from "@/components/home/sections";
+import { ContactCta, ProductShowcase, ServiceShowcase } from "@/components/home/sections";
+
+// Home is a short, image-led introduction: hero → products → services →
+// contact. Everything detailed (credentials, case studies, industries,
+// journey, the full catalogue) lives behind the bottom-nav tabs.
 
 const FEATURED_PRODUCTS = [
   "tsl-20",
@@ -37,30 +16,24 @@ const FEATURED_PRODUCTS = [
   "pipe-cold-cutting-beveling-machines",
   "flange-facing-machines",
   "tube-expanders",
-  "heavy-impact-sockets",
 ];
 const FEATURED_SERVICES = [
-  "onsite-controlled-bolting",
   "hot-tapping-line-stopping",
   "flange-facing",
+  "onsite-controlled-bolting",
   "hydro-testing-services",
   "retubing-services",
   "pipe-freezing",
 ];
 
 export default async function HomePage() {
-  const [brand, stats, caseStudies, certifications, journey, services, products, testimonials, images] =
-    await Promise.all([
-      getBrand(),
-      getImpactStats(),
-      getCaseStudies(),
-      getCertifications(),
-      getJourney(),
-      getServices(),
-      getProducts(),
-      getTestimonials(),
-      getImageUrls(),
-    ]);
+  const [brand, stats, services, products, images] = await Promise.all([
+    getBrand(),
+    getImpactStats(),
+    getServices(),
+    getProducts(),
+    getImageUrls(),
+  ]);
 
   const productCards = FEATURED_PRODUCTS.map((slug) => products.find((p) => p.slug === slug))
     .filter((p): p is NonNullable<typeof p> => !!p)
@@ -101,14 +74,9 @@ export default async function HomePage() {
       tagline: "Hot tapping & line stopping",
       image: images.hotTappingOngc ?? images.svcHotTapping,
       primary: { href: "/services/hot-tapping-line-stopping", label: "Explore service" },
-      secondary: { href: "/company", label: "Case studies" },
+      secondary: { href: "/company#case-studies", label: "Case studies" },
     },
   ];
-
-  const certs = certifications.map((c) => ({
-    ...c,
-    imageUrl: c.code === "ISO" ? images.certIso : c.code === "CE" ? images.certCe : undefined,
-  }));
 
   return (
     <div className="relative">
@@ -130,47 +98,13 @@ export default async function HomePage() {
         </Link>
       </header>
 
-      {/* ---------- Scroll 1 — Hero & Products ---------- */}
-      <section aria-label="Hero and products">
-        <HeroCarousel slides={slides} />
-        <div className="space-y-10 px-5 pt-8">
-          <Eyebrow index={1} label="Discover" />
-          <SpotlightBlock
-            title="Controlled bolting"
-            subtitle="Torque wrenches, tensioners and impact sockets."
-            image={images.catTorqueWrenches ?? images.productTorqueHero}
-            productHref="/products/tsl-20"
-            productName="TSL Series Hydraulic Torque Wrenches"
-          />
-          <ProductShowcase products={productCards} />
-        </div>
-      </section>
+      <HeroCarousel slides={slides} />
 
-      {/* ---------- Scroll 2 — Notifications & Services ---------- */}
-      <section aria-label="Notifications and services" className="mt-12 space-y-10 px-5">
-        <Eyebrow index={2} label="Updates & services" />
-        <NotificationsList />
+      <div className="space-y-9 px-5 pt-8">
+        <ProductShowcase products={productCards} />
         <ServiceShowcase services={serviceCards} />
-        <SupportGrid image={images.svcOnSiteMachining} />
-        <ContactStrip />
-      </section>
-
-      {/* ---------- Scroll 3 — Achievements & Company ---------- */}
-      <section aria-label="Achievements and company" className="mt-12 space-y-10 px-5">
-        <Eyebrow index={3} label="Proof & people" />
-        <AchievementsBlock stats={stats} image={images.impactBg} />
-        <CertificationRow certs={certs} />
-        <CaseStudies
-          items={caseStudies.map((c) => ({
-            ...c,
-            imageUrl: c.directImageUrl ?? (c.imageKey ? images[c.imageKey] : undefined),
-          }))}
-        />
-        <FieldStories items={testimonials} images={images} />
-        <IndustriesBlock />
-        <Journey items={journey} />
-        <ContactCta />
-      </section>
+        <ContactCta stats={stats} />
+      </div>
     </div>
   );
 }

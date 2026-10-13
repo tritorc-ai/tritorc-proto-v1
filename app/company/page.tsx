@@ -13,6 +13,7 @@ import {
 } from "@/lib/strapi";
 import { CONTACT } from "@/lib/mock/appContent";
 import { PageHeader } from "@/components/app/PageHeader";
+import { SectionNav } from "@/components/app/SectionNav";
 import { Photo, SectionHead } from "@/components/app/ui";
 import {
   AchievementsBlock,
@@ -22,7 +23,19 @@ import {
   FieldStories,
   IndustriesBlock,
   Journey,
+  NotificationsList,
 } from "@/components/home/sections";
+
+const NAV = [
+  { id: "updates", label: "Updates" },
+  { id: "experience", label: "Experience" },
+  { id: "certifications", label: "Certifications" },
+  { id: "case-studies", label: "Case studies" },
+  { id: "field", label: "In the field" },
+  { id: "industries", label: "Industries" },
+  { id: "journey", label: "Journey" },
+  { id: "offices", label: "Offices" },
+];
 
 export default async function CompanyPage() {
   const [images, coreValues, offices, profileUrl, stats, certifications, caseStudies, testimonials, journey] =
@@ -61,41 +74,57 @@ export default async function CompanyPage() {
           </div>
         </div>
 
-        <AchievementsBlock stats={stats} image={images.impactBg} />
+        <SectionNav items={NAV} />
 
-        <div>
+        <section id="updates" className="scroll-mt-16">
+          <NotificationsList />
+        </section>
+
+        <section id="experience" className="scroll-mt-16">
+          <AchievementsBlock stats={stats} image={images.impactBg} />
+        </section>
+
+        <section id="certifications" className="scroll-mt-16">
           <SectionHead title="Certifications" subtitle="Quality and compliance." />
           <CertificationRow certs={certs} />
-        </div>
+        </section>
 
-        <CaseStudies
-          id="case-studies"
-          items={caseStudies.map((c) => ({
-            ...c,
-            imageUrl: c.directImageUrl ?? (c.imageKey ? images[c.imageKey] : undefined),
-          }))}
-        />
+        <section id="case-studies" className="scroll-mt-16">
+          <CaseStudies
+            items={caseStudies.map((c) => ({
+              ...c,
+              imageUrl: c.directImageUrl ?? (c.imageKey ? images[c.imageKey] : undefined),
+            }))}
+          />
+        </section>
 
-        <FieldStories items={testimonials} images={images} />
-        <IndustriesBlock />
-        <Journey items={journey} />
+        <section id="field" className="scroll-mt-16">
+          <FieldStories items={testimonials} images={images} />
+        </section>
 
-        <div>
-          <SectionHead title="Core values" />
-          <div className="grid grid-cols-2 gap-3">
-            {coreValues.map((v, i) => (
-              <div
-                key={v.name}
-                className={`rounded-[22px] bg-white p-4 ${i === coreValues.length - 1 && coreValues.length % 2 === 1 ? "col-span-2" : ""}`}
-              >
-                <div className="text-[16px] font-semibold text-brand-dark">{v.name}</div>
-                <div className="mt-1 text-[12.5px] leading-snug text-brand-text-secondary">{v.description}</div>
-              </div>
-            ))}
+        <section id="industries" className="scroll-mt-16">
+          <IndustriesBlock />
+        </section>
+
+        <section id="journey" className="scroll-mt-16 space-y-10">
+          <Journey items={journey} />
+          <div>
+            <SectionHead title="Core values" />
+            <div className="grid grid-cols-2 gap-3">
+              {coreValues.map((v, i) => (
+                <div
+                  key={v.name}
+                  className={`rounded-[22px] bg-white p-4 ${i === coreValues.length - 1 && coreValues.length % 2 === 1 ? "col-span-2" : ""}`}
+                >
+                  <div className="text-[16px] font-semibold text-brand-dark">{v.name}</div>
+                  <div className="mt-1 text-[12.5px] leading-snug text-brand-text-secondary">{v.description}</div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div>
+        <section id="offices" className="scroll-mt-16">
           <SectionHead title="Global offices" subtitle={`${offices.length} locations worldwide.`} />
           <div className="flex flex-wrap gap-2">
             {offices.map((o) => (
@@ -108,7 +137,7 @@ export default async function CompanyPage() {
               </span>
             ))}
           </div>
-        </div>
+        </section>
 
         {profileUrl && profileUrl !== "#" && (
           <a

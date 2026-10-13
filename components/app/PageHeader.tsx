@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 
 /** Large-title page header used by every tab screen and sub-screen. */
@@ -13,6 +14,11 @@ export function PageHeader({
 }) {
   return (
     <div className="px-5 pb-4 pt-safe">
+      {!back && (
+        <Link href="/" aria-label="Tritorc home" className="press mb-4 inline-block">
+          <Image src="/brand/tritorc-logo.png" alt="Tritorc" width={104} height={14} className="h-3.5 w-auto" />
+        </Link>
+      )}
       {back && (
         <Link
           href={back.href}

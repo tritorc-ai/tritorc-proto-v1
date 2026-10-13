@@ -170,7 +170,7 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
             title={s.title}
             body={s.body}
             cta="Learn more"
-            aspect="aspect-[4/5]"
+            aspect="aspect-[3/4]"
           />
         ))}
       </Carousel>
@@ -289,7 +289,7 @@ export function CertificationRow({ certs }: { certs: (Certification & { imageUrl
 
 export function CaseStudies({ items, id }: { items: (CaseStudy & { imageUrl?: string })[]; id?: string }) {
   return (
-    <div id={id} className="scroll-mt-6">
+    <div id={id}>
       <SectionHead title="Case studies" subtitle="Real projects, real conditions." />
       <Carousel label="Case studies" itemClassName="w-[84%]">
         {items.map((c) => (
@@ -366,11 +366,25 @@ export function Journey({ items }: { items: JourneyMilestone[] }) {
   );
 }
 
-export function ContactCta() {
+export function ContactCta({ stats }: { stats?: ImpactStat[] }) {
   return (
     <div className="relative overflow-hidden rounded-[30px] bg-brand-dark p-6 text-white">
       <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-red/30 blur-2xl" />
       <div className="relative">
+        {stats && (
+          <Link
+            href="/company"
+            className="press mb-5 grid grid-cols-4 gap-2 border-b border-white/15 pb-5"
+            aria-label="See Tritorc credentials on the Company tab"
+          >
+            {stats.slice(0, 4).map((s) => (
+              <span key={s.label} className="block">
+                <span className="block text-[22px] font-bold leading-none tracking-[-0.02em]">{s.value}</span>
+                <span className="mt-1 block text-[10.5px] leading-tight text-white/55">{s.label}</span>
+              </span>
+            ))}
+          </Link>
+        )}
         <div className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-red-bright">
           Work with Tritorc
         </div>
@@ -394,7 +408,7 @@ export function ContactCta() {
             <Phone size={17} /> {CONTACT.phoneIndia}
           </a>
           <Link href="/company" className="press flex items-center justify-center gap-1.5 py-1 text-[14px] text-white/70">
-            About Tritorc <ArrowUpRight size={14} />
+            Credentials, case studies & more <ArrowUpRight size={14} />
           </Link>
         </div>
       </div>
