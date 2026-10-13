@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { Carousel } from "@/components/app/Carousel";
+import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { OverlayCard, Photo, SectionHead } from "@/components/app/ui";
 import { CONTACT, INDUSTRIES, NOTIFICATIONS, UPCOMING_EVENTS } from "@/lib/mock/appContent";
 import type { CaseStudy, Certification, ImpactStat, JourneyMilestone, Testimonial } from "@/lib/mock/content";
@@ -128,7 +129,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
         subtitle="Engineered for critical joints."
         action={{ href: "/products", label: "View all" }}
       />
-      <Carousel label="Featured products" itemClassName="w-[84%]" autoPlay={2400}>
+      <FocusCarousel label="Featured products" autoPlay={2600}>
         {products.map((p) => (
           <OverlayCard
             key={p.href}
@@ -136,10 +137,10 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             image={p.image}
             title={p.title}
             kicker={p.kicker}
-            aspect="aspect-[3/4]"
+            aspect="h-full"
           />
         ))}
-      </Carousel>
+      </FocusCarousel>
     </div>
   );
 }
