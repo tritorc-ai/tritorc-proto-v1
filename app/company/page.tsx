@@ -1,5 +1,5 @@
 import { jakarta } from "@/lib/fonts";
-import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
+import { getCatalogueUrl, getCoreValues, getGlobalOffices } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Photo, SectionHead } from "@/components/app/ui";
 import { CoreValues } from "@/components/company/CoreValues";
@@ -17,8 +17,7 @@ const FLAG_CODE: Record<string, string> = {
 };
 
 export default async function CompanyPage() {
-  const [images, coreValues, globalOffices, companyProfileUrl] = await Promise.all([
-    getImageUrls(),
+  const [coreValues, globalOffices, companyProfileUrl] = await Promise.all([
     getCoreValues(),
     getGlobalOffices(),
     getCatalogueUrl("Company Profile (Final)"),
@@ -32,7 +31,7 @@ export default async function CompanyPage() {
         <section>
           <SectionHead title="Company overview" subtitle="01/04 · About Tritorc" />
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
-            <Photo src={images.companyIntro} priority className="aspect-[4/5] w-full" sizes="(max-width: 448px) 100vw, 408px" />
+            <Photo src="/company/overview.webp" priority className="aspect-[4/5] w-full" imgClassName="object-[30%_50%]" sizes="(max-width: 448px) 100vw, 408px" />
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
             <p className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90">
               Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity
