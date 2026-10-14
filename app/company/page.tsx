@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
-import { SectionLabel } from "@/components/app/SectionLabel";
+import { Carousel } from "@/components/app/Carousel";
+import { Photo, SectionHead } from "@/components/app/ui";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
 export default async function CompanyPage() {
@@ -11,78 +11,79 @@ export default async function CompanyPage() {
     getGlobalOffices(),
     getCatalogueUrl("Company Profile (Final)"),
   ]);
-  const facilityImageUrl = images.companyIntro;
 
   return (
     <div>
       <PageHeader title="Company" />
-      <div className="px-5 pb-7">
-        <div className="relative my-3.5 flex h-40 items-end overflow-hidden rounded-lg shadow-[0_10px_24px_rgba(0,0,0,.1)]">
-          {facilityImageUrl ? (
-            <Image src={facilityImageUrl} alt="" fill sizes="100vw" className="object-cover" />
-          ) : (
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,#eef0f2_0px,#eef0f2_10px,#e3e7ea_10px,#e3e7ea_20px)]" />
-          )}
-          <div className="absolute inset-x-0 bottom-0 h-[3px] bg-linear-to-r from-brand-red to-brand-red-bright" />
-          {!facilityImageUrl && (
-            <div className="relative m-3.5 rounded-[3px] bg-white/85 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-black/40">
-              FACILITY PHOTO
+      <div className="space-y-10 px-5">
+        {/* 01 — Company overview */}
+        <section>
+          <SectionHead title="Company overview" subtitle="01/04 · About Tritorc" />
+          <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
+            <Photo src={images.companyIntro} priority className="aspect-[4/5] w-full" sizes="(max-width: 448px) 100vw, 408px" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
+            <p className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90">
+              Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity
+              solutions — delivering turnkey expertise to industrial teams across 11 countries.
+            </p>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="rounded-[24px] bg-brand-dark p-5">
+              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-brand-red-bright">54+</div>
+              <div className="mt-2 text-[12.5px] leading-snug text-white/60">Oil &amp; gas projects</div>
             </div>
-          )}
-        </div>
-
-        <div className="text-[13.5px] leading-relaxed text-brand-text-secondary">
-          Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline
-          integrity solutions — delivering turnkey expertise to industrial teams across 11
-          countries.
-        </div>
-
-        <div className="my-5 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-brand-dark px-4.5 py-5 shadow-[0_10px_24px_rgba(0,0,0,.16)]">
-          <div>
-            <div className="text-[22px] font-extrabold leading-none text-brand-red-bright">54+</div>
-            <div className="mt-0.75 text-[11px] leading-snug text-white/60">Oil & gas projects</div>
+            <div className="rounded-[24px] bg-brand-dark p-5">
+              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-brand-red-bright">300+</div>
+              <div className="mt-2 text-[12.5px] leading-snug text-white/60">Turbines installed</div>
+            </div>
           </div>
-          <div>
-            <div className="text-[22px] font-extrabold leading-none text-brand-red-bright">300+</div>
-            <div className="mt-0.75 text-[11px] leading-snug text-white/60">Turbines installed</div>
-          </div>
-        </div>
+        </section>
 
-        <SectionLabel>Core Values</SectionLabel>
-        <div className="mb-5.5 grid grid-cols-2 gap-2.5">
-          {coreValues.map((v) => (
-            <div
-              key={v.name}
-              className="rounded-lg border border-black/6 bg-white p-3 shadow-[0_1px_2px_rgba(0,0,0,.03),0_6px_14px_rgba(0,0,0,.05)]"
-            >
-              <div className="text-[13px] font-bold text-brand-dark">{v.name}</div>
-              <div className="mt-0.5 text-[11px] leading-snug text-brand-text-secondary">
-                {v.description}
+        {/* 02 — Core values */}
+        <section>
+          <SectionHead title="Core values" subtitle={`02/04 · ${coreValues.length} values`} />
+          <Carousel label="Core values" itemClassName="w-[78%]">
+            {coreValues.map((v, i) => (
+              <div
+                key={v.name}
+                className="flex h-full min-h-[210px] flex-col justify-between rounded-[28px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] p-6"
+              >
+                <div className="font-mono text-[12px] font-semibold tracking-[0.18em] text-brand-red-bright">
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <div>
+                  <div className="text-[26px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
+                  <p className="mt-2 text-[14px] leading-snug text-white/65">{v.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </Carousel>
+        </section>
 
-        <SectionLabel>Global Offices</SectionLabel>
-        <div className="mb-5.5 flex flex-wrap gap-2">
-          {globalOffices.map((o) => (
-            <div
-              key={`${o.city}-${o.country}`}
-              className="rounded-full border border-black/8 bg-white px-3 py-1.5 text-[11.5px] font-medium text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
-            >
-              {o.city}, <span className="text-brand-text-secondary">{o.country}</span>
-            </div>
-          ))}
-        </div>
+        {/* 03 — Global offices */}
+        <section>
+          <SectionHead title="Global offices" subtitle={`03/04 · ${globalOffices.length} locations`} />
+          <div className="flex flex-wrap gap-2">
+            {globalOffices.map((o) => (
+              <div
+                key={`${o.city}-${o.country}`}
+                className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-[13px] font-medium text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
+              >
+                {o.city}, <span className="text-brand-text-secondary">{o.country}</span>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <SectionLabel>Company Profile</SectionLabel>
-        <div className="mb-5.5">
+        {/* 04 — Company profile */}
+        <section>
+          <SectionHead title="Company profile" subtitle="04/04 · PDF download" />
           <ProductCatalogueCard
             title="Company Profile"
             meta="6.4 MB · Updated Jul 2026"
             url={companyProfileUrl ?? "#"}
           />
-        </div>
+        </section>
       </div>
     </div>
   );
