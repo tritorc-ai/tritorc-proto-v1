@@ -3,10 +3,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 /**
- * Architectural graphite card: a lit studio panel for the product shot,
- * then a text block separated by a hairline copper rule. The image is
- * multiplied onto the panel, so white photo backgrounds dissolve into it and
- * the whole product stays visible (contained, never cropped).
+ * Graphite card: the product image fills a rounded inset frame directly on
+ * the card (no extra backdrop), followed by the name, count and arrow.
  */
 export function ProductCategoryCard({
   href,
@@ -24,18 +22,18 @@ export function ProductCategoryCard({
       href={href}
       className="press group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-cu/40 bg-graphite transition-colors duration-300 hover:border-cu-light group-data-[active=true]/item:border-cu"
     >
-      {/* Image panel (inset, rounded) */}
-      <div className="relative m-2 aspect-[5/4] overflow-hidden rounded-[20px] bg-[linear-gradient(160deg,#efeae1_0%,#d9d2c6_100%)]">
+      {/* Image fills an inset, rounded frame directly on the graphite card */}
+      <div className="relative m-2 aspect-[5/4] overflow-hidden rounded-[20px] bg-graphite-deep">
         {image ? (
           <Image
             src={image}
             alt=""
             fill
             sizes="(max-width: 448px) 78vw, 340px"
-            className="object-contain p-4 mix-blend-multiply transition-transform duration-700 ease-out group-hover:scale-[1.04] group-active:scale-[1.04]"
+            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] group-active:scale-[1.04]"
           />
         ) : (
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,#e6e0d5_0,#e6e0d5_10px,#dcd5c8_10px,#dcd5c8_20px)]" />
+          <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,#2c2c2c_0,#2c2c2c_10px,#262626_10px,#262626_20px)]" />
         )}
       </div>
 

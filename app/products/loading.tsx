@@ -13,7 +13,7 @@ export default function ProductsLoading() {
           <div className="-mx-5 flex gap-3 overflow-hidden px-5">
             {[0, 1].map((i) => (
               <div key={i} className="w-[78%] shrink-0 overflow-hidden rounded-[26px] border border-cu/30 bg-graphite">
-                <div className="m-2 aspect-[5/4] animate-pulse rounded-[20px] bg-[#d9d2c6]" />
+                <div className="m-2 aspect-[5/4] animate-pulse rounded-[20px] bg-white/10" />
                 <div className="space-y-2 p-4">
                   <div className="h-4 w-3/4 animate-pulse bg-white/15" />
                   <div className="h-3 w-1/3 animate-pulse bg-white/10" />
