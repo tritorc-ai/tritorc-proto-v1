@@ -81,7 +81,7 @@ export default async function CompanyPage() {
             {globalOffices.map((o) => (
               <div
                 key={`${o.city}-${o.country}`}
-                className="flex min-w-0 items-center gap-1.5 rounded-full border border-black/8 bg-white px-2.5 py-2 text-[11px] whitespace-nowrap font-medium leading-tight text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
+                className="flex min-w-0 items-center gap-1.5 rounded-[18px] border border-black/8 bg-white px-2.5 py-2 text-[11.5px] font-medium leading-tight text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
               >
                 {FLAG_CODE[o.country] && (
                   // eslint-disable-next-line @next/next/no-img-element -- tiny local flag, no optimisation needed
@@ -92,7 +92,7 @@ export default async function CompanyPage() {
                     className="h-[14px] w-auto shrink-0 rounded-[2px] ring-1 ring-black/10"
                   />
                 )}
-                <span className="min-w-0">{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
+                <span className="min-w-0 [text-wrap:balance]">{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
               </div>
             ))}
           </div>
