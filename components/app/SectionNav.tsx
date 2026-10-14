@@ -13,7 +13,15 @@ export interface SectionNavItem {
  * the one currently in view (scroll-spy). Sections must carry the matching
  * `id` and a `scroll-mt-*` offset that clears this bar.
  */
-export function SectionNav({ items }: { items: SectionNavItem[] }) {
+export function SectionNav({
+  items,
+  variant = "default",
+}: {
+  items: SectionNavItem[];
+  /** "copper" is the squared ivory/copper style used on the Products page. */
+  variant?: "default" | "copper";
+}) {
+  const copper = variant === "copper";
   const [active, setActive] = useState(items[0]?.id);
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -41,7 +49,7 @@ export function SectionNav({ items }: { items: SectionNavItem[] }) {
   }, [active]);
 
   return (
-    <div className="sticky top-0 z-30 -mx-5 bg-(--app-bg)/90 px-5 py-2.5 backdrop-blur">
+    <div className={cn("sticky top-0 z-30 -mx-5 px-5 py-2.5 backdrop-blur", copper ? "border-b border-cu/20 bg-ivory/90" : "bg-(--app-bg)/90")}>
       <div ref={barRef} className="no-scrollbar flex gap-2 overflow-x-auto">
         {items.map((it) => (
           <a
@@ -54,8 +62,10 @@ export function SectionNav({ items }: { items: SectionNavItem[] }) {
               if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 64, behavior: "smooth" });
             }}
             className={cn(
-              "press shrink-0 rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-300",
-              active === it.id ? "bg-brand-dark text-white" : "bg-white text-brand-dark"
+              "press shrink-0 px-4 py-2 text-[13px] font-medium transition-colors duration-300",
+              copper
+                ? cn("rounded-[3px] border", active === it.id ? "border-cu bg-cu text-white" : "border-cu/35 text-ink hover:border-cu")
+                : cn("rounded-full", active === it.id ? "bg-brand-dark text-white" : "bg-white text-brand-dark")
             )}
           >
             {it.label}
