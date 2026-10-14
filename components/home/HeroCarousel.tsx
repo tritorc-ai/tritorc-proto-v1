@@ -28,14 +28,12 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               <h1 className="text-[40px] font-bold leading-[1.04] tracking-[-0.03em] [text-wrap:balance]">
                 {s.title}
               </h1>
-              <div className="mx-auto mt-4 inline-block rounded-full bg-white px-5 py-1.5 text-[14px] font-semibold text-brand-dark">
-                {s.tagline}
-              </div>
+              <div className="mx-auto mt-4 text-[15px] font-semibold text-white/90">{s.tagline}</div>
             </div>
             <div className="absolute inset-x-5 bottom-12 grid grid-cols-2 gap-3">
               <Link
                 href={s.primary.href}
-                className="press btn-gloss rounded-full py-3.5 text-center text-[16px] font-semibold"
+                className="press btn-gloss-ghost rounded-full py-3.5 text-center text-[16px] font-semibold"
               >
                 {s.primary.label}
               </Link>
