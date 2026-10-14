@@ -173,7 +173,7 @@
  * Tritorc mobile app shell — Ather-inspired layout primitives
  * ------------------------------------------------------------------------- */
 :root {
-  /* Products page: industrial-luxury palette (warm ivory / graphite / copper) */
+  /* Industrial-luxury palette (warm ivory / graphite / copper) used by teammates' components */
   --ivory: #f4f1eb;
   --graphite: #252525;
   --graphite-deep: #1b1b1b;
@@ -219,6 +219,18 @@
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+/* Teammates' components: bronze timer bar, rotating Company tagline lines */
+@keyframes timer-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes focus-pop {
+  from { opacity: 0; }
 }
 @keyframes sheen {
   from { transform: translateX(-120%); }
@@ -284,14 +296,17 @@ html[data-splash-seen] .splash-curtain {
   backdrop-filter: blur(6px);
 }
 
-/* Products: bronze timer bar that fills over one auto-advance interval */
-@keyframes timer-fill {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+/* Scroll reveal (components/app/Reveal.tsx): sections ease up into place the
+ * first time they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms var(--ease-premium), transform 650ms var(--ease-premium);
 }
-
-/* Company: rotating tagline lines slide up into place */
-@keyframes line-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+.reveal[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
 }

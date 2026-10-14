@@ -8,11 +8,14 @@ export function Dots({
   count,
   active,
   tone = "dark",
+  accent,
   className,
 }: {
   count: number;
   active: number;
   tone?: "dark" | "light";
+  /** Optional colour for the active pill (e.g. a section accent). */
+  accent?: string;
   className?: string;
 }) {
   if (count < 2) return null;
@@ -21,6 +24,7 @@ export function Dots({
       {Array.from({ length: count }).map((_, i) => (
         <span
           key={i}
+          style={accent && i === active ? { background: accent } : undefined}
           className={cn(
             "h-1.5 rounded-full transition-all duration-300 ease-out",
             i === active ? "w-5" : "w-1.5",
@@ -72,6 +76,8 @@ export function Carousel({
   trackClassName,
   label,
   autoPlay,
+  accent,
+  focusScale = false,
 }: {
   children: React.ReactNode;
   itemClassName?: string;
@@ -85,18 +91,46 @@ export function Carousel({
   label?: string;
   /** Advance every N ms, looping; pauses on touch and while off-screen. */
   autoPlay?: number;
+  /** Colour for the active pagination pill. */
+  accent?: string;
+  /** Ather-style depth: slides ease down in scale/opacity as they move off the snap point. */
+  focusScale?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const items = Children.toArray(children);
 
+  const frame = useRef(0);
+
+  const applyFocus = useCallback(() => {
+    const el = ref.current;
+    if (!el || !focusScale) return;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    const pad = parseFloat(getComputedStyle(el).paddingLeft || "0");
+    Array.from(el.children).forEach((child) => {
+      const c = child as HTMLElement;
+      const offset = c.offsetLeft - el.offsetLeft - pad - el.scrollLeft;
+      const t = Math.min(1, Math.abs(offset) / (c.clientWidth || 1));
+      const inner = c.firstElementChild as HTMLElement | null;
+      if (!inner) return;
+      inner.style.transform = `scale(${1 - 0.05 * t})`;
+      inner.style.opacity = String(1 - 0.2 * t);
+    });
+  }, [focusScale]);
+
   const onScroll = useCallback(() => {
     const el = ref.current;
-    if (el) setActive(nearestIndex(el));
-  }, []);
+    if (!el) return;
+    if (focusScale) {
+      cancelAnimationFrame(frame.current);
+      frame.current = requestAnimationFrame(applyFocus);
+    }
+    setActive(nearestIndex(el));
+  }, [focusScale, applyFocus]);
 
   useEffect(() => {
     onScroll();
+    return () => cancelAnimationFrame(frame.current);
   }, [onScroll]);
 
   const pausedUntil = useRef(0);
@@ -149,7 +183,13 @@ export function Carousel({
       >
         {items.map((child, i) => (
           <div key={i} className={cn("shrink-0 snap-start", itemClassName)}>
-            {child}
+            {focusScale ? (
+              <div className="h-full origin-left transition-[transform,opacity] duration-150 ease-out will-change-transform">
+                {child}
+              </div>
+            ) : (
+              child
+            )}
           </div>
         ))}
       </div>
@@ -157,6 +197,7 @@ export function Carousel({
         <Dots
           count={items.length}
           active={active}
+          accent={accent}
           tone={overlayDots ? "light" : dotsTone}
           className={overlayDots ? "absolute inset-x-0 bottom-4" : "mt-3"}
         />

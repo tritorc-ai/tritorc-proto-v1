@@ -5,7 +5,9 @@ import { Dots } from "@/components/app/Carousel";
 import { cn } from "@/lib/utils";
 
 const SLIDE_MS = 1000; // time one card takes to glide into the centre
-const STEP = 86; // neighbour spacing, as % of a card's own width
+// Neighbour spacing as % of a card's own width. With neighbours at scale 0.9
+// this leaves a small gap between cards, so they never overlap or merge.
+const STEP = 100;
 const SWIPE_PX = 40;
 
 /**
@@ -16,15 +18,15 @@ const SWIPE_PX = 40;
 export function FocusCarousel({
   children,
   autoPlay = 2600,
-  aspectClassName = "aspect-[10/9]",
+  aspectClassName = "aspect-square",
   className,
   label,
 }: {
   children: React.ReactNode;
+  /** Height of the stage as an aspect-ratio class. */
+  aspectClassName?: string;
   /** Time between moves in ms (the move itself takes SLIDE_MS). */
   autoPlay?: number;
-  /** Height of the stage as an aspect-ratio class (default suits tall image cards). */
-  aspectClassName?: string;
   className?: string;
   label?: string;
 }) {
@@ -112,15 +114,20 @@ export function FocusCarousel({
             <div
               key={i}
               aria-hidden={o !== 0}
-              className="absolute inset-y-0 left-1/2 w-[72%] motion-reduce:!duration-300"
+              className="absolute inset-y-0 left-1/2 w-[80%] motion-reduce:!duration-300"
               style={{
-                transform: `translateX(calc(-50% + ${o * STEP}%)) scale(${o === 0 ? 1 : 0.84})`,
-                opacity: o === 0 ? 1 : near ? 0.7 : 0,
+                transform: `translateX(calc(-50% + ${o * STEP}%)) translateY(${o === 0 ? 0 : 3}%) scale(${o === 0 ? 1 : 0.92})`,
+                // Solid (never see-through) so cards can't show through each other mid-slide.
+                opacity: near ? 1 : 0,
+                filter: o === 0 ? "none" : "grayscale(1) brightness(0.8)",
                 zIndex: 10 - Math.abs(o),
                 pointerEvents: near ? "auto" : "none",
+                // A card wrapping round the back snaps into the slot another card is still
+                // leaving, so it fades in rather than popping on top of it.
+                animation: jumped && near ? "focus-pop 700ms ease-out backwards" : undefined,
                 transition: jumped
                   ? "none"
-                  : `transform ${SLIDE_MS}ms cubic-bezier(0.45, 0, 0.15, 1), opacity ${SLIDE_MS}ms ease`,
+                  : `transform ${SLIDE_MS}ms cubic-bezier(0.22, 1, 0.36, 1), opacity ${SLIDE_MS / 2}ms ease-out, filter ${SLIDE_MS}ms ease-out`,
               }}
               onClickCapture={(e) => {
                 // Tapping a neighbour brings it to the centre instead of opening it.

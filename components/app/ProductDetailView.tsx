@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { ArrowLeft, Play } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/mock/content";
+import { Carousel } from "./Carousel";
+import { ShowcaseCard } from "@/components/products/ShowcaseCard";
 import { SectionLabel } from "./SectionLabel";
 import { ProductCatalogueCard } from "./ProductCatalogueCard";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,8 @@ export function ProductDetailView({
   // category's hero image rather than an empty state, only for "Product"
   // mode (we don't have a category-level "in use" photo to fall back to).
   const showHeroFallback = photos.length === 0 && photoMode === "product" && heroImageUrl;
+  const heroImage =
+    heroImageUrl ?? product.media.find((m) => m.kind === "photo" && m.context === "product")?.url;
 
   return (
     <div>
@@ -65,44 +68,42 @@ export function ProductDetailView({
       </div>
 
       <div className="pb-7">
-        <div className="px-5 pb-4.5 pt-4">
-          <div className="text-[22px] font-bold leading-tight text-brand-dark">{product.name}</div>
-          <div className="mt-1.5 text-[13px] leading-relaxed text-brand-text-secondary">
-            {product.tagline}
-          </div>
+        <div className="px-5 pt-3">
+          <ShowcaseCard
+            title={product.name}
+            body={product.tagline}
+            kicker={product.series}
+            image={heroImage}
+            aspect="aspect-[3/4]"
+            fit="cover"
+            priority
+          />
         </div>
 
-        <div className="flex items-center justify-between px-5 pb-2 pt-0.5">
-          <div className="font-mono text-[10.5px] font-bold uppercase tracking-wider text-neutral-400">
-            Photos
+        <div className="flex items-center justify-between px-5 pb-3 pt-7">
+          <div>
+            <div className="text-[22px] font-bold leading-tight tracking-[-0.02em] text-brand-dark">Gallery</div>
+            <div className="mt-0.5 text-[13px] text-brand-text-tertiary">See it from every angle</div>
           </div>
           <ToggleTabs value={photoMode} onChange={setPhotoMode} />
         </div>
-        <div className="flex gap-2 overflow-x-auto px-5 pb-2.5 [scrollbar-width:none]">
+        <div className="px-5">
           {photos.length > 0 ? (
-            photos.map((ph) => (
-              <Image
-                key={ph.id}
-                src={ph.url}
-                alt={product.name}
-                width={ph.portrait ? 110 : 200}
-                height={ph.portrait ? 196 : 140}
-                className={cn(
-                  "shrink-0 rounded-lg bg-white object-contain shadow-[0_6px_16px_rgba(0,0,0,.08)]",
-                  ph.portrait ? "h-49 w-27.5" : "h-35 w-50"
-                )}
-              />
-            ))
+            <Carousel key={photoMode} label="Photos" itemClassName="w-[86%]" focusScale>
+              {photos.map((ph) => (
+                <ShowcaseCard
+                  key={ph.id}
+                  title={product.name}
+                  kicker={photoMode === "product" ? "Product view" : "In use"}
+                  image={ph.url}
+                  aspect="aspect-[4/5]"
+                />
+              ))}
+            </Carousel>
           ) : showHeroFallback ? (
-            <Image
-              src={heroImageUrl}
-              alt={product.name}
-              width={200}
-              height={140}
-              className="h-35 w-50 shrink-0 rounded-lg object-cover shadow-[0_6px_16px_rgba(0,0,0,.08)]"
-            />
+            <ShowcaseCard title={product.name} kicker="Product view" image={heroImageUrl} aspect="aspect-[4/5]" />
           ) : (
-            <div className="flex h-35 w-full items-center justify-center rounded-lg bg-brand-surface text-xs text-brand-text-tertiary">
+            <div className="flex h-35 w-full items-center justify-center rounded-[22px] bg-white text-xs text-brand-text-tertiary">
               No {photoMode === "product" ? "product" : "in-use"} photos yet
             </div>
           )}
