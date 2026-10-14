@@ -13,8 +13,8 @@ export function CoreValues({ values }: { values: { name: string; description: st
   if (!current) return null;
 
   return (
-    <div className="rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] p-4">
-      <div role="tablist" aria-label="Core values" className="flex flex-wrap gap-2">
+    <div className="rounded-[22px] border border-black/8 bg-white p-3.5 shadow-[0_1px_2px_rgba(0,0,0,.03)]">
+      <div role="tablist" aria-label="Core values" className="flex flex-wrap gap-1.5">
         {values.map((v, i) => (
           <button
             key={v.name}
@@ -25,8 +25,8 @@ export function CoreValues({ values }: { values: { name: string; description: st
             aria-controls="value-panel"
             onClick={() => setActive(i)}
             className={cn(
-              "press rounded-full border px-3.5 py-1.5 text-[13px] font-semibold transition-colors duration-200",
-              i === active ? "border-white bg-white text-black" : "border-white/20 text-white/75 hover:border-white/50"
+              "press rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors duration-200",
+              i === active ? "border-black bg-black text-white" : "border-black/10 text-black/60 hover:border-black/30"
             )}
           >
             {v.name}
@@ -37,7 +37,7 @@ export function CoreValues({ values }: { values: { name: string; description: st
         id="value-panel"
         role="tabpanel"
         aria-labelledby={`value-tab-${active}`}
-        className="mt-3.5 min-h-[2.6em] text-[14px] leading-snug text-white/80"
+        className="mt-3 min-h-[2.4em] text-[13px] leading-snug text-black/65"
       >
         {current.description}
       </p>
