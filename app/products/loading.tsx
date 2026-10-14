@@ -1,22 +1,28 @@
-import { Skeleton } from "@/components/app/Skeleton";
-
 export default function ProductsLoading() {
   return (
-    <div className="px-5 pb-6 pt-safe-header">
-      <Skeleton className="mb-1.5 h-6 w-32" />
-      <Skeleton className="mb-4 h-3.5 w-52" />
-      <Skeleton className="mb-3 h-4 w-40" />
-      <div className="grid grid-cols-2 gap-3">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="overflow-hidden rounded-2xl border border-black/6">
-            <Skeleton className="aspect-square w-full rounded-none" />
-            <div className="p-3">
-              <Skeleton className="mb-1.5 h-3.5 w-full" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
+    <div className="overflow-x-clip px-5 pt-safe">
+      <div className="mb-4 h-3.5 w-24 animate-pulse rounded-full bg-cu/20" />
+      <div className="mb-2 h-9 w-44 animate-pulse bg-ink/10" />
+      <div className="mb-8 h-4 w-56 animate-pulse bg-ink/10" />
+      {[0, 1].map((s) => (
+        <div key={s} className="mb-10">
+          <div className="mb-4 flex gap-3">
+            <span className="w-[3px] rounded-full bg-cu/40" />
+            <div className="h-9 w-48 animate-pulse bg-ink/10" />
           </div>
-        ))}
-      </div>
+          <div className="-mx-5 flex gap-3 overflow-hidden px-5">
+            {[0, 1].map((i) => (
+              <div key={i} className="w-[78%] shrink-0 overflow-hidden rounded-[26px] border border-cu/30 bg-graphite">
+                <div className="m-2 aspect-[5/4] animate-pulse rounded-[20px] bg-white/10" />
+                <div className="space-y-2 p-4">
+                  <div className="h-4 w-3/4 animate-pulse bg-white/15" />
+                  <div className="h-3 w-1/3 animate-pulse bg-white/10" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

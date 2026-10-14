@@ -18,10 +18,13 @@ const SWIPE_PX = 40;
 export function FocusCarousel({
   children,
   autoPlay = 2600,
+  aspectClassName = "aspect-square",
   className,
   label,
 }: {
   children: React.ReactNode;
+  /** Height of the stage as an aspect-ratio class. */
+  aspectClassName?: string;
   /** Time between moves in ms (the move itself takes SLIDE_MS). */
   autoPlay?: number;
   className?: string;
@@ -75,7 +78,7 @@ export function FocusCarousel({
         role="region"
         aria-roledescription="carousel"
         aria-label={label}
-        className="relative -mx-5 aspect-square touch-pan-y select-none overflow-hidden"
+        className={cn("relative -mx-5 touch-pan-y select-none overflow-hidden", aspectClassName)}
         onPointerDown={(e) => {
           drag.current = { x: e.clientX, moved: false };
           pause();

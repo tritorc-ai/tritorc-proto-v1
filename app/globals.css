@@ -17,6 +17,15 @@
   --color-brand-surface: var(--brand-surface);
   --color-brand-text-secondary: var(--brand-text-secondary);
   --color-brand-text-tertiary: var(--brand-text-tertiary);
+  --color-ivory: var(--ivory);
+  --color-graphite: var(--graphite);
+  --color-graphite-deep: var(--graphite-deep);
+  --color-cu: var(--cu);
+  --color-cu-dark: var(--cu-dark);
+  --color-cu-light: var(--cu-light);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-warm-white: var(--warm-white);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -164,6 +173,17 @@
  * Tritorc mobile app shell — Ather-inspired layout primitives
  * ------------------------------------------------------------------------- */
 :root {
+  /* Industrial-luxury palette (warm ivory / graphite / copper) used by teammates' components */
+  --ivory: #f4f1eb;
+  --graphite: #252525;
+  --graphite-deep: #1b1b1b;
+  --cu: #b4774f;
+  --cu-dark: #80563d;
+  --cu-light: #d0a17d;
+  --ink: #1b1815;
+  --ink-muted: #7a7168;
+  --warm-white: #f3eee6;
+
   --app-bg: #f3f3f2;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -198,6 +218,15 @@
 }
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* Teammates' components: bronze timer bar, rotating Company tagline lines */
+@keyframes timer-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes focus-pop {
