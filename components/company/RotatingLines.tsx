@@ -18,7 +18,7 @@ const getReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduc
 export function RotatingLines({
   lines,
   fullText,
-  intervalMs = 3600,
+  intervalMs = 4800,
   className,
 }: {
   lines: string[];
@@ -44,16 +44,16 @@ export function RotatingLines({
   return (
     <div className={className}>
       <p className="sr-only">{fullText}</p>
-      <div aria-hidden className="min-h-[3.9em]">
-        <p key={index} className="animate-[line-in_650ms_cubic-bezier(0.22,1,0.36,1)_both] text-[21px] font-semibold leading-[1.25] tracking-[-0.01em] text-white">
+      <div aria-hidden className="min-h-[2.7em]">
+        <p key={index} className="animate-[line-in_900ms_ease-out_both] text-[14px] font-medium leading-snug text-white/80">
           {lines[index]}
         </p>
       </div>
-      <div aria-hidden className="mt-3 flex gap-1.5">
+      <div aria-hidden className="mt-2.5 flex gap-1">
         {lines.map((_, i) => (
           <span
             key={i}
-            className={cn("h-1 rounded-full transition-all duration-500", i === index ? "w-6 bg-white" : "w-1.5 bg-white/35")}
+            className={cn("h-[3px] rounded-full transition-all duration-700", i === index ? "w-4 bg-white/80" : "w-1 bg-white/25")}
           />
         ))}
       </div>

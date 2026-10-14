@@ -6,13 +6,15 @@ import { RotatingLines } from "@/components/company/RotatingLines";
 import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
-// The company description, shown a line at a time over the overview photo
-// (wording taken from the existing description and the "Since 1989" brand line).
+// Short facts shown one at a time over the overview photo. Every line comes from
+// content already in the app (journey, stats, certifications, case studies).
 const OVERVIEW_LINES = [
-  "A trusted authority in controlled bolting.",
-  "On-site machining and pipeline integrity solutions.",
-  "Turnkey expertise for industrial teams across 11 countries.",
-  "Serving industry since 1989.",
+  "Founded in 1989, with more than 35 years of experience.",
+  "Offices across India, the UAE, the USA, Algeria, Oman, Canada and Germany.",
+  "In-house manufacturing of bolting and machining tools since 2013.",
+  "ISO 9001:2015 certified quality management.",
+  "500+ projects delivered by 100+ expert engineers.",
+  "Live pipelines hot-tapped with zero downtime.",
 ];
 const OVERVIEW_TEXT =
   "Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity solutions — delivering turnkey expertise to industrial teams across 11 countries.";
