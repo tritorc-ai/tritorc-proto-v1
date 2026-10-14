@@ -1,4 +1,5 @@
 import { getImageUrls, getLibraryAssets } from "@/lib/strapi";
+import { jakarta } from "@/lib/fonts";
 import { PageHeader } from "@/components/app/PageHeader";
 import { LibraryView } from "@/components/app/LibraryView";
 
@@ -10,8 +11,8 @@ export default async function LibraryPage() {
   }));
 
   return (
-    <div>
-      <PageHeader title="Library" subtitle="Find any photo, video or catalogue fast" />
+    <div className={jakarta.className}>
+      <PageHeader title="Library" subtitle="Find any photo, video or catalogue fast" hideLogo />
       <LibraryView assets={enriched} />
     </div>
   );

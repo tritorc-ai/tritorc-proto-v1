@@ -7,14 +7,17 @@ export function PageHeader({
   title,
   subtitle,
   back,
+  hideLogo,
 }: {
   title: string;
   subtitle?: string;
   back?: { href: string; label?: string };
+  /** Omit the Tritorc logo above the title. */
+  hideLogo?: boolean;
 }) {
   return (
     <div className="px-5 pb-4 pt-safe">
-      {!back && (
+      {!back && !hideLogo && (
         <Link href="/" aria-label="Tritorc home" className="press mb-4 inline-block">
           <Image src="/brand/tritorc-logo.png" alt="Tritorc" width={104} height={14} className="h-3.5 w-auto" />
         </Link>
