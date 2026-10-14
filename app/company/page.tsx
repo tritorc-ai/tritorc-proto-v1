@@ -1,7 +1,7 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
-import { Carousel } from "@/components/app/Carousel";
+import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { Photo, SectionHead } from "@/components/app/ui";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
@@ -56,22 +56,22 @@ export default async function CompanyPage() {
         {/* 02 — Core values */}
         <section>
           <SectionHead title="Core values" subtitle={`02/04 · ${coreValues.length} values`} />
-          <Carousel label="Core values" itemClassName="w-[66%]">
+          <FocusCarousel label="Core values" autoPlay={3500} aspectClassName="aspect-[2/1]">
             {coreValues.map((v, i) => (
               <div
                 key={v.name}
-                className="flex h-full min-h-[104px] flex-col justify-between gap-3 rounded-[20px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] px-4 py-3.5"
+                className="flex h-full flex-col justify-between rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] px-5 py-4"
               >
                 <div className="text-[11px] font-semibold tracking-[0.18em] text-white/50">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <div>
-                  <div className="text-[18px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
-                  <p className="mt-1 text-[12px] leading-snug text-white/65">{v.description}</p>
+                  <div className="text-[20px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
+                  <p className="mt-1 text-[12.5px] leading-snug text-white/65">{v.description}</p>
                 </div>
               </div>
             ))}
-          </Carousel>
+          </FocusCarousel>
         </section>
 
         {/* 03 — Global offices */}
