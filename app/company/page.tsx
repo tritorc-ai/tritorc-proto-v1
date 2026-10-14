@@ -54,7 +54,7 @@ export default async function CompanyPage() {
       <div className="space-y-10 px-5">
         {/* 01 — Company overview */}
         <section>
-          <SectionHead title="Company overview" subtitle="01/04 · About Tritorc" />
+          <SectionHead title="Company overview" />
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
             <div className="aspect-[4/5] w-full" />
             <PhotoSlideshow slides={OVERVIEW_SLIDES} sizes="(max-width: 448px) 100vw, 408px" />
@@ -79,13 +79,13 @@ export default async function CompanyPage() {
 
         {/* 02 — Core values */}
         <section>
-          <SectionHead title="Core values" subtitle={`02/04 · ${coreValues.length} values`} />
+          <SectionHead title="Core values" />
           <CoreValues values={coreValues} />
         </section>
 
         {/* 03 — Global offices */}
         <section>
-          <SectionHead title="Global offices" subtitle={`03/04 · ${globalOffices.length} locations`} />
+          <SectionHead title="Global offices" />
           <div className="grid grid-cols-2 gap-2">
             {globalOffices.map((o) => (
               <div
@@ -109,7 +109,7 @@ export default async function CompanyPage() {
 
         {/* 04 — Company profile */}
         <section>
-          <SectionHead title="Company profile" subtitle="04/04 · PDF download" />
+          <SectionHead title="Company profile" />
           <ProductCatalogueCard
             title="Company Profile"
             meta="6.4 MB · Updated Jul 2026"
