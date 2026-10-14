@@ -1,7 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
-import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { Photo, SectionHead } from "@/components/app/ui";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
@@ -56,22 +55,22 @@ export default async function CompanyPage() {
         {/* 02 — Core values */}
         <section>
           <SectionHead title="Core values" subtitle={`02/04 · ${coreValues.length} values`} />
-          <FocusCarousel label="Core values" autoPlay={3500} aspectClassName="aspect-[2/1]">
+          <ol className="overflow-hidden rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214]">
             {coreValues.map((v, i) => (
-              <div
+              <li
                 key={v.name}
-                className="flex h-full flex-col justify-between rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] px-5 py-4"
+                className={`flex items-start gap-4 px-5 py-4 ${i > 0 ? "border-t border-white/10" : ""}`}
               >
-                <div className="text-[11px] font-semibold tracking-[0.18em] text-white/50">
+                <span className="w-6 shrink-0 pt-0.5 text-[11px] font-semibold tracking-[0.18em] text-white/40">
                   {String(i + 1).padStart(2, "0")}
-                </div>
-                <div>
-                  <div className="text-[20px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
+                </span>
+                <div className="min-w-0">
+                  <div className="text-[17px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
                   <p className="mt-1 text-[12.5px] leading-snug text-white/65">{v.description}</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </FocusCarousel>
+          </ol>
         </section>
 
         {/* 03 — Global offices */}
