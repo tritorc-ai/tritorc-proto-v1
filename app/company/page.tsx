@@ -2,8 +2,20 @@ import { jakarta } from "@/lib/fonts";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Photo, SectionHead } from "@/components/app/ui";
+import { RotatingLines } from "@/components/company/RotatingLines";
 import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
+
+// The company description, shown a line at a time over the overview photo
+// (wording taken from the existing description and the "Since 1989" brand line).
+const OVERVIEW_LINES = [
+  "A trusted authority in controlled bolting.",
+  "On-site machining and pipeline integrity solutions.",
+  "Turnkey expertise for industrial teams across 11 countries.",
+  "Serving industry since 1989.",
+];
+const OVERVIEW_TEXT =
+  "Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity solutions — delivering turnkey expertise to industrial teams across 11 countries.";
 
 // Local flag images (public/flags) keyed by the country names used in the office data.
 const FLAG_CODE: Record<string, string> = {
@@ -33,10 +45,11 @@ export default async function CompanyPage() {
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
             <Photo src="/company/overview.webp" priority className="aspect-[4/5] w-full" imgClassName="object-[30%_50%]" sizes="(max-width: 448px) 100vw, 408px" />
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
-            <p className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90">
-              Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity
-              solutions — delivering turnkey expertise to industrial teams across 11 countries.
-            </p>
+            <RotatingLines
+              className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90"
+              lines={OVERVIEW_LINES}
+              fullText={OVERVIEW_TEXT}
+            />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <div className="rounded-[20px] bg-brand-dark px-4 py-3.5">
