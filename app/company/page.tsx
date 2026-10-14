@@ -1,10 +1,21 @@
 import { jakarta } from "@/lib/fonts";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
-import { Photo, SectionHead } from "@/components/app/ui";
+import { SectionHead } from "@/components/app/ui";
+import { PhotoSlideshow, type Slide } from "@/components/company/PhotoSlideshow";
 import { RotatingLines } from "@/components/company/RotatingLines";
 import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
+
+// Photos from tritorc.com (saved in public/company) that fade into one another
+// behind the overview text.
+const OVERVIEW_SLIDES: Slide[] = [
+  { src: "/company/slide-1-tube-bundle.jpg", position: "30% 50%" },
+  { src: "/company/slide-2-onsite-machining.jpg", position: "25% 40%" },
+  { src: "/company/slide-3-offshore.webp", position: "45% 50%" },
+  { src: "/company/slide-4-sharjah.jpg", position: "50% 45%" },
+  { src: "/company/slide-5-wellhead.jpg", position: "72% 50%" },
+];
 
 // Short facts shown one at a time over the overview photo. Every line comes from
 // content already in the app (journey, stats, certifications, case studies).
@@ -45,7 +56,8 @@ export default async function CompanyPage() {
         <section>
           <SectionHead title="Company overview" subtitle="01/04 · About Tritorc" />
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
-            <Photo src="/company/overview.webp" priority className="aspect-[4/5] w-full" imgClassName="object-[30%_50%]" sizes="(max-width: 448px) 100vw, 408px" />
+            <div className="aspect-[4/5] w-full" />
+            <PhotoSlideshow slides={OVERVIEW_SLIDES} sizes="(max-width: 448px) 100vw, 408px" />
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
             <RotatingLines
               className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90"
