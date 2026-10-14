@@ -2,6 +2,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Photo, SectionHead } from "@/components/app/ui";
+import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
@@ -55,22 +56,7 @@ export default async function CompanyPage() {
         {/* 02 — Core values */}
         <section>
           <SectionHead title="Core values" subtitle={`02/04 · ${coreValues.length} values`} />
-          <ol className="overflow-hidden rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214]">
-            {coreValues.map((v, i) => (
-              <li
-                key={v.name}
-                className={`flex items-start gap-4 px-5 py-4 ${i > 0 ? "border-t border-white/10" : ""}`}
-              >
-                <span className="w-6 shrink-0 pt-0.5 text-[11px] font-semibold tracking-[0.18em] text-white/40">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div className="min-w-0">
-                  <div className="text-[17px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
-                  <p className="mt-1 text-[12.5px] leading-snug text-white/65">{v.description}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          <CoreValues values={coreValues} />
         </section>
 
         {/* 03 — Global offices */}
