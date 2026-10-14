@@ -4,7 +4,9 @@ import { ArrowUpRight } from "lucide-react";
 import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
 import { PRODUCT_CATEGORIES, PRODUCT_SECTIONS } from "@/lib/mock/content";
 import { PageHeader } from "@/components/app/PageHeader";
-import { Photo, slugify } from "@/components/app/ui";
+import { Carousel } from "@/components/app/Carousel";
+import { SectionHead, slugify } from "@/components/app/ui";
+import { ShowcaseCard } from "@/components/products/ShowcaseCard";
 
 export default async function ProductCategoryPage(props: PageProps<"/products/c/[slug]">) {
   const { slug } = await props.params;
@@ -22,45 +24,61 @@ export default async function ProductCategoryPage(props: PageProps<"/products/c/
   return (
     <div>
       <PageHeader title={category.name} subtitle={section?.name} back={{ href: "/products" }} />
-      <div className="space-y-4 px-5">
+      <div className="px-5">
         {items.length === 0 && (
           <div className="rounded-[26px] bg-white p-6 text-center text-[14px] text-brand-text-secondary">
             No products listed in this category yet.
           </div>
         )}
-        {items.map((p) => {
-          const image =
-            thumbnails[p.slug] ??
-            p.directImageUrl ??
-            (p.heroImageKey ? images[p.heroImageKey] : undefined) ??
-            images[category.imageKey];
-          return (
-            <Link
-              key={p.slug}
-              href={`/products/${p.slug}`}
-              className="press group block overflow-hidden rounded-[28px] bg-white"
-            >
-              <Photo src={image} className="aspect-[4/3] w-full" imgClassName="group-active:scale-105" />
-              <div className="p-5">
-                <div
-                  className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em]"
-                  style={{ color: section?.color }}
+        {items.length > 0 && (
+          <Carousel label={category.name} itemClassName="w-[86%]" focusScale accent={section?.color}>
+            {items.map((p, i) => {
+              const image =
+                thumbnails[p.slug] ??
+                p.directImageUrl ??
+                (p.heroImageKey ? images[p.heroImageKey] : undefined) ??
+                images[category.imageKey];
+              return (
+                <ShowcaseCard
+                  key={p.slug}
+                  href={`/products/${p.slug}`}
+                  title={p.name}
+                  body={p.tagline}
+                  kicker={p.series}
+                  image={image}
+                  accent={section?.color}
+                  cta="Know more"
+                  aspect="aspect-[3/4]"
+                  fit="cover"
+                  priority={i === 0}
+                />
+              );
+            })}
+          </Carousel>
+        )}
+
+        {items.length > 1 && (
+          <div className="mt-8">
+            <SectionHead title="All products" subtitle={`${items.length} in this category`} />
+            <div className="overflow-hidden rounded-[22px] bg-white">
+              {items.map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/products/${p.slug}`}
+                  className="press flex items-center justify-between gap-3 border-b border-black/6 px-4 py-3.5 last:border-b-0"
                 >
-                  {p.series}
-                </div>
-                <div className="mt-1 flex items-start justify-between gap-3">
-                  <h2 className="text-[20px] font-semibold leading-tight tracking-[-0.01em] text-brand-dark">
-                    {p.name}
-                  </h2>
-                  <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-dark text-white">
-                    <ArrowUpRight size={16} />
-                  </span>
-                </div>
-                <p className="mt-2 line-clamp-3 text-[13.5px] leading-snug text-brand-text-secondary">{p.tagline}</p>
-              </div>
-            </Link>
-          );
-        })}
+                  <div className="min-w-0">
+                    <div className="truncate text-[15px] font-semibold text-brand-dark">{p.name}</div>
+                    <div className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-brand-text-tertiary">
+                      {p.series}
+                    </div>
+                  </div>
+                  <ArrowUpRight size={16} className="shrink-0 text-brand-dark" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

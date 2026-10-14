@@ -200,6 +200,9 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes focus-pop {
+  from { opacity: 0; }
+}
 @keyframes sheen {
   from { transform: translateX(-120%); }
   to { transform: translateX(220%); }
@@ -262,4 +265,19 @@ html[data-splash-seen] .splash-curtain {
     inset 0 1px 0 rgba(255, 255, 255, 0.28),
     0 6px 16px rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(6px);
+}
+
+/* Scroll reveal (components/app/Reveal.tsx): sections ease up into place the
+ * first time they enter the viewport. */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms var(--ease-premium), transform 650ms var(--ease-premium);
+}
+.reveal[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
 }

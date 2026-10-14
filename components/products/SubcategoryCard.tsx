@@ -1,36 +1,47 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Photo } from "@/components/app/ui";
+import { CardImage } from "@/components/products/CardImage";
 
-/** Compact image-led card used for subcategories inside a horizontal rail. */
+/**
+ * Image-led card used for subcategories inside a horizontal rail.
+ * Ather-style: monochrome, borderless, the product photo does the talking.
+ * White card on the grey page background, title and a quiet grey meta line,
+ * and a soft round arrow that darkens on press.
+ */
 export function SubcategoryCard({
   href,
   name,
   image,
   count,
-  accent,
 }: {
   href: string;
   name: string;
   image?: string;
   count: number;
-  accent: string;
 }) {
   return (
-    <Link href={href} className="press group block h-full overflow-hidden rounded-[26px] bg-white">
-      <div className="relative aspect-[4/3]">
-        <Photo src={image} className="absolute inset-0" imgClassName="group-active:scale-105" sizes="260px" />
-        <div className="absolute inset-x-0 bottom-0 h-1" style={{ background: accent }} />
+    <Link
+      href={href}
+      className="press group block h-full overflow-hidden rounded-[28px] bg-white outline-none focus-visible:ring-2 focus-visible:ring-brand-dark/40"
+    >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        <CardImage src={image} alt={name} sizes="(max-width: 448px) 70vw, 300px" />
       </div>
-      <div className="flex items-start justify-between gap-2 p-4">
+
+      <div className="flex items-end justify-between gap-3 px-5 pb-5 pt-4">
         <div className="min-w-0">
-          <div className="text-[16px] font-semibold leading-tight text-brand-dark">{name}</div>
+          <div className="min-h-[2.5em] text-[15.5px] font-semibold leading-[1.25] tracking-[-0.015em] text-brand-dark">
+            {name}
+          </div>
           <div className="mt-1 text-[12.5px] text-brand-text-tertiary">
             {count} {count === 1 ? "product" : "products"}
           </div>
         </div>
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-dark text-white">
-          <ArrowUpRight size={15} />
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--app-bg) text-brand-dark transition-colors duration-300 group-hover:bg-brand-dark group-hover:text-white group-active:bg-brand-dark group-active:text-white">
+          <ArrowUpRight
+            size={17}
+            className="transition-transform duration-300 ease-(--ease-premium) group-hover:rotate-45 group-active:rotate-45"
+          />
         </span>
       </div>
     </Link>

@@ -131,7 +131,7 @@ export function ProductShowcase({ products }: { products: Card[] }) {
         subtitle="Engineered for critical joints."
         action={{ href: "/products", label: "View all" }}
       />
-      <FocusCarousel label="Featured products" autoPlay={2600}>
+      <FocusCarousel label="Featured products" autoPlay={4000}>
         {products.map((p) => (
           <OverlayCard
             key={p.href}
@@ -141,7 +141,6 @@ export function ProductShowcase({ products }: { products: Card[] }) {
             kicker={p.kicker}
             aspect="h-full"
             contain={p.contain}
-            frame="black"
           />
         ))}
       </FocusCarousel>
@@ -193,7 +192,7 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
         subtitle="On-site expertise, anywhere."
         action={{ href: "/services", label: "View all" }}
       />
-      <FocusCarousel label="Services" autoPlay={2600}>
+      <FocusCarousel label="Services" autoPlay={4000}>
         {services.map((s) => (
           <OverlayCard
             key={s.href}
@@ -202,7 +201,6 @@ export function ServiceShowcase({ services }: { services: Card[] }) {
             title={s.title}
             body={s.body}
             cta="Learn more"
-            frame="black"
             aspect="h-full"
           />
         ))}
