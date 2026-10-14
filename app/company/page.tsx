@@ -46,14 +46,14 @@ export default async function CompanyPage() {
             {coreValues.map((v, i) => (
               <div
                 key={v.name}
-                className="flex h-full min-h-[210px] flex-col justify-between rounded-[28px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] p-6"
+                className="flex h-full min-h-[140px] flex-col justify-between gap-4 rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] p-5"
               >
                 <div className="font-mono text-[12px] font-semibold tracking-[0.18em] text-brand-red-bright">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <div>
-                  <div className="text-[26px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
-                  <p className="mt-2 text-[14px] leading-snug text-white/65">{v.description}</p>
+                  <div className="text-[22px] font-semibold leading-tight tracking-[-0.01em] text-white">{v.name}</div>
+                  <p className="mt-1.5 text-[13.5px] leading-snug text-white/65">{v.description}</p>
                 </div>
               </div>
             ))}
