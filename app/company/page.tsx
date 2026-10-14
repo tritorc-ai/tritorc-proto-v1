@@ -77,11 +77,11 @@ export default async function CompanyPage() {
         {/* 03 — Global offices */}
         <section>
           <SectionHead title="Global offices" subtitle={`03/04 · ${globalOffices.length} locations`} />
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {globalOffices.map((o) => (
               <div
                 key={`${o.city}-${o.country}`}
-                className="flex items-center gap-2 rounded-full border border-black/8 bg-white px-3.5 py-2 text-[13px] font-medium text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
+                className="flex min-w-0 items-center gap-1.5 rounded-full border border-black/8 bg-white px-2.5 py-2 text-[11px] whitespace-nowrap font-medium leading-tight text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
               >
                 {FLAG_CODE[o.country] && (
                   // eslint-disable-next-line @next/next/no-img-element -- tiny local flag, no optimisation needed
@@ -92,7 +92,7 @@ export default async function CompanyPage() {
                     className="h-[14px] w-auto shrink-0 rounded-[2px] ring-1 ring-black/10"
                   />
                 )}
-                <span>{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
+                <span className="min-w-0">{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
               </div>
             ))}
           </div>
