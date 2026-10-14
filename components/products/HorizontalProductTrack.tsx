@@ -6,11 +6,11 @@ import { ScrollProgressIndicator } from "@/components/products/ScrollProgressInd
 import { cn } from "@/lib/utils";
 
 /** Seconds a card is held before the row advances one step. */
-const ADVANCE_MS = 8000;
+const ADVANCE_MS = 5000;
 /** Inactivity required after any user interaction before auto-advance resumes. */
-const RESUME_MS = 9000;
+const RESUME_MS = 8000;
 /** Duration of one programmatic glide (consistent regardless of distance). */
-const GLIDE_MS = 700;
+const GLIDE_MS = 600;
 const DRAG_THRESHOLD = 6;
 
 type Metrics = { progress: number; thumb: number; active: number };
