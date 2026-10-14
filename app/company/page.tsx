@@ -1,11 +1,9 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { jakarta } from "@/lib/fonts";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Photo, SectionHead } from "@/components/app/ui";
 import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
-
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
 // Local flag images (public/flags) keyed by the country names used in the office data.
 const FLAG_CODE: Record<string, string> = {
