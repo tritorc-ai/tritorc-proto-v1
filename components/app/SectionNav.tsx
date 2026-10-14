@@ -18,7 +18,7 @@ export function SectionNav({
   variant = "default",
 }: {
   items: SectionNavItem[];
-  /** "copper" is the squared ivory/copper style used on the Products page. */
+  /** "copper" is the copper-accent style used on the Products page. */
   variant?: "default" | "copper";
 }) {
   const copper = variant === "copper";
@@ -49,7 +49,7 @@ export function SectionNav({
   }, [active]);
 
   return (
-    <div className={cn("sticky top-0 z-30 -mx-5 px-5 py-2.5 backdrop-blur", copper ? "border-b border-cu/20 bg-ivory/90" : "bg-(--app-bg)/90")}>
+    <div className={cn("sticky top-0 z-30 -mx-5 px-5 py-2.5 backdrop-blur", "bg-(--app-bg)/90")}>
       <div ref={barRef} className="no-scrollbar flex gap-2 overflow-x-auto">
         {items.map((it) => (
           <a
@@ -64,7 +64,7 @@ export function SectionNav({
             className={cn(
               "press shrink-0 px-4 py-2 text-[13px] font-medium transition-colors duration-300",
               copper
-                ? cn("rounded-[3px] border", active === it.id ? "border-cu bg-cu text-white" : "border-cu/35 text-ink hover:border-cu")
+                ? cn("rounded-full border", active === it.id ? "border-cu bg-cu text-white" : "border-cu/35 text-ink hover:border-cu")
                 : cn("rounded-full", active === it.id ? "bg-brand-dark text-white" : "bg-white text-brand-dark")
             )}
           >

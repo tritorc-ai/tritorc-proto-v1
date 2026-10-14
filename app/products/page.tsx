@@ -28,16 +28,8 @@ export default async function ProductsPage() {
   }));
 
   return (
-    // Warm ivory canvas. It extends under the nav's padding (same trick as the
-    // Home panel) so no cooler strip shows behind the fixed bottom bar.
-    <div
-      className="overflow-x-clip bg-ivory text-ink"
-      style={{
-        minHeight: "100dvh",
-        marginBottom: "calc(-1 * (88px + env(safe-area-inset-bottom, 0px)))",
-        paddingBottom: "calc(88px + env(safe-area-inset-bottom, 0px))",
-      }}
-    >
+    // Same off-white canvas as Home (inherited from the app shell).
+    <div className="overflow-x-clip text-ink">
       <PageHeader title="Products" subtitle="The complete Tritorc catalogue" />
       <div className="px-5">
         <SectionNav variant="copper" items={sections.map((s) => ({ id: s.id, label: s.name }))} />

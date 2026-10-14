@@ -22,9 +22,9 @@ export function ScrollProgressIndicator({
 }) {
   return (
     <div className={cn("flex items-center gap-3", className)} aria-hidden>
-      <div className="relative h-[2px] flex-1 bg-cu/25">
+      <div className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-cu/25">
         <span
-          className="absolute inset-y-0 bg-cu-dark"
+          className="absolute inset-y-0 rounded-full bg-cu-dark"
           style={{
             width: `${Math.max(thumb, 0.08) * 100}%`,
             left: `${progress * (1 - Math.max(thumb, 0.08)) * 100}%`,

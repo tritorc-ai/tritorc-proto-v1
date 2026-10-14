@@ -13,7 +13,7 @@ export function ProductSection({ section }: { section: ProductSectionData }) {
   return (
     <section id={section.id} className="scroll-mt-16" aria-labelledby={`${section.id}-title`}>
       <header className="mb-4 flex items-stretch gap-3">
-        <span className="w-[3px] shrink-0 bg-cu" aria-hidden />
+        <span className="w-[3px] shrink-0 rounded-full bg-cu" aria-hidden />
         <div>
           <h2
             id={`${section.id}-title`}

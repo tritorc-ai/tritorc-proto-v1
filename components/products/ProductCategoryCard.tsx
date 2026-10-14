@@ -22,10 +22,10 @@ export function ProductCategoryCard({
   return (
     <Link
       href={href}
-      className="press group relative flex h-full flex-col overflow-hidden rounded-[4px] border border-cu/40 bg-graphite transition-colors duration-300 hover:border-cu-light group-data-[active=true]/item:border-cu"
+      className="press group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-cu/40 bg-graphite transition-colors duration-300 hover:border-cu-light group-data-[active=true]/item:border-cu"
     >
-      {/* Image panel */}
-      <div className="relative aspect-[5/4] overflow-hidden border-b border-cu/30 bg-[linear-gradient(160deg,#efeae1_0%,#d9d2c6_100%)]">
+      {/* Image panel (inset, rounded) */}
+      <div className="relative m-2 aspect-[5/4] overflow-hidden rounded-[20px] bg-[linear-gradient(160deg,#efeae1_0%,#d9d2c6_100%)]">
         {image ? (
           <Image
             src={image}
@@ -37,12 +37,10 @@ export function ProductCategoryCard({
         ) : (
           <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,#e6e0d5_0,#e6e0d5_10px,#dcd5c8_10px,#dcd5c8_20px)]" />
         )}
-        <span className="absolute left-0 top-0 h-3 w-3 border-l border-t border-cu" aria-hidden />
-        <span className="absolute bottom-0 right-0 h-3 w-3 border-b border-r border-cu" aria-hidden />
       </div>
 
       {/* Text block */}
-      <div className="flex flex-1 items-start justify-between gap-3 p-4">
+      <div className="flex flex-1 items-start justify-between gap-3 px-5 pb-5 pt-3">
         <div className="min-w-0">
           <div className="text-[17px] font-semibold leading-snug tracking-[-0.005em] text-warm-white [text-wrap:balance]">
             {name}
@@ -51,7 +49,7 @@ export function ProductCategoryCard({
             {count} {count === 1 ? "product" : "products"}
           </div>
         </div>
-        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] border border-cu/60 text-cu-light transition-colors duration-300 group-hover:border-cu group-hover:bg-cu group-hover:text-white group-active:bg-cu group-active:text-white">
+        <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-cu/60 text-cu-light transition-colors duration-300 group-hover:border-cu group-hover:bg-cu group-hover:text-white group-active:bg-cu group-active:text-white">
           <ArrowUpRight
             size={15}
             className="transition-transform duration-300 group-hover:translate-x-px group-hover:-translate-y-px group-active:translate-x-0.5 group-active:-translate-y-0.5"
