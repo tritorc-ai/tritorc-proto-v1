@@ -17,7 +17,7 @@ export default async function CompanyPage() {
 
   return (
     <div className={jakarta.className}>
-      <PageHeader title="Company" monochrome />
+      <PageHeader title="Company" hideLogo />
       <div className="space-y-10 px-5">
         {/* 01 — Company overview */}
         <section>

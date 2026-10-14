@@ -7,19 +7,19 @@ export function PageHeader({
   title,
   subtitle,
   back,
-  monochrome,
+  hideLogo,
 }: {
   title: string;
   subtitle?: string;
   back?: { href: string; label?: string };
-  /** Render the logo in black (for black-and-white pages). */
-  monochrome?: boolean;
+  /** Omit the Tritorc logo above the title. */
+  hideLogo?: boolean;
 }) {
   return (
     <div className="px-5 pb-4 pt-safe">
-      {!back && (
+      {!back && !hideLogo && (
         <Link href="/" aria-label="Tritorc home" className="press mb-4 inline-block">
-          <Image src="/brand/tritorc-logo.png" alt="Tritorc" width={104} height={14} className={monochrome ? "h-3.5 w-auto brightness-0" : "h-3.5 w-auto"} />
+          <Image src="/brand/tritorc-logo.png" alt="Tritorc" width={104} height={14} className="h-3.5 w-auto" />
         </Link>
       )}
       {back && (
