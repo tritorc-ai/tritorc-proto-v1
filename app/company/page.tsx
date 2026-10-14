@@ -1,8 +1,11 @@
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { getCatalogueUrl, getCoreValues, getGlobalOffices, getImageUrls } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Carousel } from "@/components/app/Carousel";
 import { Photo, SectionHead } from "@/components/app/ui";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
+
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
 export default async function CompanyPage() {
   const [images, coreValues, globalOffices, companyProfileUrl] = await Promise.all([
@@ -13,8 +16,8 @@ export default async function CompanyPage() {
   ]);
 
   return (
-    <div>
-      <PageHeader title="Company" />
+    <div className={jakarta.className}>
+      <PageHeader title="Company" monochrome />
       <div className="space-y-10 px-5">
         {/* 01 — Company overview */}
         <section>
@@ -29,11 +32,11 @@ export default async function CompanyPage() {
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
             <div className="rounded-[24px] bg-brand-dark p-5">
-              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-brand-red-bright">54+</div>
+              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-white">54+</div>
               <div className="mt-2 text-[12.5px] leading-snug text-white/60">Oil &amp; gas projects</div>
             </div>
             <div className="rounded-[24px] bg-brand-dark p-5">
-              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-brand-red-bright">300+</div>
+              <div className="text-[34px] font-extrabold leading-none tracking-[-0.02em] text-white">300+</div>
               <div className="mt-2 text-[12.5px] leading-snug text-white/60">Turbines installed</div>
             </div>
           </div>
@@ -48,7 +51,7 @@ export default async function CompanyPage() {
                 key={v.name}
                 className="flex h-full min-h-[140px] flex-col justify-between gap-4 rounded-[24px] border border-white/10 bg-linear-to-br from-[#232326] to-[#121214] p-5"
               >
-                <div className="font-mono text-[12px] font-semibold tracking-[0.18em] text-brand-red-bright">
+                <div className="text-[12px] font-semibold tracking-[0.18em] text-white/50">
                   {String(i + 1).padStart(2, "0")}
                 </div>
                 <div>
