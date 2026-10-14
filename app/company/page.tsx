@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Download, MapPin } from "lucide-react";
+import { Download, Globe, Mail, MapPin, Phone } from "lucide-react";
 import {
   getCaseStudies,
   getCatalogueUrl,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/strapi";
 import { CONTACT } from "@/lib/mock/appContent";
 import { PageHeader } from "@/components/app/PageHeader";
+import { EnquiryForm } from "@/components/app/EnquiryForm";
 import { SectionNav } from "@/components/app/SectionNav";
 import { Photo, SectionHead } from "@/components/app/ui";
 import {
@@ -35,6 +36,7 @@ const NAV = [
   { id: "industries", label: "Industries" },
   { id: "journey", label: "Journey" },
   { id: "offices", label: "Offices" },
+  { id: "enquiry", label: "Enquiry" },
 ];
 
 export default async function CompanyPage() {
@@ -166,6 +168,34 @@ export default async function CompanyPage() {
             </span>
           </Link>
         )}
+
+        <section id="enquiry" className="scroll-mt-16 space-y-5">
+          <SectionHead title="Enquiry" subtitle="Tell us what you need — our team will get back to you." />
+          <div className="overflow-hidden rounded-[26px] bg-white">
+            <a href={`mailto:${CONTACT.email}`} className="press flex items-center gap-3 px-4 py-4">
+              <Mail size={18} className="text-brand-red" />
+              <span className="text-[15px] text-brand-dark">{CONTACT.email}</span>
+            </a>
+            <a href={CONTACT.phoneIndiaHref} className="press flex items-center gap-3 border-t border-black/[0.06] px-4 py-4">
+              <Phone size={18} className="text-brand-red" />
+              <span className="text-[15px] text-brand-dark">{CONTACT.phoneIndia} (India)</span>
+            </a>
+            <a href={CONTACT.phoneUsaHref} className="press flex items-center gap-3 border-t border-black/[0.06] px-4 py-4">
+              <Phone size={18} className="text-brand-red" />
+              <span className="text-[15px] text-brand-dark">{CONTACT.phoneUsa} (USA)</span>
+            </a>
+            <a
+              href={CONTACT.website}
+              target="_blank"
+              rel="noreferrer"
+              className="press flex items-center gap-3 border-t border-black/[0.06] px-4 py-4"
+            >
+              <Globe size={18} className="text-brand-red" />
+              <span className="text-[15px] text-brand-dark">tritorc.com</span>
+            </a>
+          </div>
+          <EnquiryForm />
+        </section>
 
         <ContactCta />
 

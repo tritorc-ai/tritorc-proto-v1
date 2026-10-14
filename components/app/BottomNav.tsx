@@ -2,17 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Package, Wrench, ClipboardList, Ellipsis } from "lucide-react";
+import { Home, Package, Wrench, BookOpen, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// "More" owns Library and Company (plus contact/social), so those routes keep
-// the More tab highlighted.
 const TABS = [
   { href: "/", label: "Home", icon: Home, match: ["/"] },
   { href: "/products", label: "Products", icon: Package, match: ["/products"] },
   { href: "/services", label: "Services", icon: Wrench, match: ["/services"] },
-  { href: "/enquiry", label: "Enquiry", icon: ClipboardList, match: ["/enquiry"] },
-  { href: "/more", label: "More", icon: Ellipsis, match: ["/more", "/library", "/company"] },
+  { href: "/library", label: "Library", icon: BookOpen, match: ["/library"] },
+  { href: "/company", label: "Company", icon: Building2, match: ["/company"] },
 ] as const;
 
 /** Fixed five-tab bar, pinned above the device's system navigation area. */
