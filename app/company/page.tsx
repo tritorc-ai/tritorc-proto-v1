@@ -7,6 +7,17 @@ import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
+// Local flag images (public/flags) keyed by the country names used in the office data.
+const FLAG_CODE: Record<string, string> = {
+  India: "in",
+  USA: "us",
+  UAE: "ae",
+  Algeria: "dz",
+  Oman: "om",
+  Canada: "ca",
+  Germany: "de",
+};
+
 export default async function CompanyPage() {
   const [images, coreValues, globalOffices, companyProfileUrl] = await Promise.all([
     getImageUrls(),
@@ -70,9 +81,18 @@ export default async function CompanyPage() {
             {globalOffices.map((o) => (
               <div
                 key={`${o.city}-${o.country}`}
-                className="rounded-full border border-black/8 bg-white px-3.5 py-2 text-[13px] font-medium text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
+                className="flex items-center gap-2 rounded-full border border-black/8 bg-white px-3.5 py-2 text-[13px] font-medium text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
               >
-                {o.city}, <span className="text-brand-text-secondary">{o.country}</span>
+                {FLAG_CODE[o.country] && (
+                  // eslint-disable-next-line @next/next/no-img-element -- tiny local flag, no optimisation needed
+                  <img
+                    src={`/flags/${FLAG_CODE[o.country]}.png`}
+                    alt=""
+                    height={14}
+                    className="h-[14px] w-auto shrink-0 rounded-[2px] ring-1 ring-black/10"
+                  />
+                )}
+                <span>{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
               </div>
             ))}
           </div>
