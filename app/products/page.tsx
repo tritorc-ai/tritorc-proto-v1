@@ -3,6 +3,7 @@ import { PRODUCT_CATEGORIES, PRODUCT_SECTIONS } from "@/lib/mock/content";
 import { PageHeader } from "@/components/app/PageHeader";
 import { SectionNav } from "@/components/app/SectionNav";
 import { slugify } from "@/components/app/ui";
+import { ProductAnimationProvider } from "@/components/products/AnimationMode";
 import { ProductSection } from "@/components/products/ProductSection";
 
 export default async function ProductsPage() {
@@ -33,11 +34,13 @@ export default async function ProductsPage() {
       <PageHeader title="Products" subtitle="The complete Tritorc catalogue" />
       <div className="px-5">
         <SectionNav variant="copper" items={sections.map((s) => ({ id: s.id, label: s.name }))} />
-        <div className="space-y-10 pb-8 pt-6">
-          {sections.map((section) => (
-            <ProductSection key={section.id} section={section} />
-          ))}
-        </div>
+        <ProductAnimationProvider>
+          <div className="space-y-10 pb-8 pt-6">
+            {sections.map((section) => (
+              <ProductSection key={section.id} section={section} />
+            ))}
+          </div>
+        </ProductAnimationProvider>
       </div>
     </div>
   );

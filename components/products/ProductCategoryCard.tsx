@@ -20,17 +20,17 @@ export function ProductCategoryCard({
   return (
     <Link
       href={href}
-      className="press group relative flex h-full flex-col overflow-hidden rounded-[26px] border border-cu/40 bg-graphite transition-colors duration-300 hover:border-cu-light group-data-[active=true]/item:border-cu"
+      className="press group relative flex h-full flex-col overflow-hidden rounded-2xl border border-cu/35 bg-graphite outline-none transition-colors duration-300 hover:border-cu-light focus-visible:border-cu-light focus-visible:ring-2 focus-visible:ring-cu-light group-data-[active=true]/item:border-cu"
     >
       {/* Image fills an inset, rounded frame directly on the graphite card */}
-      <div className="relative m-2 aspect-[5/4] overflow-hidden rounded-[20px] bg-graphite-deep">
+      <div className="relative m-2 aspect-[5/4] overflow-hidden rounded-xl bg-graphite-deep">
         {image ? (
           <Image
             src={image}
             alt=""
             fill
             sizes="(max-width: 448px) 78vw, 340px"
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04] group-active:scale-[1.04]"
+            className="object-cover"
           />
         ) : (
           <div className="absolute inset-0 bg-[repeating-linear-gradient(135deg,#2c2c2c_0,#2c2c2c_10px,#262626_10px,#262626_20px)]" />

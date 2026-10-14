@@ -283,3 +283,9 @@ html[data-splash-seen] .splash-curtain {
     0 6px 16px rgba(0, 0, 0, 0.22);
   backdrop-filter: blur(6px);
 }
+
+/* Products: bronze timer bar that fills over one auto-advance interval */
+@keyframes timer-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
