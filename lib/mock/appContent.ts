@@ -40,6 +40,26 @@ export const UPCOMING_EVENTS: UpcomingEvent[] = [
     title: "ADIPEC 2026 in Abu Dhabi, Hall 12, booth 12200",
     href: "/company#updates",
   },
+  {
+    id: "filler-event-2",
+    title: "Lorem ipsum expo in Dubai, Hall 4, booth 4100",
+    href: "/company#updates",
+  },
+  {
+    id: "filler-event-3",
+    title: "Dolor sit amet summit in Houston, Hall 9, booth 9300",
+    href: "/company#updates",
+  },
+  {
+    id: "filler-event-4",
+    title: "Consectetur forum in Mumbai, Hall 2, booth 2250",
+    href: "/company#updates",
+  },
+  {
+    id: "filler-event-5",
+    title: "Adipiscing elit conference in Riyadh, Hall 7, booth 7080",
+    href: "/company#updates",
+  },
 ];
 
 export const NOTIFICATIONS: AppNotification[] = [
