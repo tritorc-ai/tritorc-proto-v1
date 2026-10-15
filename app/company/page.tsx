@@ -52,9 +52,8 @@ export default async function CompanyPage() {
     <div className={jakarta.className}>
       <PageHeader title="Company" hideLogo />
       <div className="space-y-10 px-5">
-        {/* 01 — Company overview */}
+        {/* 01 — Overview photo + stats (the page heading above is just "Company") */}
         <section>
-          <SectionHead title="Company overview" />
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
             <div className="aspect-[4/5] w-full" />
             <PhotoSlideshow slides={OVERVIEW_SLIDES} sizes="(max-width: 448px) 100vw, 408px" />
