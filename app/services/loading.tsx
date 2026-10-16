@@ -1,22 +1,25 @@
-import { Skeleton } from "@/components/app/Skeleton";
-
+// Light placeholder mirroring the Services page (title, section pills, a
+// heading and carousel cards) — no dark blocks, so going back to Products
+// never flashes black.
 export default function ServicesLoading() {
   return (
-    <div className="px-5 pb-6 pt-safe-header">
-      <Skeleton className="mb-1.5 h-6 w-32" />
-      <Skeleton className="mb-4 h-3.5 w-52" />
-      <Skeleton className="mb-3 h-4 w-40" />
-      <div className="grid grid-cols-2 gap-3">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="overflow-hidden rounded-2xl border border-black/6">
-            <Skeleton className="aspect-square w-full rounded-none" />
-            <div className="p-3">
-              <Skeleton className="mb-1.5 h-3.5 w-full" />
-              <Skeleton className="h-3 w-2/3" />
-            </div>
-          </div>
+    <div className="overflow-x-clip px-5 pt-safe">
+      <div className="mb-5 h-10 w-44 animate-pulse rounded-lg bg-black/[0.07]" />
+      <div className="mb-6 flex gap-2">
+        {[88, 112, 72].map((w) => (
+          <div key={w} className="h-9 animate-pulse rounded-full bg-black/[0.06]" style={{ width: w }} />
         ))}
       </div>
+      {[0, 1].map((s) => (
+        <div key={s} className="mb-9">
+          <div className="mb-4 h-7 w-56 animate-pulse rounded-lg bg-black/[0.07]" />
+          <div className="-mx-5 flex gap-3 overflow-hidden px-5">
+            {[0, 1].map((i) => (
+              <div key={i} className="aspect-[4/5] w-[78%] shrink-0 animate-pulse rounded-[28px] bg-black/[0.06]" />
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/app/Skeleton";
 
 // Mirrors the Company screen: title, then Overview (photo + two stat tiles),
-// Core values card, Global offices (2-column pills) and the Company profile row.
+// Global offices (2-column pills) and the Company profile row.
 export default function CompanyLoading() {
   return (
     <div aria-busy="true" aria-label="Loading company information">
@@ -18,12 +18,6 @@ export default function CompanyLoading() {
             <Skeleton className="h-[56px] rounded-[20px]" />
             <Skeleton className="h-[56px] rounded-[20px]" />
           </div>
-        </section>
-
-        {/* Core values */}
-        <section>
-          <Skeleton className="mb-4 h-7 w-36 rounded-lg" />
-          <Skeleton className="h-[143px] w-full rounded-[22px]" />
         </section>
 
         {/* Global offices */}

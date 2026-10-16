@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
 import { PRODUCT_CATEGORIES, PRODUCT_SECTIONS } from "@/lib/mock/content";
+import { jakarta } from "@/lib/fonts";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Carousel } from "@/components/app/Carousel";
 import { SectionHead, slugify } from "@/components/app/ui";
@@ -21,8 +22,14 @@ export default async function ProductCategoryPage(props: PageProps<"/products/c/
   const section = PRODUCT_SECTIONS.find((s) => s.categories.includes(category.name));
   const items = products.filter((p) => p.category === category.name);
 
+  // A category with a single product would only show one large card that
+  // leads to the product page — skip that extra tap and open the product
+  // directly. redirect() replaces the history entry, so Back returns to the
+  // Products page instead of bouncing here again.
+  if (items.length === 1) redirect(`/products/${items[0].slug}`);
+
   return (
-    <div>
+    <div className={jakarta.className}>
       <PageHeader title={category.name} subtitle={section?.name} back={{ href: "/products" }} />
       <div className="px-5">
         {items.length === 0 && (

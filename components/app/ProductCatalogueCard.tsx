@@ -22,7 +22,7 @@ export function ProductCatalogueCard({
         type="button"
         onClick={() => canPreview && setPreviewOpen(true)}
         disabled={!canPreview}
-        className="flex w-full items-center gap-3 rounded-lg border border-black/6 bg-white p-3 text-left shadow-[0_1px_2px_rgba(0,0,0,.03),0_6px_14px_rgba(0,0,0,.05)]"
+        className="flex w-full items-center gap-3 rounded-lg bg-[#e4e5e7] p-3 text-left"
       >
         <div className="flex h-13 w-10.5 shrink-0 items-center justify-center rounded-[3px] bg-brand-dark">
           <span className="font-mono text-[9px] font-bold text-white">PDF</span>

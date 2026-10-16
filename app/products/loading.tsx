@@ -1,24 +1,21 @@
+// Light placeholder mirroring the Products page (title, section pills, a
+// heading and carousel cards) — no dark blocks, so going back to Products
+// never flashes black.
 export default function ProductsLoading() {
   return (
     <div className="overflow-x-clip px-5 pt-safe">
-      <div className="mb-4 h-3.5 w-24 animate-pulse rounded-full bg-cu/20" />
-      <div className="mb-2 h-9 w-44 animate-pulse bg-ink/10" />
-      <div className="mb-8 h-4 w-56 animate-pulse bg-ink/10" />
+      <div className="mb-5 h-10 w-44 animate-pulse rounded-lg bg-black/[0.07]" />
+      <div className="mb-6 flex gap-2">
+        {[88, 112, 72].map((w) => (
+          <div key={w} className="h-9 animate-pulse rounded-full bg-black/[0.06]" style={{ width: w }} />
+        ))}
+      </div>
       {[0, 1].map((s) => (
-        <div key={s} className="mb-10">
-          <div className="mb-4 flex gap-3">
-            <span className="w-[3px] rounded-full bg-cu/40" />
-            <div className="h-9 w-48 animate-pulse bg-ink/10" />
-          </div>
+        <div key={s} className="mb-9">
+          <div className="mb-4 h-7 w-56 animate-pulse rounded-lg bg-black/[0.07]" />
           <div className="-mx-5 flex gap-3 overflow-hidden px-5">
             {[0, 1].map((i) => (
-              <div key={i} className="w-[78%] shrink-0 overflow-hidden rounded-[26px] border border-cu/30 bg-graphite">
-                <div className="m-2 aspect-[5/4] animate-pulse rounded-[20px] bg-white/10" />
-                <div className="space-y-2 p-4">
-                  <div className="h-4 w-3/4 animate-pulse bg-white/15" />
-                  <div className="h-3 w-1/3 animate-pulse bg-white/10" />
-                </div>
-              </div>
+              <div key={i} className="aspect-[4/5] w-[78%] shrink-0 animate-pulse rounded-[28px] bg-black/[0.06]" />
             ))}
           </div>
         </div>

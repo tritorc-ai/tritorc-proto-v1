@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { anybody, chakraPetch } from "@/lib/fonts";
+import { anybody } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 /**
@@ -32,7 +32,7 @@ export function Splash() {
         <div className="absolute left-1/2 top-[49%] w-[82%] max-w-[320px] -translate-x-1/2 -translate-y-1/2">
           <div className="splash-glide">
             <div className="splash-logo flex justify-center">
-              <span className={cn("splash-wordmark", chakraPetch.className)}>TRITORC</span>
+              <div className="splash-wordmark" />
             </div>
           </div>
         </div>
