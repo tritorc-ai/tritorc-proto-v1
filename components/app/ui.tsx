@@ -85,6 +85,7 @@ export function OverlayCard({
   aspect = "aspect-[4/5]",
   frame,
   contain,
+  titleClassName,
 }: {
   href: string;
   image?: string;
@@ -97,6 +98,7 @@ export function OverlayCard({
   frame?: "black" | "ring";
   /** Cut-out product shot: show it whole on a studio backdrop instead of cropping. */
   contain?: boolean | "white";
+  titleClassName?: string;
 }) {
   return (
     <Link
@@ -131,7 +133,7 @@ export function OverlayCard({
             {kicker}
           </div>
         )}
-        <div className="text-[22px] font-semibold leading-tight tracking-[-0.01em]">{title}</div>
+        <div className={cn("text-[22px] font-semibold leading-tight tracking-[-0.01em]", titleClassName)}>{title}</div>
         {body && <p className="mt-1.5 line-clamp-3 text-[14px] leading-snug text-white/80">{body}</p>}
         {cta && (
           <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-5 py-2.5 text-[14px] font-semibold text-brand-dark">

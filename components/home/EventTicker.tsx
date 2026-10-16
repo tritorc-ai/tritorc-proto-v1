@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
-import type { UpcomingEvent } from "@/lib/mock/appContent";
+import { Bell, CalendarDays, ChevronRight } from "lucide-react";
+import type { TickerItem } from "@/lib/mock/appContent";
 import { cn } from "@/lib/utils";
 
 const INTERVAL_MS = 4000;
@@ -19,9 +19,9 @@ const POSITIONS = {
 /**
  * Notification-style deck: the front card sits in the middle with the previous
  * card peeking out above and the next one below. It rolls on a timer, and the
- * user can swipe vertically, tap a peeking card, use the arrows or the dots.
+ * user can swipe vertically, tap a peeking card or use the dots.
  */
-export function EventTicker({ events }: { events: UpcomingEvent[] }) {
+export function EventTicker({ events }: { events: TickerItem[] }) {
   const [active, setActive] = useState(0);
   const [held, setHeld] = useState(false);
   const count = events.length;
@@ -79,10 +79,13 @@ export function EventTicker({ events }: { events: UpcomingEvent[] }) {
             const position =
               offset === 0 ? "front" : offset === 1 ? "below" : offset === count - 1 ? "above" : "hidden";
             const front = position === "front";
+            const external = e.href.startsWith("http");
+            const Icon = e.label === "Upcoming event" ? CalendarDays : Bell;
             return (
               <Link
                 key={e.id}
                 href={e.href}
+                {...(external && { target: "_blank", rel: "noopener noreferrer" })}
                 draggable={false}
                 aria-hidden={position === "hidden"}
                 tabIndex={front ? 0 : -1}
@@ -101,10 +104,12 @@ export function EventTicker({ events }: { events: UpcomingEvent[] }) {
               >
                 <span className={cn("min-w-0 transition-opacity duration-500", !front && "opacity-60")}>
                   <span className="flex items-center gap-2 text-[13px] text-brand-text-secondary">
-                    <CalendarDays size={15} />
-                    Upcoming event
+                    <Icon size={15} />
+                    {e.label}
                   </span>
-                  <span className="mt-1.5 block text-[16px] font-semibold leading-snug text-brand-dark">{e.title}</span>
+                  <span className="mt-1.5 line-clamp-2 block text-[16px] font-semibold leading-snug text-brand-dark">
+                    {e.title}
+                  </span>
                 </span>
                 <span
                   className={cn(
@@ -118,26 +123,6 @@ export function EventTicker({ events }: { events: UpcomingEvent[] }) {
             );
           })}
         </div>
-        {count > 1 && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex flex-col justify-between py-1.5">
-            <button
-              type="button"
-              aria-label="Previous notification"
-              onClick={() => step(-1)}
-              className="pointer-events-auto flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-brand-dark shadow-sm"
-            >
-              <ChevronUp size={14} />
-            </button>
-            <button
-              type="button"
-              aria-label="Next notification"
-              onClick={() => step(1)}
-              className="pointer-events-auto flex h-6 w-6 items-center justify-center rounded-full bg-white/80 text-brand-dark shadow-sm"
-            >
-              <ChevronDown size={14} />
-            </button>
-          </div>
-        )}
       </div>
       {count > 1 && (
         <div className="flex items-center justify-center gap-1.5">

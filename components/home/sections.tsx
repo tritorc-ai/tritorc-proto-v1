@@ -3,7 +3,6 @@ import Image from "next/image";
 import {
   ArrowUpRight,
   BookOpen,
-  Bell,
   Info,
   Mail,
   Phone,
@@ -17,7 +16,7 @@ import { EventTicker } from "@/components/home/EventTicker";
 import { Carousel } from "@/components/app/Carousel";
 import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { OverlayCard, Photo, SectionHead } from "@/components/app/ui";
-import { CONTACT, INDUSTRIES, NOTIFICATIONS, UPCOMING_EVENTS } from "@/lib/mock/appContent";
+import { CONTACT, INDUSTRIES, TICKER_ITEMS } from "@/lib/mock/appContent";
 import type { CaseStudy, Certification, ImpactStat, JourneyMilestone, Testimonial } from "@/lib/mock/content";
 import { cn } from "@/lib/utils";
 
@@ -52,7 +51,7 @@ export function Eyebrow({ index, label }: { index: number; label: string }) {
 
 /** Compact announcement card shown right under the hero. */
 export function UpcomingEvents() {
-  return <EventTicker events={UPCOMING_EVENTS} />;
+  return <EventTicker events={TICKER_ITEMS} />;
 }
 
 /** Ather "Halo" block: two compact tiles beside one large product visual. */
@@ -127,40 +126,6 @@ export function ProductShowcase({ products }: { products: Card[] }) {
 }
 
 /* ---------------- Scroll 2 ---------------- */
-
-export function NotificationsList() {
-  return (
-    <div>
-      <SectionHead title="What's new" subtitle="Announcements, updates and field news." />
-      <div className="overflow-hidden rounded-[26px] bg-white">
-        {NOTIFICATIONS.map((n, i) => (
-          <Link
-            key={n.id}
-            href={n.href}
-            className={cn(
-              "press flex items-start gap-3.5 px-4 py-4 active:bg-black/[0.03]",
-              i > 0 && "border-t border-black/[0.06]"
-            )}
-          >
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-red/10 text-brand-red">
-              <Bell size={18} />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="flex items-center gap-2">
-                <span className="rounded-full bg-black/[0.06] px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-brand-text-secondary">
-                  {n.tag}
-                </span>
-                <span className="text-[12px] text-brand-text-tertiary">{n.when}</span>
-              </span>
-              <span className="mt-1 block text-[15px] font-semibold leading-snug text-brand-dark">{n.title}</span>
-              <span className="mt-0.5 block text-[13px] leading-snug text-brand-text-secondary">{n.body}</span>
-            </span>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export function ServiceShowcase({ services }: { services: Card[] }) {
   return (

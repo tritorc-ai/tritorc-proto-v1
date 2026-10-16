@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { getBrand, getImageUrls, getServices, getTestimonials } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ClientVoices, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
@@ -77,13 +77,22 @@ export default async function HomePage() {
           priority
           className="h-[18px] w-auto brightness-0 invert"
         />
-        <Link
-          href="/library"
-          aria-label="Search the library"
-          className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
-        >
-          <Search size={18} />
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/notifications"
+            aria-label="Notifications"
+            className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
+          >
+            <Bell size={18} />
+          </Link>
+          <Link
+            href="/library"
+            aria-label="Search the library"
+            className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
+          >
+            <Search size={18} />
+          </Link>
+        </div>
       </header>
 
       <HeroCarousel slides={slides} />
