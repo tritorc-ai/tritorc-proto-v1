@@ -13,7 +13,7 @@ export function CoreValues({ values }: { values: { name: string; description: st
   if (!current) return null;
 
   return (
-    <div className="rounded-[22px] border border-black/8 bg-white p-3.5 shadow-[0_1px_2px_rgba(0,0,0,.03)]">
+    <div className="rounded-[22px] bg-[#e4e5e7] p-3.5">
       <div role="tablist" aria-label="Core values" className="flex flex-wrap gap-1.5">
         {values.map((v, i) => (
           <button
@@ -26,7 +26,7 @@ export function CoreValues({ values }: { values: { name: string; description: st
             onClick={() => setActive(i)}
             className={cn(
               "press rounded-full border px-3 py-1.5 text-[12px] font-medium transition-colors duration-200",
-              i === active ? "border-black bg-black text-white" : "border-black/10 text-black/60 hover:border-black/30"
+              i === active ? "border-black bg-black text-white" : "border-black/10 text-black/60 hover:border-black/30 hover:bg-white/50"
             )}
           >
             {v.name}

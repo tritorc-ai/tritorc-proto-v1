@@ -1,10 +1,9 @@
 import { jakarta } from "@/lib/fonts";
-import { getCatalogueUrl, getCoreValues, getGlobalOffices } from "@/lib/strapi";
+import { getCatalogueUrl, getGlobalOffices } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { SectionHead } from "@/components/app/ui";
 import { PhotoSlideshow, type Slide } from "@/components/company/PhotoSlideshow";
 import { RotatingLines } from "@/components/company/RotatingLines";
-import { CoreValues } from "@/components/company/CoreValues";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 
 // Photos from tritorc.com (saved in public/company) that fade into one another
@@ -42,8 +41,7 @@ const FLAG_CODE: Record<string, string> = {
 };
 
 export default async function CompanyPage() {
-  const [coreValues, globalOffices, companyProfileUrl] = await Promise.all([
-    getCoreValues(),
+  const [globalOffices, companyProfileUrl] = await Promise.all([
     getGlobalOffices(),
     getCatalogueUrl("Company Profile (Final)"),
   ]);
@@ -76,20 +74,14 @@ export default async function CompanyPage() {
           </div>
         </section>
 
-        {/* 02 — Core values */}
-        <section>
-          <SectionHead title="Core values" />
-          <CoreValues values={coreValues} />
-        </section>
-
-        {/* 03 — Global offices */}
+        {/* 02 — Global offices */}
         <section>
           <SectionHead title="Global offices" />
           <div className="grid grid-cols-2 gap-2">
             {globalOffices.map((o) => (
               <div
                 key={`${o.city}-${o.country}`}
-                className="flex min-w-0 items-center gap-1.5 rounded-[18px] border border-black/8 bg-white px-2.5 py-2 text-[11.5px] font-medium leading-tight text-brand-dark shadow-[0_1px_2px_rgba(0,0,0,.03)]"
+                className="flex min-w-0 items-center gap-1.5 rounded-[18px] bg-[#e4e5e7] px-2.5 py-2 text-[11.5px] font-medium leading-tight text-brand-dark"
               >
                 {FLAG_CODE[o.country] && (
                   // eslint-disable-next-line @next/next/no-img-element -- tiny local flag, no optimisation needed

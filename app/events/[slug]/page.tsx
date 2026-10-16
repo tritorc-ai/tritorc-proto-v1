@@ -47,8 +47,8 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
 
         <ul className="space-y-2.5">
           {facts.map(({ icon: Icon, label, value }) => (
-            <li key={label} className="flex items-start gap-3.5 rounded-[22px] bg-white p-4">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-red/10 text-brand-red">
+            <li key={label} className="flex items-start gap-3.5 rounded-[22px] bg-[#e4e5e7] p-4">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark">
                 <Icon size={18} />
               </span>
               <span className="min-w-0">
@@ -75,11 +75,11 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
         {event.hours && (
           <section>
             <SectionHead title="Show hours" />
-            <div className="overflow-hidden rounded-[22px] bg-white">
+            <div className="overflow-hidden rounded-[22px] bg-[#e4e5e7]">
               {event.hours.map((h, i) => (
                 <div
                   key={h.day}
-                  className={`flex items-center justify-between px-4 py-3 ${i > 0 ? "border-t border-black/[0.06]" : ""}`}
+                  className={`flex items-center justify-between px-4 py-3 ${i > 0 ? "border-t border-black/[0.08]" : ""}`}
                 >
                   <span className="flex items-center gap-2 text-[14px] font-semibold text-brand-dark">
                     <Clock size={14} className="text-brand-text-tertiary" />

@@ -42,7 +42,7 @@ export default function EventsPage() {
           <ul className="space-y-3">
             {past.map((e) => (
               <li key={e.slug}>
-                <Link href={`/events/${e.slug}`} className="press flex gap-3.5 rounded-[24px] bg-white p-3">
+                <Link href={`/events/${e.slug}`} className="press flex gap-3.5 rounded-[24px] bg-[#e4e5e7] p-3">
                   <Photo src={e.image} sizes="96px" className="h-24 w-24 shrink-0 rounded-[18px]" />
                   <span className="min-w-0 flex-1 py-0.5">
                     <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-brand-text-tertiary">
@@ -54,7 +54,7 @@ export default function EventsPage() {
                       <span className="truncate">{e.city}</span>
                     </span>
                     {e.stats[1] && (
-                      <span className="mt-1.5 inline-block rounded-full bg-black/[0.06] px-2 py-0.5 text-[11px] font-semibold text-brand-text-secondary">
+                      <span className="mt-1.5 inline-block rounded-full bg-white/70 px-2 py-0.5 text-[11px] font-semibold text-brand-text-secondary">
                         {e.stats[1].value} {e.stats[1].label.toLowerCase()}
                       </span>
                     )}

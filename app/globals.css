@@ -284,22 +284,16 @@ html {
 .splash-footer {
   animation: splash-fade-in 420ms cubic-bezier(0.45, 0, 0.55, 1) 700ms both;
 }
-/* Silver sheen clipped to the letterforms only */
+/* Silver sheen clipped to the Tritorc logo (same artwork as the Home header) */
 .splash-wordmark {
-  display: inline-block;
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  line-height: 1;
-  text-transform: uppercase;
+  width: min(100%, 250px);
+  aspect-ratio: 2736 / 371;
   user-select: none;
   background: linear-gradient(110deg, #b8b9c0 0%, #fff 36%, #fff 64%, #b8b9c0 100%);
   background-size: 260% 100%;
   background-position: 180% 0;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  -webkit-mask: url(/brand/tritorc-logo.png) center / contain no-repeat;
+  mask: url(/brand/tritorc-logo.png) center / contain no-repeat;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
   animation: splash-shine 1950ms cubic-bezier(0.42, 0, 0.25, 1) 750ms forwards;
 }
