@@ -192,56 +192,36 @@ export interface ServiceSection {
 export const SERVICE_SECTIONS: ServiceSection[] = [
   { name: "Onsite Controlled Bolting", color: "#d6312f", categories: ["Onsite Controlled Bolting"] },
   {
-    name: "Onsite Machining",
+    name: "Onsite Machining Services",
     color: "#2563eb",
-    categories: [
-      "Pipeline Coldcutting & Bevelling",
-      "Flange Facing",
-      "On-Site Milling",
-      "Magnetic Drilling Machine",
-      "Portable Water Jet Cutting",
-    ],
+    categories: ["Pipeline Coldcutting & Bevelling", "Flange Facing"],
   },
   {
-    name: "Process & Pipeline",
+    name: "Process & Pipeline Services",
     color: "#0d9488",
     categories: [
       "Dewatering & Dry Air Flushing Services",
       "Hydro Testing Services",
-      "Lube-oil Flushing Services",
       "Nitrogen Helium Leak Testing Services",
       "Nitrogen Purging Preservation Services",
       "Pneumatic Testing",
     ],
   },
-  { name: "Retubing", color: "#7c3aed", categories: ["Retubing Services"] },
   {
-    name: "Specialized Engineering",
+    name: "Specialised Engineering Services",
     color: "#d97706",
-    categories: [
-      "Emergency Pipeline Repair Clamp",
-      "Hot Tapping & Line Stopping",
-      "Online Leak Sealing",
-      "Pipe Freezing",
-    ],
+    categories: ["Hot Tapping & Line Stopping", "Retubing Services"],
   },
-  { name: "Tool Calibration", color: "#db2777", categories: ["Calibration Services"] },
-  { name: "Dry Rental", color: "#4f46e5", categories: ["Dry Rental"] },
+  { name: "Tool Calibration Services", color: "#db2777", categories: ["Calibration Services"] },
+  { name: "Tool Dry Rental", color: "#4f46e5", categories: ["Dry Rental"] },
 ];
 
 export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { name: "Onsite Controlled Bolting", imageKey: "productTorqueHero" },
   { name: "Pipeline Coldcutting & Bevelling", imageKey: "catPipeColdCutting" },
   { name: "Flange Facing", imageKey: "catFlangeFacing" },
-  { name: "On-Site Milling", imageKey: "svcOnSiteMilling" },
-  {
-    name: "Magnetic Drilling Machine",
-    directImageUrl: "https://www.tritorc.com/assets/services/pro/mgntic.webp",
-  },
-  { name: "Portable Water Jet Cutting", imageKey: "svcOnSiteMachining" },
   { name: "Dewatering & Dry Air Flushing Services", imageKey: "svcDewatering" },
   { name: "Hydro Testing Services", imageKey: "svcHydroTesting" },
-  { name: "Lube-oil Flushing Services", imageKey: "svcLubeOilFlushing" },
   { name: "Nitrogen Helium Leak Testing Services", imageKey: "svcNitrogenHeliumLeak" },
   { name: "Nitrogen Purging Preservation Services", imageKey: "svcNitrogenPurging" },
   { name: "Pneumatic Testing", imageKey: "svcPneumaticTesting" },
@@ -249,22 +229,13 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     name: "Retubing Services",
     directImageUrl: "https://www.tritorc.com/assets/services/Retubing.jpg",
   },
-  { name: "Emergency Pipeline Repair Clamp", imageKey: "svcEmergencyRepairClamp" },
   { name: "Hot Tapping & Line Stopping", imageKey: "svcHotTapping" },
-  { name: "Online Leak Sealing", imageKey: "svcOnlineLeakSealing" },
-  { name: "Pipe Freezing", imageKey: "svcPipeFreezing" },
   { name: "Calibration Services", imageKey: "svcCalibration" },
   { name: "Dry Rental", imageKey: "svcDryRental" },
 ];
 
 const HOT_TAPPING_CATALOGUE = {
   title: "Hot Tapping Cata",
-  meta: "Updated Aug 2026",
-  url: "#",
-};
-const WATERJET_CATALOGUE = { title: "Waterjet Cutting", meta: "Updated Aug 2026", url: "#" };
-const ONSITE_MACHINING_SERVICE_CATALOGUE = {
-  title: "On-Site Machining (Service)",
   meta: "Updated Aug 2026",
   url: "#",
 };
@@ -304,38 +275,6 @@ export const SERVICES: Service[] = [
     media: [],
   },
   {
-    slug: "on-site-milling",
-    name: "On-Site Milling",
-    category: "On-Site Milling",
-    tagline: "Precision milling, no facility downtime",
-    description:
-      "On-site milling operations brought directly to your facility, eliminating the need for costly equipment removal and transport.",
-    imageKey: "svcOnSiteMilling",
-    media: [],
-    catalogue: ONSITE_MACHINING_SERVICE_CATALOGUE,
-  },
-  {
-    slug: "magnetic-drilling-machine",
-    name: "Magnetic Drilling Machine",
-    category: "Magnetic Drilling Machine",
-    tagline: "Portable, magnet-mounted precision drilling",
-    description:
-      "Magnetic base drilling machines for on-site hole drilling on steel structures, without the need for a fixed workshop setup.",
-    directImageUrl: "https://www.tritorc.com/assets/services/pro/mgntic.webp",
-    media: [],
-  },
-  {
-    slug: "portable-water-jet-cutting",
-    name: "Portable Water Jet Cutting",
-    category: "Portable Water Jet Cutting",
-    tagline: "Cold, spark-free cutting on site",
-    description:
-      "Portable water jet cutting equipment for precise, spark-free cutting in hazardous or confined industrial environments.",
-    imageKey: "svcOnSiteMachining",
-    media: [],
-    catalogue: WATERJET_CATALOGUE,
-  },
-  {
     slug: "dewatering-dry-air-flushing",
     name: "Dewatering & Dry Air Flushing Services",
     category: "Dewatering & Dry Air Flushing Services",
@@ -353,16 +292,6 @@ export const SERVICES: Service[] = [
     description:
       "Comprehensive hydrostatic testing services to verify pipeline integrity and safety, up to 6,400 bar. Air-driven — no electricity required. MRS testing per ISO 9080/ASTM D2837, with ISO/ASTM/ASME-compliant reporting.",
     imageKey: "svcHydroTesting",
-    media: [],
-    catalogue: PIPELINE_PROCESS_CATALOGUE,
-  },
-  {
-    slug: "lube-oil-flushing-services",
-    name: "Lube-oil Flushing Services",
-    category: "Lube-oil Flushing Services",
-    tagline: "System cleanliness and performance",
-    description: "Professional lube oil flushing services for optimal system cleanliness and performance.",
-    imageKey: "svcLubeOilFlushing",
     media: [],
     catalogue: PIPELINE_PROCESS_CATALOGUE,
   },
@@ -416,33 +345,6 @@ export const SERVICES: Service[] = [
     imageKey: "svcHotTapping",
     media: [],
     catalogue: HOT_TAPPING_CATALOGUE,
-  },
-  {
-    slug: "emergency-pipeline-repair-clamp",
-    name: "Emergency Pipeline Repair Clamp",
-    category: "Emergency Pipeline Repair Clamp",
-    tagline: "Immediate leak containment",
-    description: "Emergency repair clamp solutions for immediate pipeline leak containment.",
-    imageKey: "svcEmergencyRepairClamp",
-    media: [],
-  },
-  {
-    slug: "online-leak-sealing",
-    name: "Online Leak Sealing",
-    category: "Online Leak Sealing",
-    tagline: "No system shutdown required",
-    description: "Advanced online leak sealing solutions without system shutdown.",
-    imageKey: "svcOnlineLeakSealing",
-    media: [],
-  },
-  {
-    slug: "pipe-freezing",
-    name: "Pipe Freezing",
-    category: "Pipe Freezing",
-    tagline: "Safe isolation without draining",
-    description: "Professional pipe freezing services for safe pipeline isolation and maintenance.",
-    imageKey: "svcPipeFreezing",
-    media: [],
   },
   {
     slug: "calibration-services",
@@ -638,6 +540,8 @@ export const PRODUCTS: Product[] = [
     media: [],
     catalogue: BOLTING_CATALOGUE,
     heroImageKey: "productTensionerHero",
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/ppc_images_products_bolt_tensioners_btl_piyush_m_001_webp_173df31de207de6a_3403de1a81.webp",
   },
   {
     slug: "wbt-series",
@@ -941,6 +845,177 @@ export const PRODUCTS: Product[] = [
     catalogue: null,
     heroImageKey: "catChainClamps",
     directImageUrl: "https://www.tritorc.com/assets/img/products/pipe-accessories/scissor-clamps-1000-series.webp",
+  },
+  // --- Products added for the curated Products page (see PRODUCT_LIST below). ---
+  // Details and photos come from the matching pages on tritorc.com; where the
+  // site gave no figure or photo, the field is left empty rather than invented.
+  {
+    slug: "thl-series",
+    name: "Hex Drive Hydraulic Torque Wrench",
+    series: "THL Series",
+    category: "Hydraulic Torque Wrenches and Pumps",
+    tagline:
+      "Low-profile, hex-type hydraulic torque wrench with interchangeable hex links, a small nose radius and a 360° × 180° swivel for confined spaces.",
+    specs: [
+      { label: "Max. Torque", value: "53,512 Nm" },
+      { label: "Hex Size", value: "19 - 175 mm" },
+    ],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_862e155acf2012c3fb5c_862e155acf2012c3_43c95b4f12.png",
+  },
+  {
+    slug: "thl-ultra-slim",
+    name: "Ultra-Slim Hex Drive Hydraulic Torque Wrench",
+    series: "THL Ultra-Slim Series",
+    category: "Hydraulic Torque Wrenches and Pumps",
+    tagline: "Ultra-slim, low-profile hex-drive torque wrench for the tightest clearances.",
+    specs: [{ label: "Torque Range", value: "275 - 12,834 Nm" }],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/hydraulic_torque_wrench_thl_series_ultra_slim_2_a15de7d5f2.webp",
+  },
+  {
+    slug: "slt-series",
+    name: "Spring Return Hydraulic Bolt Tensioner",
+    series: "SLT Series",
+    category: "Hydraulic Bolt Tensioners",
+    tagline: "Spring-return hydraulic bolt tensioner for controlled, repeatable bolt loading.",
+    specs: [],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+  },
+  {
+    slug: "mst-series",
+    name: "Multi Stage Hydraulic Bolt Tensioner",
+    series: "MST Series",
+    category: "Hydraulic Bolt Tensioners",
+    tagline: "Multi-stage hydraulic bolt tensioner for controlled, repeatable bolt loading.",
+    specs: [],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+  },
+  {
+    slug: "tsf-series",
+    name: "Split Frame Pipe Cutting Machine",
+    series: "TSF Series",
+    category: "Pipe Cold Cutting and Beveling Machines",
+    tagline:
+      "OD-mounted split-frame machine that cuts and bevels pipe in one operation with a cold, spark-free mechanical process.",
+    specs: [
+      { label: "Pipe OD Range", value: '2" - 72"' },
+      { label: "Drive Options", value: "Pneumatic, hydraulic, electric" },
+      { label: "Bevel Types", value: "Standard, compound, J-prep" },
+    ],
+    media: [],
+    catalogue: IN_SITU_MACHINING_CATALOGUE,
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/pipe_cutting_machine_tsf_series_1_48aa3ef18f.webp",
+  },
+  {
+    slug: "twe-3",
+    name: "TWE-3 Electric Torquing Pump",
+    series: "TWE-3",
+    category: "Hydraulic Torque Wrenches and Pumps",
+    tagline: "Electric-driven pump that powers hydraulic torque wrenches.",
+    specs: [],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+  },
+  {
+    slug: "twp-3",
+    name: "TWP-3 Air Driven Torque Pump",
+    series: "TWP-3",
+    category: "Hydraulic Torque Wrenches and Pumps",
+    tagline:
+      "Air-operated pump for hydraulic torque wrenches, built for remote, hazardous or power-restricted sites.",
+    specs: [
+      { label: "Tank", value: "10 L" },
+      { label: "Weight", value: "30 kg" },
+      { label: "Air Supply", value: "4 - 8 bar" },
+      { label: "Noise", value: "82 dB" },
+    ],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_4872f60d3545a7305ee7_4872f60d3545a730_bfbff2c9f8.jpg",
+  },
+  {
+    slug: "tbp-150",
+    name: "TBP-150 Air Driven Tensioning Pump",
+    series: "TBP-150",
+    category: "Hydraulic Bolt Tensioners",
+    tagline:
+      "Compact air-driven hydraulic pump for high-pressure bolt tensioning; can run several tensioners at once.",
+    specs: [
+      { label: "Working Pressure", value: "1,500 bar" },
+      { label: "Air Supply", value: "4 - 7 bar" },
+      { label: "Tank", value: "5 - 10 L" },
+    ],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+    directImageUrl:
+      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_40f68772506aa6231b12_40f68772506aa623_5ce46f6ab9.png",
+  },
+  {
+    slug: "tbe-200",
+    name: "TBE-200 Electric Tensioning Pump",
+    series: "TBE-200",
+    category: "Hydraulic Bolt Tensioners",
+    tagline: "Electric-driven pump for hydraulic bolt tensioning.",
+    specs: [],
+    media: [],
+    catalogue: BOLTING_CATALOGUE,
+  },
+];
+
+/**
+ * The curated list shown on the Products page: three sections, each card goes
+ * straight to that product. `title`/`series` are the labels printed on the card.
+ */
+export interface ProductListItem {
+  slug: string;
+  title: string;
+  series: string;
+}
+export interface ProductListSection {
+  name: string;
+  items: ProductListItem[];
+}
+
+export const PRODUCT_LIST: ProductListSection[] = [
+  {
+    name: "Controlled Bolting",
+    items: [
+      { slug: "tsl-20", title: "Square Drive Type", series: "TSL Series" },
+      { slug: "thl-series", title: "Hex Drive Type", series: "THL Series" },
+      { slug: "thl-ultra-slim", title: "Ultra-Slim Hex Drive", series: "THL Ultra-Slim Series" },
+      { slug: "btl-19", title: "Top Loaded", series: "BTL Series" },
+      { slug: "slt-series", title: "Spring Return", series: "SLT Series" },
+      { slug: "mst-series", title: "Multi Stage", series: "MST Series" },
+      { slug: "tsf-series", title: "Split Frame Pipe Cutting Machine", series: "TSF Series" },
+    ],
+  },
+  {
+    name: "Pumps",
+    items: [
+      { slug: "twe-3", title: "Electric Torquing Pump", series: "TWE-3" },
+      { slug: "twp-3", title: "Air Driven Torque Pump", series: "TWP-3" },
+      { slug: "tbp-150", title: "Air Driven Tensioning Pump", series: "TBP-150" },
+      { slug: "tbe-200", title: "Electric Tensioning Pump", series: "TBE-200" },
+    ],
+  },
+  {
+    name: "Onsite Machine Tools",
+    items: [
+      {
+        slug: "pipe-cold-cutting-beveling-machines",
+        title: "Pipe Cold Cutting and Beveling Machines",
+        series: "Cold Cutting Range",
+      },
+    ],
   },
 ];
 

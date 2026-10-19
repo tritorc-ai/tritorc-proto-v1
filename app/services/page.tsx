@@ -31,8 +31,9 @@ export default async function ServicesPage() {
   const groups = sections
     .map((section) => ({
       ...section,
-      services: services
-        .filter((s) => section.categories.includes(s.category))
+      // Follow the order of `section.categories` (lib/mock/content.ts), not the order of SERVICES.
+      services: section.categories
+        .flatMap((name) => services.filter((s) => s.category === name))
         .map((s) => ({
           ...s,
           imageUrl:
@@ -55,7 +56,7 @@ export default async function ServicesPage() {
         <div className="space-y-8 pt-4">
           {groups.map((group) => (
             <Reveal as="section" key={group.name} id={slugify(group.name)} className="scroll-mt-20">
-              <SectionHead title={group.name} />
+              <SectionHead title={group.name} size="sm" />
               <FocusCarousel label={group.name} autoPlay={4000}>
                 {group.services.map((s) => (
                   <OverlayCard

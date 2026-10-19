@@ -22,7 +22,6 @@ const FEATURED_SERVICES = [
   "onsite-controlled-bolting",
   "hydro-testing-services",
   "retubing-services",
-  "pipe-freezing",
 ];
 
 export default async function HomePage() {

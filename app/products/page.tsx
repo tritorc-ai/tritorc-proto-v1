@@ -1,6 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
-import { PRODUCT_CATEGORIES, PRODUCT_SECTIONS } from "@/lib/mock/content";
+import { PRODUCT_LIST } from "@/lib/mock/content";
 import { PageHeader } from "@/components/app/PageHeader";
 import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { OverlayCard, SectionHead, slugify } from "@/components/app/ui";
@@ -15,18 +15,20 @@ export default async function ProductsPage() {
     getImageUrls(),
     getThumbnailMap("product"),
   ]);
-  const categoryImage = new Map(PRODUCT_CATEGORIES.map((c) => [c.name, images[c.imageKey]]));
+  const bySlug = new Map(products.map((p) => [p.slug, p]));
 
-  const sections = PRODUCT_SECTIONS.map((section) => ({
+  // Sections and order come from PRODUCT_LIST (lib/mock/content.ts); each card
+  // opens that product directly.
+  const sections = PRODUCT_LIST.map((section) => ({
     ...section,
-    subcategories: section.categories.map((name) => {
-      const inCat = products.filter((p) => p.category === name);
-      const lead = inCat[0];
+    cards: section.items.flatMap((item) => {
+      const product = bySlug.get(item.slug);
+      if (!product) return [];
       const image =
-        (lead && (thumbnails[lead.slug] ?? lead.directImageUrl)) ??
-        categoryImage.get(name) ??
-        (lead?.heroImageKey ? images[lead.heroImageKey] : undefined);
-      return { name, slug: slugify(name), count: inCat.length, image };
+        thumbnails[product.slug] ??
+        product.directImageUrl ??
+        (product.heroImageKey ? images[product.heroImageKey] : undefined);
+      return [{ ...item, image }];
     }),
   }));
 
@@ -34,32 +36,30 @@ export default async function ProductsPage() {
     <div className={headingFont.className}>
       <PageHeader title="Products" hideLogo titleClassName="text-[36px] font-bold" />
 
-      {/* Quick jump between the vertical category sections: sticky, with scroll-spy */}
+      {/* Quick jump between the vertical sections: sticky, with scroll-spy */}
       {/* One padded wrapper for the bar and the sections so the bar stays sticky across the whole list */}
       <div className="px-5">
         <SectionNav variant="minimal" items={sections.map((s) => ({ id: slugify(s.name), label: s.name }))} />
 
         <div className="space-y-8 pt-4">
-        {sections.map((section) => (
-          <Reveal as="section" key={section.name} id={slugify(section.name)} className="scroll-mt-20">
-            <SectionHead
-              title={section.name}
-            />
-            <FocusCarousel label={section.name} autoPlay={4000}>
-              {section.subcategories.map((sub) => (
-                <OverlayCard
-                  key={sub.slug}
-                  href={`/products/c/${sub.slug}`}
-                  title={sub.name}
-                  body={`${sub.count} ${sub.count === 1 ? "product" : "products"}`}
-                  image={sub.image}
-                  cta="Explore"
-                  aspect="h-full"
-                />
-              ))}
-            </FocusCarousel>
-          </Reveal>
-        ))}
+          {sections.map((section) => (
+            <Reveal as="section" key={section.name} id={slugify(section.name)} className="scroll-mt-20">
+              <SectionHead title={section.name} size="sm" />
+              <FocusCarousel label={section.name} autoPlay={4000}>
+                {section.cards.map((card) => (
+                  <OverlayCard
+                    key={card.slug}
+                    href={`/products/${card.slug}`}
+                    title={card.title}
+                    body={card.series}
+                    image={card.image}
+                    cta="Explore"
+                    aspect="h-full"
+                  />
+                ))}
+              </FocusCarousel>
+            </Reveal>
+          ))}
         </div>
       </div>
     </div>

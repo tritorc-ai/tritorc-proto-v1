@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCatalogueUrl, getImageUrls, getMediaByCaption, getProduct, getProducts, getVideoUrls } from "@/lib/strapi";
-import { slugify } from "@/components/app/ui";
+import { getCatalogueUrl, getImageUrls, getMediaByCaption, getProduct, getVideoUrls } from "@/lib/strapi";
 import { ProductDetailView } from "@/components/app/ProductDetailView";
 import type { ImageKey } from "@/lib/mock/images";
 import type { VideoKey } from "@/lib/mock/videos";
@@ -78,10 +77,8 @@ export default async function ProductDetailPage(props: PageProps<"/products/[slu
 
   const combinedMedia = [...combinedPhotoMedia, ...videoMedia];
 
-  // Back goes to the category list when it has several products; a
-  // single-product category redirects straight here, so go to Products instead.
-  const siblings = (await getProducts()).filter((p) => p.category === product.category);
-  const backHref = siblings.length > 1 ? `/products/c/${slugify(product.category)}` : "/products";
+  // Products are opened straight from the Products page, so Back returns there.
+  const backHref = "/products";
 
   const catalogueUrl = product.catalogue ? await getCatalogueUrl(product.catalogue.title) : undefined;
   const productWithMedia = {
