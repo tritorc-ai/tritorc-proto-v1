@@ -331,14 +331,18 @@ html[data-splash-seen] .splash-root {
 /* Scroll reveal (components/app/Reveal.tsx): sections ease up into place the
  * first time they enter the viewport. */
 .reveal {
-  opacity: 0;
-  transform: translateY(18px);
   transition: opacity 650ms var(--ease-premium), transform 650ms var(--ease-premium);
 }
-.reveal[data-shown] {
+/* Hidden only once the script has "armed" an off-screen section, so the server
+ * HTML is never invisible while scripts are still loading. */
+.reveal[data-armed] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.reveal[data-armed][data-shown] {
   opacity: 1;
   transform: none;
 }
 @media (prefers-reduced-motion: reduce) {
-  .reveal { opacity: 1; transform: none; transition: none; }
+  .reveal, .reveal[data-armed] { opacity: 1; transform: none; transition: none; }
 }
