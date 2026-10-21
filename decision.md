@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-21 (Global offices map & InfoWindow styling)_
+_Last updated: 2026-10-21 (Removed PWA InstallPrompt banner)_
 
 ---
 
@@ -17,13 +17,13 @@ Prototype stage. Repo: `tritorc-ai/...`, branch flow: feature branch → PR → 
 - Tailwind CSS 4 (`app/globals.css`, theme tokens: brand-red, graphite, ivory, cu, ink…), shadcn/ui + Radix (`components/ui/`), lucide-react
 - Fonts in `lib/fonts.ts`: Plus Jakarta Sans (Company/Library), Chakra Petch + Anybody (splash)
 - Content: Strapi CMS (`cms.tritorc.com`) via `lib/strapi.ts` + `lib/strapiClient.ts`; mock fallback in `lib/mock/*`
-- PWA: `app/manifest.ts`, `public/sw.js`, `ServiceWorkerRegister`, `InstallPrompt`
+- PWA: `app/manifest.ts`, `public/sw.js`, `ServiceWorkerRegister`
 - Scripts: `npm run dev | build | lint`. No test suite.
 
 ## 3. Structure
 ```
 app/
-  layout.tsx        root: metadata, viewport, Splash, BottomNav, InstallPrompt, SW register
+  layout.tsx        root: metadata, viewport, Splash, BottomNav, SW register
   template.tsx      page transition wrapper
   page.tsx          Home
   products/         page (catalogue) · [slug] product detail · c/[slug] category
@@ -67,6 +67,7 @@ lib/
 ## 5. Change log (newest first)
 | Date | Change | Files |
 |---|---|---|
+| 2026-10-21 | Removed persistent PWA "Install Tritorc App" bottom bar (`InstallPrompt`) from `RootLayout` | `app/layout.tsx`, `decision.md` |
 | 2026-10-21 | Moved Google Maps API key to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` with fallback in `OfficesMap.tsx` | `.env.local`, `components/company/OfficesMap.tsx` |
 | 2026-10-21 | Added interactive **Google Map** on Company page (`OfficesMap`) with B&W theme, location pins for 10 global offices, chip sync + auto-pan, and compact flag+city info window with zero excess chrome | `components/company/OfficesMap.tsx`, `components/company/GlobalOfficesSection.tsx`, `app/company/page.tsx`, `app/globals.css` |
 | 2026-10-21 | `BottomNav` is now a **floating oval capsule** (rounded-full, shorter: ~54px tall, 16px side margin, 12px above bottom/safe-area) with an oval glass pill on the active tab; `pb-nav` raised 78px -> 88px to clear it | `components/app/BottomNav.tsx`, `app/globals.css` |
