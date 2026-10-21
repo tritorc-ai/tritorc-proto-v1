@@ -20,10 +20,10 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-black/[0.06] bg-white/95 shadow-[0_-6px_24px_rgba(0,0,0,0.05)] backdrop-blur supports-[backdrop-filter]:bg-white/90"
-      style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-4"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
     >
-      <ul className="flex items-stretch justify-between px-1">
+      <ul className="pointer-events-auto flex items-stretch justify-between rounded-full border border-white/70 bg-white/45 p-1 shadow-[0_10px_36px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(255,255,255,0.35)] backdrop-blur-2xl backdrop-saturate-[1.8]">
         {TABS.map(({ href, label, icon: Icon, match }) => {
           const active = match.some((m) => (m === "/" ? pathname === "/" : pathname.startsWith(m)));
           return (
@@ -31,25 +31,26 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className="press relative flex flex-col items-center gap-1 pb-2 pt-3"
+                className="press relative flex flex-col items-center gap-0.5 pb-1 pt-1.5"
               >
                 <span
+                  aria-hidden
                   className={cn(
-                    "absolute left-1/2 top-0 h-[3px] -translate-x-1/2 rounded-b-full bg-brand-red transition-all duration-300 ease-out",
-                    active ? "w-8 opacity-100" : "w-0 opacity-0"
+                    "absolute inset-x-0.5 inset-y-0 rounded-full border border-white/70 bg-white/55 shadow-[0_4px_14px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.95)] backdrop-blur-md transition-all duration-300 ease-out",
+                    active ? "scale-100 opacity-100" : "scale-90 opacity-0"
                   )}
                 />
                 <Icon
-                  size={24}
+                  size={21}
                   strokeWidth={active ? 2.1 : 1.7}
                   className={cn(
-                    "transition-all duration-300",
+                    "relative transition-all duration-300",
                     active ? "scale-105 text-brand-dark" : "text-brand-text-tertiary"
                   )}
                 />
                 <span
                   className={cn(
-                    "text-[12px] leading-none transition-colors",
+                    "relative text-[11px] leading-none transition-colors",
                     active ? "font-bold text-brand-dark" : "font-medium text-brand-text-tertiary"
                   )}
                 >

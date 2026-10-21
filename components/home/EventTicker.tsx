@@ -102,7 +102,12 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                   position === "hidden" && "pointer-events-none",
                 )}
               >
-                <span className={cn("min-w-0 transition-opacity duration-500", !front && "opacity-60")}>
+                <span
+                  className={cn(
+                    "min-w-0 transition-[opacity,filter] duration-500",
+                    !front && "opacity-50 blur-[6px]",
+                  )}
+                >
                   <span className="flex items-center gap-2 text-[13px] text-brand-text-secondary">
                     <Icon size={15} />
                     {e.label}
