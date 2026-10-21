@@ -9,17 +9,27 @@ export function SectionHead({
   subtitle,
   action,
   tone = "light",
+  size = "md",
 }: {
   title: string;
   subtitle?: string;
   action?: { href: string; label: string };
   /** "dark" is for sections that sit on a black background. */
   tone?: "light" | "dark";
+  /** "sm" is a quieter, Ather-style heading (22px, medium-bold) for card-carousel pages. */
+  size?: "md" | "sm";
 }) {
   return (
-    <div className="mb-4 flex items-end justify-between gap-3">
+    <div className={cn("flex items-end justify-between gap-3", size === "sm" ? "mb-3" : "mb-4")}>
       <div className="min-w-0">
-        <h2 className={cn("text-[26px] font-bold leading-[1.1] tracking-[-0.02em]", tone === "dark" ? "text-white" : "text-brand-dark")}>
+        <h2
+          className={cn(
+            size === "sm"
+              ? "text-[22px] font-semibold leading-[1.15] tracking-[-0.015em]"
+              : "text-[26px] font-bold leading-[1.1] tracking-[-0.02em]",
+            tone === "dark" ? "text-white" : "text-brand-dark"
+          )}
+        >
           {title}
         </h2>
         {subtitle && (
