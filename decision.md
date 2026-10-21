@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-21 (push Phase 2: live inbox, unread badge, in-app banner)_
+_Last updated: 2026-10-21 (bento home UI merged into stap-backend)_
 
 ---
 
@@ -67,6 +67,7 @@ lib/
 ## 5. Change log (newest first)
 | Date | Change | Files |
 |---|---|---|
+| 2026-10-21 | **Merged `origin/app-bento-box` (new bento home UI/UX) into `stap-backend`.** That branch is a single squashed commit with NO shared history (unrelated histories), based on `main` + 9 files, so its diff vs `origin/main` was applied with `git apply --3way` rather than a git merge. Only conflict: `app/page.tsx` -> took the bento version, but replaced its static bell (linked `/events`, hardcoded red dot) with `NotificationBell variant="light"` (live unread count, links `/notifications`). Added `light` variant to `NotificationBell` | `app/page.tsx`, `app/globals.css`, `components/home/{BentoHero,BentoTestimonials,EventTicker}.tsx`, `public/images/home/*`, `run-tritorc.bat`, `components/app/NotificationBell.tsx` |
 | 2026-10-21 | **Push Phase 2**: live inbox. `lib/notifications.ts` (server: maps Strapi `notification` -> `AppNotification`, falls back to mock when none) + `notifFetch()`; `GET /api/notifications`; `InboxProvider` in layout (polls on load/focus/60s + SW `push-received`; read ids in localStorage `tritorc:readIds`, first run baselines existing as read; sets app-icon badge); `InAppBanner` (iOS-style heads-up, swipe-up/tap); `NotificationBell` badge on home; feed shows unread dots + "Mark all read"; new tags Update/Product/Service/LinkedIn. Strapi dev helper `npm run notify -- "Title" "Body" /url type topic`. tsc+eslint clean, verified in browser | `lib/notifications.ts`, `app/api/notifications/route.ts`, `components/app/{InboxProvider,InAppBanner,NotificationBell,NotificationFeed}.tsx`, `app/{layout,page}.tsx`, `app/notifications/page.tsx`, `lib/strapiClient.ts`, `lib/mock/appContent.ts` |
 | 2026-10-21 | **Separate Strapi installed** (`../tritorc-strapi`, Strapi 5.58 TS): collections `push-subscription` (custom `POST /api/push-subscriptions/upsert` + `/deactivate`), `notification` (creating one with `sendPush=true` triggers `dispatch()` via `web-push`: topic filter, batches of 25, prunes 404/410, writes `sentAt`+`stats`), `enquiry`; VAPID keys generated; scoped API tokens `next-write` (upsert/deactivate/enquiry create only) + `next-read` created by `scripts/create-tokens.ts`. Verified: token scoping (403s), BFF -> Strapi 200, dispatch prune test. `strapiWrite` now uses `NOTIF_*` env | `../tritorc-strapi/**`, `lib/strapiClient.ts` |
 | 2026-10-21 | **Push Phase 1**: SW `push`/`notificationclick`/`pushsubscriptionchange` (cache bumped to v2); client helpers; `strapiWrite()`; `POST /api/push/subscribe\|unsubscribe` (validation + in-memory rate limit, forwards to Strapi — Strapi side NOT built yet, so returns 502); `NotificationPrompt` on /notifications. tsc + eslint clean; verified in browser | `public/sw.js`, `lib/push.ts`, `lib/pushApi.ts`, `lib/deviceId.ts`, `lib/strapiClient.ts`, `app/api/push/*`, `components/app/NotificationPrompt.tsx`, `app/notifications/page.tsx` |
