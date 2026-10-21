@@ -1,0 +1,18 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "tritorc-app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
+      "name": "tritorc-app-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
+      "port": 3000
+    }
+  ]
+}
