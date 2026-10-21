@@ -7,3 +7,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# Project memory
+Read `decision.md` first for the codebase map and decision log (saves re-reading the repo). After every task, update it: bump "Last updated", add a change-log row, record new decisions/TODOs.
