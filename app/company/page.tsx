@@ -5,6 +5,8 @@ import { SectionHead } from "@/components/app/ui";
 import { PhotoSlideshow, type Slide } from "@/components/company/PhotoSlideshow";
 import { RotatingLines } from "@/components/company/RotatingLines";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
+import { GlobalOfficesSection } from "@/components/company/GlobalOfficesSection";
+
 
 // Photos from tritorc.com (saved in public/company) that fade into one another
 // behind the overview text.
@@ -77,25 +79,7 @@ export default async function CompanyPage() {
         {/* 02 — Global offices */}
         <section>
           <SectionHead title="Global offices" />
-          <div className="grid grid-cols-2 gap-2">
-            {globalOffices.map((o) => (
-              <div
-                key={`${o.city}-${o.country}`}
-                className="flex min-w-0 items-center gap-1.5 rounded-[18px] bg-[#e4e5e7] px-2.5 py-2 text-[11.5px] font-medium leading-tight text-brand-dark"
-              >
-                {FLAG_CODE[o.country] && (
-                  // eslint-disable-next-line @next/next/no-img-element -- tiny local flag, no optimisation needed
-                  <img
-                    src={`/flags/${FLAG_CODE[o.country]}.png`}
-                    alt=""
-                    height={14}
-                    className="h-[14px] w-auto shrink-0 rounded-[2px] ring-1 ring-black/10"
-                  />
-                )}
-                <span className="min-w-0 [text-wrap:balance]">{o.city}, <span className="text-brand-text-secondary">{o.country}</span></span>
-              </div>
-            ))}
-          </div>
+          <GlobalOfficesSection offices={globalOffices} />
         </section>
 
         {/* 04 — Company profile */}

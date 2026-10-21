@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-21 (bento home UI merged into stap-backend)_
+_Last updated: 2026-10-21 (Global offices map & InfoWindow styling)_
 
 ---
 
@@ -67,6 +67,8 @@ lib/
 ## 5. Change log (newest first)
 | Date | Change | Files |
 |---|---|---|
+| 2026-10-21 | Moved Google Maps API key to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` with fallback in `OfficesMap.tsx` | `.env.local`, `components/company/OfficesMap.tsx` |
+| 2026-10-21 | Added interactive **Google Map** on Company page (`OfficesMap`) with B&W theme, location pins for 10 global offices, chip sync + auto-pan, and compact flag+city info window with zero excess chrome | `components/company/OfficesMap.tsx`, `components/company/GlobalOfficesSection.tsx`, `app/company/page.tsx`, `app/globals.css` |
 | 2026-10-21 | `BottomNav` is now a **floating oval capsule** (rounded-full, shorter: ~54px tall, 16px side margin, 12px above bottom/safe-area) with an oval glass pill on the active tab; `pb-nav` raised 78px -> 88px to clear it | `components/app/BottomNav.tsx`, `app/globals.css` |
 | 2026-10-21 | `BottomNav` restyled as Apple-style frosted glass: translucent `bg-white/45` + `backdrop-blur-2xl saturate`, rounded top corners, white edge highlights; active tab is a raised glass pill (replaces the red top bar) | `components/app/BottomNav.tsx` |
 | 2026-10-21 | Home `EventTicker`: background (non-front) cards' text now blurred (`blur-[6px]` + `opacity-50`) so only the front card is readable | `components/home/EventTicker.tsx` |
