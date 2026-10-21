@@ -18,7 +18,16 @@ export const CONTACT = {
   ],
 } as const;
 
-export type NotificationTag = "Event" | "Case study" | "Article" | "Library" | "Video";
+export type NotificationTag =
+  | "Event"
+  | "Case study"
+  | "Article"
+  | "Library"
+  | "Video"
+  | "Update"
+  | "Product"
+  | "Service"
+  | "LinkedIn";
 
 export interface AppNotification {
   id: string;
@@ -30,6 +39,8 @@ export interface AppNotification {
   /** Internal route, or an https URL on tritorc.com (opened in a new tab). */
   href: string;
   image?: string;
+  /** ISO timestamp for live notifications (used for ordering). */
+  createdAt?: string;
 }
 
 const BLOG = "https://www.tritorc.com/blog";

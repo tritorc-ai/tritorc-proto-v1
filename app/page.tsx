@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import { NotificationBell } from "@/components/app/NotificationBell";
 import { getBrand, getImageUrls, getServices, getTestimonials } from "@/lib/strapi";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
 import { ClientVoices, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
@@ -78,13 +79,7 @@ export default async function HomePage() {
           className="h-[18px] w-auto brightness-0 invert"
         />
         <div className="flex gap-2">
-          <Link
-            href="/notifications"
-            aria-label="Notifications"
-            className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
-          >
-            <Bell size={18} />
-          </Link>
+          <NotificationBell />
           <Link
             href="/library"
             aria-label="Search the library"

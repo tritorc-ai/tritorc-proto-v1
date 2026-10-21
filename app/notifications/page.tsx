@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { CalendarDays, ChevronRight } from "lucide-react";
 import { jakarta } from "@/lib/fonts";
-import { NOTIFICATIONS } from "@/lib/mock/appContent";
+import { getNotificationFeed } from "@/lib/notifications";
 import { PageHeader } from "@/components/app/PageHeader";
 import { NotificationFeed } from "@/components/app/NotificationFeed";
+import { NotificationPrompt } from "@/components/app/NotificationPrompt";
 
 export const metadata = { title: "Notifications | Tritorc" };
 
-export default function NotificationsPage() {
+export default async function NotificationsPage() {
+  const items = await getNotificationFeed();
   return (
     <div className={jakarta.className}>
       <PageHeader
@@ -16,6 +18,7 @@ export default function NotificationsPage() {
         back={{ href: "/" }}
       />
       <div className="px-5 pb-6">
+        <NotificationPrompt />
         <Link
           href="/events"
           className="press mb-4 flex items-center justify-between rounded-[24px] bg-brand-dark p-4 text-white"
@@ -31,7 +34,7 @@ export default function NotificationsPage() {
           </span>
           <ChevronRight size={18} className="text-white/70" />
         </Link>
-        <NotificationFeed items={NOTIFICATIONS} />
+        <NotificationFeed items={items} />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-21 (initial snapshot)_
+_Last updated: 2026-10-21 (push Phase 2: live inbox, unread badge, in-app banner)_
 
 ---
 
@@ -55,14 +55,27 @@ lib/
 - **Site URL:** `NEXT_PUBLIC_SITE_URL` → Vercel env → localhost, used for `metadataBase`.
 - Detail pages (product/service) were redesigned (PR #6); home has stacked swipeable event notifications.
 
+## 4b. Backend design (push notifications, inbox, enquiries) — full plan: `C:\Users\vp89\.claude\plans\deep-wishing-pie.md`
+- Backend = a **separate Strapi 5 project** at `C:\Users\vp89\Desktop\tritorc-strapi` (SQLite in dev, port 1337; NOT cms.tritorc.com, which stays the content/media CMS). Next.js `app/api/*` is a BFF calling it via `strapiWrite()` (`lib/strapiClient.ts`). Start it: `cd ../tritorc-strapi && npm run develop`.
+- **Web Push** (VAPID) shown as native OS notifications; when the app is focused the SW posts `push-received` and the page shows an in-app banner instead. iOS needs install-to-Home-Screen.
+- **Anonymous devices** (`lib/deviceId.ts` UUID), no login. Read/unread is **client-side** (no server table).
+- Strapi collections to build: `push-subscription` (custom routes `/api/push-subscriptions/upsert` + `/deactivate`), `notification`, `enquiry`, `linkedin-post`. Dispatcher using `web-push` lives in Strapi; prune subscriptions on 404/410.
+- Triggers: manual broadcast; new event; new product/service/library; **LinkedIn = manual paste in Strapi now, official Community Management API poller later** (no LinkedIn webhook; no scraping).
+- Env (Next `.env.local`, gitignored): `NOTIF_API_URL`, `NOTIF_API_WRITE_TOKEN`, `NOTIF_API_READ_TOKEN`, `NEXT_PUBLIC_VAPID_PUBLIC_KEY`. Env (Strapi `.env`): `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (placeholder mailto: change it). `STRAPI_API_URL`/`STRAPI_API_READ_TOKEN` still = cms.tritorc.com catalogue.
+- Phases: 1 Foundation ✅ · 2 inbox ✅ (live `GET /api/notifications`, unread badge, in-app banner) · 3 auto triggers + topics · 4 enquiry (`EnquiryForm` still `mailto:`) · 5 LinkedIn.
+
 ## 5. Change log (newest first)
 | Date | Change | Files |
 |---|---|---|
+| 2026-10-21 | **Push Phase 2**: live inbox. `lib/notifications.ts` (server: maps Strapi `notification` -> `AppNotification`, falls back to mock when none) + `notifFetch()`; `GET /api/notifications`; `InboxProvider` in layout (polls on load/focus/60s + SW `push-received`; read ids in localStorage `tritorc:readIds`, first run baselines existing as read; sets app-icon badge); `InAppBanner` (iOS-style heads-up, swipe-up/tap); `NotificationBell` badge on home; feed shows unread dots + "Mark all read"; new tags Update/Product/Service/LinkedIn. Strapi dev helper `npm run notify -- "Title" "Body" /url type topic`. tsc+eslint clean, verified in browser | `lib/notifications.ts`, `app/api/notifications/route.ts`, `components/app/{InboxProvider,InAppBanner,NotificationBell,NotificationFeed}.tsx`, `app/{layout,page}.tsx`, `app/notifications/page.tsx`, `lib/strapiClient.ts`, `lib/mock/appContent.ts` |
+| 2026-10-21 | **Separate Strapi installed** (`../tritorc-strapi`, Strapi 5.58 TS): collections `push-subscription` (custom `POST /api/push-subscriptions/upsert` + `/deactivate`), `notification` (creating one with `sendPush=true` triggers `dispatch()` via `web-push`: topic filter, batches of 25, prunes 404/410, writes `sentAt`+`stats`), `enquiry`; VAPID keys generated; scoped API tokens `next-write` (upsert/deactivate/enquiry create only) + `next-read` created by `scripts/create-tokens.ts`. Verified: token scoping (403s), BFF -> Strapi 200, dispatch prune test. `strapiWrite` now uses `NOTIF_*` env | `../tritorc-strapi/**`, `lib/strapiClient.ts` |
+| 2026-10-21 | **Push Phase 1**: SW `push`/`notificationclick`/`pushsubscriptionchange` (cache bumped to v2); client helpers; `strapiWrite()`; `POST /api/push/subscribe\|unsubscribe` (validation + in-memory rate limit, forwards to Strapi — Strapi side NOT built yet, so returns 502); `NotificationPrompt` on /notifications. tsc + eslint clean; verified in browser | `public/sw.js`, `lib/push.ts`, `lib/pushApi.ts`, `lib/deviceId.ts`, `lib/strapiClient.ts`, `app/api/push/*`, `components/app/NotificationPrompt.tsx`, `app/notifications/page.tsx` |
 | 2026-10-21 | Created decision.md. Uncommitted work in tree at that time: small edits to products/services page + `lib/fonts.ts` (one font line removed) | `app/products/page.tsx`, `app/services/page.tsx`, `lib/fonts.ts` |
 | (prior, from git) | PR #6 product/service detail redesign; events+notifications grey/black palette | see `git log` |
 | (prior) | PR #5 notification bar; PR #4 swipeable event notifications, services restyle, new splash | see `git log` |
 
 ## 6. Open items / TODO
+- Strapi: create admin user at /admin; set real `VAPID_SUBJECT`; production DB (Postgres) + hosting; enquiry email alert (Phase 4); lifecycle hooks for event/product/service/library; regenerate tokens for prod with `npm run create-tokens` (set `TOKEN_ENV_FILE` to write them to a file).
 - Wire remaining mock content (products, services, testimonials, etc.) to Strapi when ready.
 - (add as they come up)
 

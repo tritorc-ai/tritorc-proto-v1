@@ -73,3 +73,85 @@ export async function strapiFetch<T>(
     clearTimeout(timeout);
   }
 }
+
+/**
+ * Write to the Strapi REST API (POST/PUT/DELETE). Uses NOTIF_API_WRITE_TOKEN,
+ * a separate token scoped to creating subscriptions/enquiries only — never
+ * reuse the read token for writes. Never throws; callers inspect `ok`.
+ */
+export async function strapiWrite<T = unknown>(
+  method: "POST" | "PUT" | "DELETE",
+  path: string,
+  body?: unknown
+): Promise<{ ok: boolean; status: number; data: T | null }> {
+  // Notifications/enquiries live in their own Strapi (tritorc-strapi), separate
+  // from the content CMS behind STRAPI_API_URL.
+  const baseUrl = process.env.NOTIF_API_URL?.replace(/\/+$/, "");
+  const token = process.env.NOTIF_API_WRITE_TOKEN;
+  if (!baseUrl || !token) {
+    console.warn("[strapi] write skipped: NOTIF_API_URL or NOTIF_API_WRITE_TOKEN not set");
+    return { ok: false, status: 503, data: null };
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch(`${baseUrl}${path}`, {
+      method,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    const data = res.status === 204 ? null : ((await res.json().catch(() => null)) as T | null);
+    if (!res.ok) console.warn(`[strapi] ${method} ${path} -> HTTP ${res.status}`);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.warn(`[strapi] ${method} ${path} failed:`, err instanceof Error ? err.message : err);
+    return { ok: false, status: 502, data: null };
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+/**
+ * GET from the notifications Strapi (tritorc-strapi, NOTIF_API_URL) with its
+ * read-only token. Same contract as strapiFetch: null on any failure.
+ */
+export async function notifFetch<T>(
+  path: string,
+  params?: Record<string, string>,
+  revalidateSeconds = 0
+): Promise<T | null> {
+  const baseUrl = process.env.NOTIF_API_URL?.replace(/\/+$/, "");
+  const token = process.env.NOTIF_API_READ_TOKEN;
+  if (!baseUrl || !token) return null;
+
+  const url = new URL(`${baseUrl}${path}`);
+  for (const [k, v] of Object.entries(params ?? {})) url.searchParams.set(k, v);
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 6000);
+  try {
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal,
+      ...(revalidateSeconds > 0
+        ? { next: { revalidate: revalidateSeconds } }
+        : { cache: "no-store" as const }),
+    });
+    if (!res.ok) {
+      console.warn(`[notif] ${path} -> HTTP ${res.status}`);
+      return null;
+    }
+    return (await res.json()) as T;
+  } catch (err) {
+    console.warn(`[notif] ${path} failed:`, err instanceof Error ? err.message : err);
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
