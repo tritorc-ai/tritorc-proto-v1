@@ -196,9 +196,9 @@
 }
 
 /* Space reserved under every screen so content never hides behind the
- * fixed bottom navigation (54px bar + device safe-area). */
+ * floating bottom navigation (54px pill + 12px gap + device safe-area). */
 @utility pb-nav {
-  padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
 }
 
 @utility pt-safe {
