@@ -188,9 +188,14 @@ export interface ServiceSection {
 
 // Real taxonomy confirmed directly from tritorc.com/services (live page) and
 // the official site's own repo fallback content (lib/servicesContent.ts) —
-// 7 categories, ~19 real sub-services. Not an invented structure.
+// 7 categories, ~19 real sub-services. "Onsite Controlled Bolting" is intentionally
+// not listed on the Services page (its detail page still exists); same for "Tool Dry Rental". Not an invented structure.
 export const SERVICE_SECTIONS: ServiceSection[] = [
-  { name: "Onsite Controlled Bolting", color: "#d6312f", categories: ["Onsite Controlled Bolting"] },
+  {
+    name: "Specialised Engineering Services",
+    color: "#d97706",
+    categories: ["Hot Tapping & Line Stopping", "Retubing Services"],
+  },
   {
     name: "Onsite Machining Services",
     color: "#2563eb",
@@ -207,13 +212,7 @@ export const SERVICE_SECTIONS: ServiceSection[] = [
       "Pneumatic Testing",
     ],
   },
-  {
-    name: "Specialised Engineering Services",
-    color: "#d97706",
-    categories: ["Hot Tapping & Line Stopping", "Retubing Services"],
-  },
   { name: "Tool Calibration Services", color: "#db2777", categories: ["Calibration Services"] },
-  { name: "Tool Dry Rental", color: "#4f46e5", categories: ["Dry Rental"] },
 ];
 
 export const SERVICE_CATEGORIES: ServiceCategory[] = [

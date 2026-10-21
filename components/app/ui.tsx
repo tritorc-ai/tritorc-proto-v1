@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { HeroVideo } from "./HeroVideo";
+import type { HeroVideoSource } from "@/lib/heroVideos";
 
 /** Section heading in the Ather pattern: big title, muted subtitle, optional pill action. */
 export function SectionHead({
@@ -96,6 +98,7 @@ export function OverlayCard({
   frame,
   contain,
   titleClassName,
+  video,
 }: {
   href: string;
   image?: string;
@@ -109,6 +112,8 @@ export function OverlayCard({
   /** Cut-out product shot: show it whole on a studio backdrop instead of cropping. */
   contain?: boolean | "white";
   titleClassName?: string;
+  /** Muted looping clip that plays over the image. */
+  video?: HeroVideoSource;
 }) {
   return (
     <Link
@@ -124,6 +129,7 @@ export function OverlayCard({
         className={cn("absolute inset-0", contain === "white" ? "bg-white" : contain && "bg-linear-to-b from-[#f7f8f9] to-[#d5d9dd]")}
         imgClassName={cn("group-active:scale-105", contain && (cta ? "object-contain px-4 pt-6 pb-44" : "object-contain px-5 pt-8 pb-28"))}
       />
+      {video && <HeroVideo src={video.src} poster={video.poster ?? image} />}
       <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />
       {frame === "ring" && (
         <span

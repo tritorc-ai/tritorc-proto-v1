@@ -8,6 +8,8 @@ import type { ProductSpec } from "@/lib/mock/content";
 import { MediaPreviewModal, type PreviewableAsset } from "./MediaPreviewModal";
 import { PdfPreviewModal } from "./PdfPreviewModal";
 import { jakarta } from "@/lib/fonts";
+import { HeroVideo } from "./HeroVideo";
+import type { HeroVideoSource } from "@/lib/heroVideos";
 import { cn } from "@/lib/utils";
 
 /** Header + sheet-handle offset used when expanding the sheet / jumping to a section. */
@@ -192,6 +194,7 @@ export function DetailSheetView({
   about,
   catalogue,
   heroImageUrl,
+  heroVideo,
   backHref,
   overviewLabel = "Product",
 }: {
@@ -205,6 +208,8 @@ export function DetailSheetView({
   about?: { title: string; text: string };
   catalogue?: { title: string; meta: string; url: string } | null;
   heroImageUrl?: string;
+  /** Muted looping clip that plays in the hero instead of the still image. */
+  heroVideo?: HeroVideoSource;
   backHref: string;
   /** Name of the non-"in use" photo group in the toggle. */
   overviewLabel?: string;
@@ -349,17 +354,21 @@ export function DetailSheetView({
           <div className="relative mt-1 flex-1">
             {heroImage ? (
               <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)]">
-                <Image
-                  src={heroImage}
-                  alt={name}
-                  fill
-                  priority
-                  sizes="(max-width: 448px) 90vw, 408px"
-                  className={cn(
-                    "animate-in fade-in duration-700 ease-(--ease-premium) motion-reduce:animate-none",
-                    "object-cover",
-                  )}
-                />
+                {heroVideo ? (
+                  <HeroVideo src={heroVideo.src} poster={heroVideo.poster ?? heroImage} label={name} />
+                ) : (
+                  <Image
+                    src={heroImage}
+                    alt={name}
+                    fill
+                    priority
+                    sizes="(max-width: 448px) 90vw, 408px"
+                    className={cn(
+                      "animate-in fade-in duration-700 ease-(--ease-premium) motion-reduce:animate-none",
+                      "object-cover",
+                    )}
+                  />
+                )}
               </div>
             ) : (
               <div className="flex h-full items-center justify-center text-[13px] text-brand-text-tertiary">

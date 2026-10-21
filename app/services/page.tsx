@@ -1,4 +1,4 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { jakarta } from "@/lib/fonts";
 import { Mail, Phone } from "lucide-react";
 import {
   getImageUrls,
@@ -13,8 +13,8 @@ import { FocusCarousel } from "@/components/app/FocusCarousel";
 import { OverlayCard, SectionHead, slugify } from "@/components/app/ui";
 import { SectionNav } from "@/components/app/SectionNav";
 import { Reveal } from "@/components/app/Reveal";
+import { HERO_VIDEOS } from "@/lib/heroVideos";
 
-const headingFont = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export default async function ServicesPage() {
   const [services, categories, sections, images, thumbnails] = await Promise.all([
@@ -46,7 +46,7 @@ export default async function ServicesPage() {
     .filter((g) => g.services.length > 0);
 
   return (
-    <div className={headingFont.className}>
+    <div className={jakarta.className}>
       <PageHeader title="Services" hideLogo titleClassName="text-[36px] font-bold" />
 
       {/* One padded wrapper for the bar and the sections so the bar stays sticky across the whole list */}
@@ -65,6 +65,7 @@ export default async function ServicesPage() {
                     title={s.name}
                     body={s.tagline}
                     image={s.imageUrl}
+                    video={HERO_VIDEOS[s.slug]}
                     cta="Learn more"
                     aspect="h-full"
                   />
