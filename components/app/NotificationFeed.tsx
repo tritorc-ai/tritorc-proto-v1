@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Bell, BookOpen, CalendarDays, FileText, Newspaper, Play } from "lucide-react";
+import { ArrowUpRight, Bell, BookOpen, CalendarDays, CheckCheck, FileText, MessageSquare, Newspaper, Package, Play, Wrench } from "lucide-react";
 import type { AppNotification, NotificationTag } from "@/lib/mock/appContent";
 import { Photo } from "./ui";
+import { useInbox } from "./InboxProvider";
 import { cn } from "@/lib/utils";
 
 const FILTERS: { label: string; tags: NotificationTag[] | null }[] = [
@@ -13,6 +14,7 @@ const FILTERS: { label: string; tags: NotificationTag[] | null }[] = [
   { label: "Case studies", tags: ["Case study"] },
   { label: "Articles", tags: ["Article"] },
   { label: "Library", tags: ["Library", "Video"] },
+  { label: "Updates", tags: ["Update", "Product", "Service", "LinkedIn"] },
 ];
 
 const TAG_ICON: Record<NotificationTag, typeof Bell> = {
@@ -21,10 +23,15 @@ const TAG_ICON: Record<NotificationTag, typeof Bell> = {
   Article: Newspaper,
   Library: BookOpen,
   Video: Play,
+  Update: Bell,
+  Product: Package,
+  Service: Wrench,
+  LinkedIn: MessageSquare,
 };
 
 export function NotificationFeed({ items }: { items: AppNotification[] }) {
   const [filter, setFilter] = useState(0);
+  const { unreadIds, unreadCount, markRead, markAllRead } = useInbox();
   const tags = FILTERS[filter].tags;
   const shown = tags ? items.filter((n) => tags.includes(n.tag)) : items;
 
@@ -48,17 +55,35 @@ export function NotificationFeed({ items }: { items: AppNotification[] }) {
         ))}
       </div>
 
+      {unreadCount > 0 && (
+        <button
+          type="button"
+          onClick={markAllRead}
+          className="press mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-brand-dark"
+        >
+          <CheckCheck size={15} /> Mark all {unreadCount} as read
+        </button>
+      )}
+
       <ul className="mt-4 space-y-3">
         {shown.map((n) => {
           const external = n.href.startsWith("http");
           const Icon = TAG_ICON[n.tag];
+          const unread = unreadIds.has(n.id);
           return (
             <li key={n.id}>
               <Link
                 href={n.href}
+                onClick={() => markRead(n.id)}
                 {...(external && { target: "_blank", rel: "noopener noreferrer" })}
-                className="press flex gap-3.5 rounded-[24px] bg-[#e4e5e7] p-3"
+                className="press relative flex gap-3.5 rounded-[24px] bg-[#e4e5e7] p-3"
               >
+                {unread && (
+                  <span
+                    aria-label="Unread"
+                    className="absolute right-4 top-4 h-2.5 w-2.5 rounded-full bg-brand-red"
+                  />
+                )}
                 {n.image ? (
                   <Photo src={n.image} sizes="96px" className="h-24 w-24 shrink-0 rounded-[18px]" />
                 ) : (

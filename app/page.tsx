@@ -1,120 +1,151 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
-import { getBrand, getImageUrls, getServices, getTestimonials } from "@/lib/strapi";
-import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { ClientVoices, ServiceShowcase, UpcomingEvents } from "@/components/home/sections";
-
-// Home is a short, image-led introduction: hero → event → services →
-// contact. Everything detailed (credentials, case studies, industries,
-// journey, the full catalogue) lives behind the bottom-nav tabs.
-
-// Carousel-only service renders.
-const SERVICE_IMAGES: Record<string, string> = {
-  "hot-tapping-line-stopping": "/services/hot-tapping.webp",
-  "flange-facing": "/services/flange-facing.webp",
-  "onsite-controlled-bolting": "/services/controlled-bolting.webp",
-};
-
-const FEATURED_SERVICES = [
-  "hot-tapping-line-stopping",
-  "flange-facing",
-  "onsite-controlled-bolting",
-  "hydro-testing-services",
-  "retubing-services",
-];
+import { ArrowRight } from "lucide-react";
+import { NotificationBell } from "@/components/app/NotificationBell";
+import { BentoHero } from "@/components/home/BentoHero";
+import { BentoTestimonials, type BentoQuote } from "@/components/home/BentoTestimonials";
+import { UpcomingEvents } from "@/components/home/sections";
 
 export default async function HomePage() {
-  const [brand, services, testimonials, images] = await Promise.all([
-    getBrand(),
-    getServices(),
-    getTestimonials(),
-    getImageUrls(),
-  ]);
-
-  const serviceCards = FEATURED_SERVICES.map((slug) => services.find((s) => s.slug === slug))
-    .filter((s): s is NonNullable<typeof s> => !!s)
-    .map((s) => ({
-      href: `/services/${s.slug}`,
-      title: s.name,
-      body: s.tagline,
-      image: SERVICE_IMAGES[s.slug] ?? s.directImageUrl ?? (s.imageKey ? images[s.imageKey] : undefined),
-    }));
-
-  const slides = [
+  const heroSlides = [
     {
-      title: "Precision bolting, delivered.",
-      tagline: brand.since,
-      image: images.homeHero,
+      eyebrow: "SINCE 1988",
+      lines: ["Precision", "bolting,", "delivered."] as [string, string, string],
+      image: "/images/home/hero-bolting.jpg",
       primary: { href: "/products", label: "Explore products" },
       secondary: { href: "/services", label: "Our services" },
     },
     {
-      title: "Power for wind & energy.",
-      tagline: "Foundation bolt tensioning",
-      image: images.caseAdani ?? images.catWindTurbine,
-      primary: { href: "/products/wbt-series", label: "WBT Series" },
-      secondary: { href: "/library", label: "Learn more" },
+      eyebrow: "SINCE 1988",
+      lines: ["Power for", "wind &", "energy."] as [string, string, string],
+      image: "/images/home/hero-bolting.jpg",
+      primary: { href: "/products", label: "Explore products" },
+      secondary: { href: "/services", label: "Our services" },
     },
     {
-      title: "Live pipelines. Zero downtime.",
-      tagline: "Hot tapping & line stopping",
-      image: images.hotTappingOngc ?? images.svcHotTapping,
-      primary: { href: "/services/hot-tapping-line-stopping", label: "Explore service" },
-      secondary: { href: "/company#case-studies", label: "Case studies" },
+      eyebrow: "SINCE 1988",
+      lines: ["Zero downtime.", "Bolting,", "delivered."] as [string, string, string],
+      image: "/images/home/hero-bolting.jpg",
+      primary: { href: "/products", label: "Explore products" },
+      secondary: { href: "/services", label: "Our services" },
+    },
+  ];
+
+  const testimonialQuotes: BentoQuote[] = [
+    {
+      quote: "From refineries to remote pipelines, our tools perform where it matters most.",
+      author: "Field Operations, Oil & Gas Sector",
+    },
+    {
+      quote: "Reliable service and world-class support.",
+      author: "Maintenance Head, Power Sector",
+    },
+    {
+      quote: "Behind the bolts of India's first vertical-lift sea bridge.",
+      author: "The New Pamban Bridge, India",
     },
   ];
 
   return (
-    <div className="relative">
-      <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 pt-safe">
-        <Image
-          src="/brand/tritorc-logo.png"
-          alt="Tritorc"
-          width={133}
-          height={18}
-          priority
-          className="h-[18px] w-auto brightness-0 invert"
-        />
-        <div className="flex gap-2">
-          <Link
-            href="/notifications"
-            aria-label="Notifications"
-            className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
-          >
-            <Bell size={18} />
-          </Link>
-          <Link
-            href="/library"
-            aria-label="Search the library"
-            className="press flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur"
-          >
-            <Search size={18} />
-          </Link>
-        </div>
+    <div className="relative min-h-screen bg-[#f3f3f2] px-3.5 pt-safe pb-0 space-y-3">
+      {/* Top Floating Header */}
+      <header className="flex items-center justify-between rounded-full bg-white px-4 py-2.5 shadow-sm border border-black/5">
+        <Link href="/" aria-label="Tritorc home" className="press flex items-center">
+          <span className="text-[17px] font-black tracking-[-0.03em] text-black">TRITORC</span>
+        </Link>
+
+        <NotificationBell variant="light" />
       </header>
 
-      <HeroCarousel slides={slides} />
+      {/* Hero Section */}
+      <section aria-label="Hero">
+        <BentoHero slides={heroSlides} />
+      </section>
 
-      <div className="space-y-9 px-5 pt-8">
+      {/* Events Carousel replacing Nesaji-Kachchh */}
+      <section aria-label="Events and Announcements" className="pt-1">
         <UpcomingEvents />
-        <ServiceShowcase services={serviceCards} />
-      </div>
+      </section>
 
-      {/* Dark panel: a clean black section with rounded top corners that
-          simply begins under the services (no gradient). It also runs under
-          the nav padding so no light strip shows behind the bottom bar. */}
-      <div
-        className="relative mt-10 rounded-t-[32px] bg-[#0a0a0b]"
-        style={{
-          marginBottom: "calc(-1 * (88px + env(safe-area-inset-bottom, 0px)))",
-          paddingBottom: "calc(88px + env(safe-area-inset-bottom, 0px))",
-        }}
-      >
-        <div className="space-y-9 px-5 pb-8 pt-10">
-          <ClientVoices items={testimonials} images={images} />
-        </div>
-      </div>
+      {/* 2-Column Bento: Flange Fastening & Products */}
+      <section aria-label="Services and Products" className="grid grid-cols-2 gap-3 sm:gap-3.5">
+        {/* Left: Flange Fastening */}
+        <Link
+          href="/services/flange-facing"
+          className="group relative flex h-[280px] sm:h-[290px] flex-col justify-between overflow-hidden rounded-[32px] bg-[#f7f6f4] border border-black/5 p-5 shadow-xs transition-all hover:shadow-sm"
+        >
+          {/* Background image & gradient overlay */}
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src="/images/home/flange-fasting.jpg"
+              alt="Flange Fastening"
+              fill
+              sizes="(max-width: 448px) 50vw, 220px"
+              className="object-cover object-[70%_center] group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f4] via-[#f7f6f4]/90 via-45% to-transparent" />
+          </div>
+
+          <div className="relative z-10">
+            <div className="text-[9.5px] font-semibold uppercase tracking-[0.22em] text-[#4b4b4e]">
+              TRITORC SERVICES
+            </div>
+            <h3 className="mt-2 text-[27px] sm:text-[29px] font-black leading-[0.98] tracking-[-0.035em] text-[#0a0a0b]">
+              Flange<br />Fastening
+            </h3>
+            <p className="mt-3 text-[13.5px] font-medium leading-[1.3] text-[#444447]">
+              On-site bolting<br />solutions.
+            </p>
+          </div>
+
+          <div className="relative z-10 mt-auto">
+            <div className="press flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-black border border-black/15 shadow-[0_8px_22px_rgba(0,0,0,0.18),0_2px_6px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.24)]">
+              <ArrowRight size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+        </Link>
+
+        {/* Right: Products */}
+        <Link
+          href="/products"
+          className="group relative flex h-[280px] sm:h-[290px] flex-col justify-between overflow-hidden rounded-[32px] bg-[#f7f6f4] border border-black/5 p-5 shadow-xs transition-all hover:shadow-sm"
+        >
+          {/* Background image & gradient overlay */}
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src="/images/home/products-bolt.jpg"
+              alt="Industrial Products"
+              fill
+              sizes="(max-width: 448px) 50vw, 220px"
+              className="object-cover object-right group-hover:scale-105 transition-transform duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f4] via-[#f7f6f4]/90 via-45% to-transparent" />
+          </div>
+
+          <div className="relative z-10">
+            <div className="text-[9.5px] font-semibold uppercase tracking-[0.22em] text-[#4b4b4e]">
+              TRITORC PRODUCTS
+            </div>
+            <h3 className="mt-2 text-[27px] sm:text-[29px] font-black leading-[0.98] tracking-[-0.035em] text-[#0a0a0b]">
+              Products
+            </h3>
+            <p className="mt-3 text-[13.5px] font-medium leading-[1.3] text-[#444447]">
+              Industrial bolting<br />solutions.
+            </p>
+          </div>
+
+          <div className="relative z-10 mt-auto">
+            <div className="press flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white text-black border border-black/15 shadow-[0_8px_22px_rgba(0,0,0,0.18),0_2px_6px_rgba(0,0,0,0.12)] transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(0,0,0,0.24)]">
+              <ArrowRight size={18} strokeWidth={2.4} />
+            </div>
+          </div>
+        </Link>
+      </section>
+
+      {/* Testimonials Bento */}
+      <section aria-label="Client Testimonials" className="pt-0.5">
+        <BentoTestimonials items={testimonialQuotes} />
+      </section>
     </div>
   );
 }

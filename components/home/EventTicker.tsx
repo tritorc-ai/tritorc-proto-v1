@@ -98,7 +98,7 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                 className={cn(
                   "flex items-center justify-between gap-4 rounded-[26px] bg-[#e4e5e7] px-5 py-4 ring-1 ring-white/70",
                   "transition-[transform,opacity,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  front ? "shadow-[0_10px_24px_-8px_rgba(0,0,0,0.3)]" : "shadow-sm",
+                  front ? "shadow-[0_10px_24px_-8px_rgba(0,0,0,0.22)]" : "shadow-sm",
                   position === "hidden" && "pointer-events-none",
                 )}
               >
@@ -125,7 +125,7 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
         </div>
       </div>
       {count > 1 && (
-        <div className="flex items-center justify-center gap-1.5">
+        <div className="flex items-center justify-center gap-1.5 -mt-3">
           {events.map((e, i) => (
             <button
               key={e.id}
