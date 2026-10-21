@@ -3,7 +3,6 @@ import "./globals.css";
 import { BottomNav } from "@/components/app/BottomNav";
 import { Splash } from "@/components/app/Splash";
 import { SPLASH_GUARD_SCRIPT } from "@/components/app/splashGuard";
-import { InstallPrompt } from "@/components/app/InstallPrompt";
 import { ServiceWorkerRegister } from "@/components/app/ServiceWorkerRegister";
 import { InboxProvider } from "@/components/app/InboxProvider";
 
@@ -55,7 +54,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <div className="mx-auto min-h-dvh max-w-md bg-(--app-bg) pb-nav sm:shadow-[0_0_60px_rgba(0,0,0,0.08)]">
             {children}
           </div>
-          <InstallPrompt />
           <BottomNav />
         </InboxProvider>
         <ServiceWorkerRegister />

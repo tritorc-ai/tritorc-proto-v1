@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-21 (bento home UI merged into stap-backend)_
+_Last updated: 2026-10-21 (Removed PWA InstallPrompt banner)_
 
 ---
 
@@ -17,13 +17,13 @@ Prototype stage. Repo: `tritorc-ai/...`, branch flow: feature branch → PR → 
 - Tailwind CSS 4 (`app/globals.css`, theme tokens: brand-red, graphite, ivory, cu, ink…), shadcn/ui + Radix (`components/ui/`), lucide-react
 - Fonts in `lib/fonts.ts`: Plus Jakarta Sans (Company/Library), Chakra Petch + Anybody (splash)
 - Content: Strapi CMS (`cms.tritorc.com`) via `lib/strapi.ts` + `lib/strapiClient.ts`; mock fallback in `lib/mock/*`
-- PWA: `app/manifest.ts`, `public/sw.js`, `ServiceWorkerRegister`, `InstallPrompt`
+- PWA: `app/manifest.ts`, `public/sw.js`, `ServiceWorkerRegister`
 - Scripts: `npm run dev | build | lint`. No test suite.
 
 ## 3. Structure
 ```
 app/
-  layout.tsx        root: metadata, viewport, Splash, BottomNav, InstallPrompt, SW register
+  layout.tsx        root: metadata, viewport, Splash, BottomNav, SW register
   template.tsx      page transition wrapper
   page.tsx          Home
   products/         page (catalogue) · [slug] product detail · c/[slug] category
@@ -70,6 +70,9 @@ lib/
 | 2026-10-21 | Services page: tried vertical service lists in place of the carousels, then **reverted** at user's request - back to `FocusCarousel` + `OverlayCard` (hot tapping card still plays its clip) | `app/services/page.tsx` |
 | 2026-10-21 | Services page: hid the "Tool Dry Rental" section (removed from `SERVICE_SECTIONS`; service/detail page remain) | `lib/mock/content.ts` |
 | 2026-10-21 | **Hot Tapping hero video**: YouTube short `afPi2lE2kfI` (Tritorc's own) downloaded with yt-dlp, trimmed to first 10s, muted, H.264 ~1MB (`public/services/hot-tapping-hero.mp4` + `-poster.jpg`). Plays (muted, loop, playsInline) in the hot-tapping detail hero and its Services-list card; poster/image shows if autoplay blocked or reduced-motion. Mapping lives in `lib/heroVideos.ts` (`HERO_VIDEOS` by service slug) - add a slug there to give another service a clip. New `HeroVideo` component; `OverlayCard` gets `video` prop; `DetailSheetView` gets `heroVideo` prop. **Services page**: removed the "Onsite Controlled Bolting" section (page + detail route still exist) and moved "Specialised Engineering Services" to the top (`SERVICE_SECTIONS` in `lib/mock/content.ts`). Tools installed via winget: yt-dlp, ffmpeg | `lib/heroVideos.ts`, `components/app/{HeroVideo,ui,DetailSheetView,ServiceDetailView}.tsx`, `app/services/page.tsx`, `lib/mock/content.ts`, `public/services/hot-tapping-hero*` |
+| 2026-10-21 | Removed persistent PWA "Install Tritorc App" bottom bar (`InstallPrompt`) from `RootLayout` | `app/layout.tsx`, `decision.md` |
+| 2026-10-21 | Moved Google Maps API key to `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local` with fallback in `OfficesMap.tsx` | `.env.local`, `components/company/OfficesMap.tsx` |
+| 2026-10-21 | Added interactive **Google Map** on Company page (`OfficesMap`) with B&W theme, location pins for 10 global offices, chip sync + auto-pan, and compact flag+city info window with zero excess chrome | `components/company/OfficesMap.tsx`, `components/company/GlobalOfficesSection.tsx`, `app/company/page.tsx`, `app/globals.css` |
 | 2026-10-21 | `BottomNav` is now a **floating oval capsule** (rounded-full, shorter: ~54px tall, 16px side margin, 12px above bottom/safe-area) with an oval glass pill on the active tab; `pb-nav` raised 78px -> 88px to clear it | `components/app/BottomNav.tsx`, `app/globals.css` |
 | 2026-10-21 | `BottomNav` restyled as Apple-style frosted glass: translucent `bg-white/45` + `backdrop-blur-2xl saturate`, rounded top corners, white edge highlights; active tab is a raised glass pill (replaces the red top bar) | `components/app/BottomNav.tsx` |
 | 2026-10-21 | Home `EventTicker`: background (non-front) cards' text now blurred (`blur-[6px]` + `opacity-50`) so only the front card is readable | `components/home/EventTicker.tsx` |
