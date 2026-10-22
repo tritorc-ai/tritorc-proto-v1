@@ -1,4 +1,4 @@
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { jakarta } from "@/lib/fonts";
 import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
 import { PRODUCT_LIST } from "@/lib/mock/content";
 import { PageHeader } from "@/components/app/PageHeader";
@@ -7,7 +7,6 @@ import { OverlayCard, SectionHead, slugify } from "@/components/app/ui";
 import { SectionNav } from "@/components/app/SectionNav";
 import { Reveal } from "@/components/app/Reveal";
 
-const headingFont = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export default async function ProductsPage() {
   const [products, images, thumbnails] = await Promise.all([
@@ -33,7 +32,7 @@ export default async function ProductsPage() {
   }));
 
   return (
-    <div className={headingFont.className}>
+    <div className={jakarta.className}>
       <PageHeader title="Products" hideLogo titleClassName="text-[36px] font-bold" />
 
       {/* Quick jump between the vertical sections: sticky, with scroll-spy */}
