@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Package, Wrench, BookOpen, Building2 } from "lucide-react";
+import { jakarta } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 const TABS = [
@@ -20,7 +21,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-4"
+      className={cn("pointer-events-none fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md px-4", jakarta.className)}
       style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)" }}
     >
       <ul className="pointer-events-auto flex items-stretch justify-between rounded-full border border-white/70 bg-white/45 p-1 shadow-[0_10px_36px_rgba(0,0,0,0.16),inset_0_1px_0_rgba(255,255,255,0.9),inset_0_-1px_0_rgba(255,255,255,0.35)] backdrop-blur-2xl backdrop-saturate-[1.8]">

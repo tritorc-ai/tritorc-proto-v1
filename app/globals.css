@@ -205,6 +205,16 @@
   padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
 }
 
+/* Small sideways nudge on the "see all" arrow so the list is noticed */
+@keyframes nudge-x {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@utility animate-nudge {
+  animation: nudge-x 1.4s ease-in-out infinite;
+}
+
 @keyframes curtain-rise {
   from { transform: translateY(0); }
   to { transform: translateY(-101%); }

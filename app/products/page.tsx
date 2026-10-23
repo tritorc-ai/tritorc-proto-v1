@@ -2,8 +2,8 @@ import { jakarta } from "@/lib/fonts";
 import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
 import { PRODUCT_LIST } from "@/lib/mock/content";
 import { PageHeader } from "@/components/app/PageHeader";
-import { FocusCarousel } from "@/components/app/FocusCarousel";
-import { OverlayCard, SectionHead, slugify } from "@/components/app/ui";
+import { FrontAndList } from "@/components/app/FrontAndList";
+import { SectionHead, slugify } from "@/components/app/ui";
 import { SectionNav } from "@/components/app/SectionNav";
 import { Reveal } from "@/components/app/Reveal";
 
@@ -44,19 +44,17 @@ export default async function ProductsPage() {
           {sections.map((section) => (
             <Reveal as="section" key={section.name} id={slugify(section.name)} className="scroll-mt-20">
               <SectionHead title={section.name} size="sm" />
-              <FocusCarousel label={section.name} autoPlay={4000}>
-                {section.cards.map((card) => (
-                  <OverlayCard
-                    key={card.slug}
-                    href={`/products/${card.slug}`}
-                    title={card.title}
-                    body={card.series}
-                    image={card.image}
-                    cta="Explore"
-                    aspect="h-full"
-                  />
-                ))}
-              </FocusCarousel>
+              <FrontAndList
+                label={section.name}
+                cta="Explore"
+                listTitle={`More in ${section.name}`}
+                items={section.cards.map((card) => ({
+                  href: `/products/${card.slug}`,
+                  title: card.title,
+                  body: card.series,
+                  image: card.image,
+                }))}
+              />
             </Reveal>
           ))}
         </div>

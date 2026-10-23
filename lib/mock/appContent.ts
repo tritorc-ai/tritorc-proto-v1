@@ -130,18 +130,34 @@ export interface TickerItem {
   label: string;
   title: string;
   href: string;
+  /** Thumbnail shown at the right of the card. */
+  image?: string;
+  /** Small-caps line under the title. */
+  meta?: string;
 }
 
+/** Case studies shown as the two tiles on Home; the notification strip skips them. */
+export const FEATURED_CASE_IDS = ["case-ongc-nqp", "case-adnoc-sarb"];
+
+/** Home notification strip: upcoming events, then the other case studies. */
 export const TICKER_ITEMS: TickerItem[] = [
   {
     id: "adipec-2026",
     label: "Upcoming event",
     title: "ADIPEC 2026 in Abu Dhabi, Hall 12, booth 12200",
     href: "/events/adipec-2026",
+    image: "https://www.tritorc.com/exhibition/adipec-2025-1.jpg",
+    meta: "2–5 Nov 2026 · Abu Dhabi",
   },
-  ...NOTIFICATIONS.filter((n) => n.tag === "Case study" || n.tag === "Article")
-    .slice(0, 3)
-    .map((n) => ({ id: n.id, label: n.tag, title: n.title, href: n.href })),
+  // Case studies other than the two already featured as tiles on Home.
+  ...NOTIFICATIONS.filter((n) => n.tag === "Case study" && !FEATURED_CASE_IDS.includes(n.id)).map((n) => ({
+    id: n.id,
+    label: n.tag,
+    title: n.title,
+    href: n.href,
+    image: n.image,
+    meta: n.when ?? "From the Tritorc blog",
+  })),
 ];
 
 export const INDUSTRIES = [

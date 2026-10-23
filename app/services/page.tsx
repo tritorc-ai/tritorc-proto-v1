@@ -9,8 +9,8 @@ import {
 } from "@/lib/strapi";
 import { CONTACT } from "@/lib/mock/appContent";
 import { PageHeader } from "@/components/app/PageHeader";
-import { FocusCarousel } from "@/components/app/FocusCarousel";
-import { OverlayCard, SectionHead, slugify } from "@/components/app/ui";
+import { FrontAndList } from "@/components/app/FrontAndList";
+import { SectionHead, slugify } from "@/components/app/ui";
 import { SectionNav } from "@/components/app/SectionNav";
 import { Reveal } from "@/components/app/Reveal";
 import { HERO_VIDEOS } from "@/lib/heroVideos";
@@ -57,20 +57,18 @@ export default async function ServicesPage() {
           {groups.map((group) => (
             <Reveal as="section" key={group.name} id={slugify(group.name)} className="scroll-mt-20">
               <SectionHead title={group.name} size="sm" />
-              <FocusCarousel label={group.name} autoPlay={4000}>
-                {group.services.map((s) => (
-                  <OverlayCard
-                    key={s.slug}
-                    href={`/services/${s.slug}`}
-                    title={s.name}
-                    body={s.tagline}
-                    image={s.imageUrl}
-                    video={HERO_VIDEOS[s.slug]}
-                    cta="Learn more"
-                    aspect="h-full"
-                  />
-                ))}
-              </FocusCarousel>
+              <FrontAndList
+                label={group.name}
+                cta="Learn more"
+                listTitle={`More in ${group.name}`}
+                items={group.services.map((s) => ({
+                  href: `/services/${s.slug}`,
+                  title: s.name,
+                  body: s.tagline,
+                  image: s.imageUrl,
+                  video: HERO_VIDEOS[s.slug],
+                }))}
+              />
             </Reveal>
           ))}
 
