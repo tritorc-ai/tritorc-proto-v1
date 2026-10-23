@@ -6,6 +6,7 @@ import { PhotoSlideshow, type Slide } from "@/components/company/PhotoSlideshow"
 import { RotatingLines } from "@/components/company/RotatingLines";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 import { GlobalOfficesSection } from "@/components/company/GlobalOfficesSection";
+import { CertificationsBento } from "@/components/company/CertificationsBento";
 
 
 // Photos from tritorc.com (saved in public/company) that fade into one another
@@ -77,9 +78,30 @@ export default async function CompanyPage() {
         </section>
 
         {/* 02 — Global offices */}
-        <section>
+        <section id="global-offices" className="scroll-mt-24">
           <SectionHead title="Global offices" />
           <GlobalOfficesSection offices={globalOffices} />
+        </section>
+
+        {/* 03 — Certifications: one bento box, badges cropped from tritorc.com */}
+        <section id="certifications" className="scroll-mt-24">
+          <SectionHead title="Certifications" />
+          <CertificationsBento
+            items={[
+              {
+                title: "ISO 9001:2015",
+                note: "Certified company",
+                image: "/images/certs/iso-9001-2015.webp",
+                alt: "ISO 9001:2015 certified company",
+              },
+              {
+                title: "ECITB",
+                note: "Approved provider",
+                image: "/images/certs/ecitb-approved-provider.webp",
+                alt: "ECITB approved provider",
+              },
+            ]}
+          />
         </section>
 
         {/* 04 — Company profile */}

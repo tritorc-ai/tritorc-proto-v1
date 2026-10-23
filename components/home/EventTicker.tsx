@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Bell, CalendarDays, ChevronRight } from "lucide-react";
 import type { TickerItem } from "@/lib/mock/appContent";
 import { cn } from "@/lib/utils";
@@ -11,8 +12,8 @@ const SWIPE_PX = 28;
 
 const POSITIONS = {
   front: { transform: "translateY(0) scale(1)", opacity: 1, zIndex: 30 },
-  below: { transform: "translateY(30px) scale(0.95)", opacity: 1, zIndex: 20 },
-  above: { transform: "translateY(-30px) scale(0.95)", opacity: 1, zIndex: 20 },
+  below: { transform: "translateY(12px) scale(0.95)", opacity: 1, zIndex: 20 },
+  above: { transform: "translateY(-12px) scale(0.95)", opacity: 1, zIndex: 20 },
   hidden: { transform: "translateY(0) scale(0.88)", opacity: 0, zIndex: 10 },
 } as const;
 
@@ -55,7 +56,7 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
     <div>
       <div className="relative">
         <div
-          className="grid touch-pan-x px-1 py-9 select-none"
+          className="grid touch-pan-x py-3 select-none"
           onPointerDown={(e) => {
             startY.current = e.clientY;
             swiped.current = false;
@@ -96,7 +97,7 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                 }}
                 style={{ gridArea: "1 / 1", ...POSITIONS[position] }}
                 className={cn(
-                  "flex items-center justify-between gap-4 rounded-[26px] bg-[#e4e5e7] px-5 py-4 ring-1 ring-white/70",
+                  "flex h-[83px] items-center gap-2 rounded-[20px] bg-[#e4e5e7] py-[3.5px] pl-3.5 pr-[7px] ring-1 ring-white/70",
                   "transition-[transform,opacity,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
                   front ? "shadow-[0_10px_24px_-8px_rgba(0,0,0,0.22)]" : "shadow-sm",
                   position === "hidden" && "pointer-events-none",
@@ -104,26 +105,44 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
               >
                 <span
                   className={cn(
-                    "min-w-0 transition-[opacity,filter] duration-500",
+                    "min-w-0 flex-1 transition-[opacity,filter] duration-500",
                     !front && "opacity-50 blur-[6px]",
                   )}
                 >
-                  <span className="flex items-center gap-2 text-[13px] text-brand-text-secondary">
-                    <Icon size={15} />
+                  <span className="flex items-center gap-1.5 text-[9.5px] text-brand-text-secondary">
+                    <Icon size={11} />
                     {e.label}
                   </span>
-                  <span className="mt-1.5 line-clamp-2 block text-[16px] font-semibold leading-snug text-brand-dark">
+                  <span className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-[1.25] text-brand-dark">
                     {e.title}
                   </span>
+                  {e.meta && (
+                    <span className="mt-1 block truncate text-[7.5px] font-medium uppercase tracking-[0.12em] text-neutral-500">
+                      {e.meta}
+                    </span>
+                  )}
                 </span>
                 <span
                   className={cn(
-                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark transition-opacity duration-500",
+                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark transition-opacity duration-500",
                     !front && "opacity-0",
                   )}
                 >
-                  <ChevronRight size={18} />
+                  <ChevronRight size={14} />
                 </span>
+                {e.image && (
+                  <>
+                    <span aria-hidden className="h-[58px] w-px shrink-0 bg-black/10" />
+                    <span
+                      className={cn(
+                        "relative h-[76px] w-[117px] shrink-0 overflow-hidden rounded-[14px] bg-[#d5d9dd] transition-[opacity,filter] duration-500",
+                        !front && "opacity-50 blur-[6px]",
+                      )}
+                    >
+                      <Image src={e.image} alt="" fill sizes="117px" className="object-cover" />
+                    </span>
+                  </>
+                )}
               </Link>
             );
           })}
