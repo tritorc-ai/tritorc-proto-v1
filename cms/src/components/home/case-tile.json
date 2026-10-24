@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_home_case-tiles",
+  "info": {
+    "displayName": "Case tile"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "imagePosition": {
+      "type": "string"
+    },
+    "alt": {
+      "type": "string"
+    },
+    "href": {
+      "type": "string"
+    }
+  }
+}

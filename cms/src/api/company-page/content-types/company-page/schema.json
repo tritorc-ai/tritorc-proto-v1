@@ -1,0 +1,41 @@
+{
+  "kind": "singleType",
+  "collectionName": "company_pages",
+  "info": {
+    "singularName": "company-page",
+    "pluralName": "company-pages",
+    "displayName": "Company Page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "overviewText": {
+      "type": "text"
+    },
+    "overviewLines": {
+      "type": "json"
+    },
+    "slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "company.slide"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "certificationBadges": {
+      "type": "component",
+      "repeatable": true,
+      "component": "company.certification-badge"
+    },
+    "profileTitle": {
+      "type": "string"
+    },
+    "profileMeta": {
+      "type": "string"
+    }
+  }
+}

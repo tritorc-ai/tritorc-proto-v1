@@ -536,6 +536,43 @@ export interface ApiCertificationCertification
   };
 }
 
+export interface ApiCompanyPageCompanyPage extends Struct.SingleTypeSchema {
+  collectionName: 'company_pages';
+  info: {
+    displayName: 'Company Page';
+    pluralName: 'company-pages';
+    singularName: 'company-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    certificationBadges: Schema.Attribute.Component<
+      'company.certification-badge',
+      true
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::company-page.company-page'
+    > &
+      Schema.Attribute.Private;
+    overviewLines: Schema.Attribute.JSON;
+    overviewText: Schema.Attribute.Text;
+    profileMeta: Schema.Attribute.String;
+    profileTitle: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    slides: Schema.Attribute.Component<'company.slide', true>;
+    stats: Schema.Attribute.Component<'shared.stat', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCoreValueCoreValue extends Struct.CollectionTypeSchema {
   collectionName: 'core_values';
   info: {
@@ -611,6 +648,39 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFounderMessageFounderMessage
+  extends Struct.SingleTypeSchema {
+  collectionName: 'founder_messages';
+  info: {
+    displayName: 'Founder Message';
+    pluralName: 'founder-messages';
+    singularName: 'founder-message';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::founder-message.founder-message'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    photo: Schema.Attribute.Media<'images'>;
+    photoUrl: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    role: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiGlobalOfficeGlobalOffice
   extends Struct.CollectionTypeSchema {
   collectionName: 'global_offices';
@@ -636,6 +706,40 @@ export interface ApiGlobalOfficeGlobalOffice
       Schema.Attribute.Private;
     order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHomePageHomePage extends Struct.SingleTypeSchema {
+  collectionName: 'home_pages';
+  info: {
+    displayName: 'Home Page';
+    pluralName: 'home-pages';
+    singularName: 'home-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    caseTiles: Schema.Attribute.Component<'home.case-tile', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    heroSlides: Schema.Attribute.Component<'home.hero-slide', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::home-page.home-page'
+    > &
+      Schema.Attribute.Private;
+    primaryCtaHref: Schema.Attribute.String;
+    primaryCtaLabel: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    quotes: Schema.Attribute.Component<'home.quote', true>;
+    secondaryCtaHref: Schema.Attribute.String;
+    secondaryCtaLabel: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -892,6 +996,41 @@ export interface ApiServiceService extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSiteContactSiteContact extends Struct.SingleTypeSchema {
+  collectionName: 'site_contacts';
+  info: {
+    displayName: 'Site Contact';
+    pluralName: 'site-contacts';
+    singularName: 'site-contact';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contactPage: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::site-contact.site-contact'
+    > &
+      Schema.Attribute.Private;
+    phoneIndia: Schema.Attribute.String;
+    phoneIndiaHref: Schema.Attribute.String;
+    phoneUsa: Schema.Attribute.String;
+    phoneUsaHref: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    social: Schema.Attribute.Component<'shared.link', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    website: Schema.Attribute.String;
   };
 }
 
@@ -1440,9 +1579,12 @@ declare module '@strapi/strapi' {
       'api::brand.brand': ApiBrandBrand;
       'api::case-study.case-study': ApiCaseStudyCaseStudy;
       'api::certification.certification': ApiCertificationCertification;
+      'api::company-page.company-page': ApiCompanyPageCompanyPage;
       'api::core-value.core-value': ApiCoreValueCoreValue;
       'api::event.event': ApiEventEvent;
+      'api::founder-message.founder-message': ApiFounderMessageFounderMessage;
       'api::global-office.global-office': ApiGlobalOfficeGlobalOffice;
+      'api::home-page.home-page': ApiHomePageHomePage;
       'api::impact-stat.impact-stat': ApiImpactStatImpactStat;
       'api::journey-milestone.journey-milestone': ApiJourneyMilestoneJourneyMilestone;
       'api::product-category.product-category': ApiProductCategoryProductCategory;
@@ -1450,6 +1592,7 @@ declare module '@strapi/strapi' {
       'api::product.product': ApiProductProduct;
       'api::service-section.service-section': ApiServiceSectionServiceSection;
       'api::service.service': ApiServiceService;
+      'api::site-contact.site-contact': ApiSiteContactSiteContact;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

@@ -38,3 +38,16 @@ Sizes: 1200x1600 (hero images 1344x1800), WebP under about 300 KB.
 SQLite and local disk are for development. Production needs Postgres, media on S3,
 secrets from the environment (APP_KEYS, API_TOKEN_SALT, ADMIN_JWT_SECRET,
 TRANSFER_TOKEN_SALT, JWT_SECRET, DATABASE_URL) and backups.
+
+## Editing page content (no code)
+Every piece of text the app shows is now a Strapi entry. In the admin, Content Manager:
+- Single types (one entry each): Founder Message, Home Page, Company Page, Site Contact, Brand.
+  - Home Page: Hero slides (image, headline lines, side, link), the two Case tiles, Quotes, hero buttons.
+  - Company Page: overview text, rotating lines, slideshow photos, the two stat tiles, certification badges, profile card.
+  - Founder Message starts as a PLACEHOLDER ("Founder Name"): replace name, role, message and upload the portrait.
+- Collections: Products, Product Sections (which products show on the Products page and in what order),
+  Services, Service Sections (groups; a service with no group is not listed), Events, Global Offices and the rest.
+- Images: each picture field has an upload slot (`image` / `photo`) AND a text field (`imageUrl` / `photoUrl`).
+  An uploaded image wins; the text field is the fallback and starts as a local /public path.
+- After clicking Publish the app shows the change within about 30 seconds, with no rebuild.
+- Not here: notifications (the other Strapi, `tritorc-strapi`), the home notification strip and the industries list.

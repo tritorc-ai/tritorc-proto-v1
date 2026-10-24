@@ -5,9 +5,9 @@ import {
   getServiceCategories,
   getServiceSections,
   getServices,
+  getSiteContact,
   getThumbnailMap,
 } from "@/lib/strapi";
-import { CONTACT } from "@/lib/mock/appContent";
 import { PageHeader } from "@/components/app/PageHeader";
 import { FrontAndList } from "@/components/app/FrontAndList";
 import { SectionHead, slugify } from "@/components/app/ui";
@@ -17,12 +17,13 @@ import { HERO_VIDEOS } from "@/lib/heroVideos";
 
 
 export default async function ServicesPage() {
-  const [services, categories, sections, images, thumbnails] = await Promise.all([
+  const [services, categories, sections, images, thumbnails, contact] = await Promise.all([
     getServices(),
     getServiceCategories(),
     getServiceSections(),
     getImageUrls(),
     getThumbnailMap("service"),
+    getSiteContact(),
   ]);
   const categoryImage = new Map(
     categories.map((c) => [c.name, c.directImageUrl ?? (c.imageKey ? images[c.imageKey] : undefined)])
@@ -82,13 +83,13 @@ export default async function ServicesPage() {
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
               <a
-                href={`mailto:${CONTACT.email}`}
+                href={`mailto:${contact.email}`}
                 className="press flex items-center justify-center gap-2 rounded-2xl bg-white py-3 text-[14px] font-semibold text-brand-dark"
               >
                 <Mail size={16} /> Email
               </a>
               <a
-                href={CONTACT.phoneIndiaHref}
+                href={contact.phoneIndiaHref}
                 className="press flex items-center justify-center gap-2 rounded-2xl border border-white/40 py-3 text-[14px] font-semibold"
               >
                 <Phone size={16} /> Call

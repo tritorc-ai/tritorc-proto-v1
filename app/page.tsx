@@ -2,79 +2,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { jakarta } from "@/lib/fonts";
-import { FEATURED_CASE_IDS, NOTIFICATIONS } from "@/lib/mock/appContent";
-import { BentoHero, type BentoSlide } from "@/components/home/BentoHero";
-import { BentoTestimonials, type BentoQuote } from "@/components/home/BentoTestimonials";
+import { getFounderMessage, getHomePage } from "@/lib/strapi";
+import { BentoHero } from "@/components/home/BentoHero";
+import { BentoTestimonials } from "@/components/home/BentoTestimonials";
 import { HomeHeader } from "@/components/home/HomeHeader";
 import { FounderMessage } from "@/components/home/FounderMessage";
 import { UpcomingEvents } from "@/components/home/sections";
 
-// Two case studies shown as tiles. Facts and links come from the case-study notifications;
-// each tile opens the case study itself (the notification's link, in a new tab). The pictures have
-// their original lettering erased; the label, title and line are drawn live in the
-// app font so every home-page word uses one typeface (`pos` keeps the subject in view).
-const CASE_TILES = [
-  {
-    id: FEATURED_CASE_IDS[0],
-    title: "Hot tapping at ONGC NQP",
-    note: 'Live 16" pipeline, zero downtime.',
-    image: "/images/home/case-hot-tapping-clean.webp",
-    pos: "8% 50%",
-    alt: "Technician operating a hot tapping machine on a live pipeline at sunset",
-  },
-  {
-    id: FEATURED_CASE_IDS[1],
-    title: "SARB leak testing",
-    note: 'Nitrogen-helium, 1"–6" piping.',
-    image: "/images/home/case-leak-testing-clean.webp",
-    pos: "12% 50%",
-    alt: "Technician leak testing a flanged pipeline with a pressure gauge at sunset",
-  },
-].map((t) => {
-  const n = NOTIFICATIONS.find((x) => x.id === t.id);
-  return { ...t, href: n?.href ?? "/notifications" };
-});
+// Hero slides, case tiles, quotes and the founder's message are edited in Strapi
+// (Home Page and Founder Message); lib/mock/siteContent.ts holds the built-in defaults.
+// The case-tile pictures have their original lettering erased; the label, title and
+// line are drawn live in the app font so every home-page word uses one typeface
+// (`pos` keeps the subject in view).
 
 export default async function HomePage() {
-  // Every slide's headline is live text in the app font; the pictures have had their own lettering erased.
-  const heroSlides: BentoSlide[] = [
-    {
-      image: "/images/home/hero-tsl3.webp",
-      imagePosition: "38% center",
-      eyebrow: "SINCE 1988",
-      lines: ["Precision", "bolting,", "delivered."],
-      side: "right",
-    },
-    {
-      image: "/images/home/hero-zero-shutdown-clean.webp",
-      imagePosition: "50% 0%",
-      lines: ["Zero shutdown", "tapping."],
-      side: "left",
-      href: "/services/hot-tapping-line-stopping",
-    },
-    {
-      image: "/images/home/hero-precision-bolting-clean.webp",
-      imagePosition: "50% 30%",
-      lines: ["Precision", "bolting,", "delivered."],
-      side: "left",
-      href: "/services",
-    },
-  ];
-
-  const testimonialQuotes: BentoQuote[] = [
-    {
-      quote: "From refineries to remote pipelines, our tools perform where it matters most.",
-      author: "Field Operations, Oil & Gas Sector",
-    },
-    {
-      quote: "Reliable service and world-class support.",
-      author: "Maintenance Head, Power Sector",
-    },
-    {
-      quote: "Behind the bolts of India's first vertical-lift sea bridge.",
-      author: "The New Pamban Bridge, India",
-    },
-  ];
+  const [home, founder] = await Promise.all([getHomePage(), getFounderMessage()]);
 
   return (
     <div className={`relative min-h-screen bg-[#f3f3f2] px-3.5 pt-safe pb-0 space-y-3 ${jakarta.className}`}>
@@ -83,11 +25,7 @@ export default async function HomePage() {
 
       {/* Hero Section */}
       <section aria-label="Hero">
-        <BentoHero
-          slides={heroSlides}
-          primary={{ href: "/products", label: "Explore products" }}
-          secondary={{ href: "/services", label: "Our services" }}
-        />
+        <BentoHero slides={home.heroSlides} primary={home.primary} secondary={home.secondary} />
       </section>
 
       {/* Events Carousel replacing Nesaji-Kachchh */}
@@ -97,9 +35,9 @@ export default async function HomePage() {
 
       {/* 2-Column Bento: Flange Fastening & Products */}
       <section aria-label="Case studies" className="grid grid-cols-[1.52fr_1fr] gap-3 sm:gap-3.5">
-        {CASE_TILES.map((t, i) => (
+        {home.caseTiles.map((t, i) => (
           <Link
-            key={t.id}
+            key={`${t.title}-${i}`}
             href={t.href}
             {...(t.href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
             className="group relative flex h-[190px] sm:h-[200px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#f7f6f4] border border-black/5 p-4 shadow-xs transition-all hover:shadow-sm"
@@ -139,18 +77,14 @@ export default async function HomePage() {
         ))}
       </section>
 
-      {/* Founder's message. PLACEHOLDER name/role/message: replace with the real ones, and set `photo` (e.g. "/images/home/founder.webp") once the portrait is supplied. */}
+      {/* Founder's message (edited in Strapi: Founder Message; the name/role/message there start as placeholders) */}
       <section aria-label="Founder's message" className="pt-0.5">
-        <FounderMessage
-          name="Founder Name"
-          role="Founder, Tritorc"
-          message="Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule."
-        />
+        <FounderMessage name={founder.name} role={founder.role} message={founder.message} photo={founder.photo} />
       </section>
 
       {/* Testimonials Bento */}
       <section aria-label="Client Testimonials" className="pt-0.5">
-        <BentoTestimonials items={testimonialQuotes} />
+        <BentoTestimonials items={home.quotes} />
       </section>
     </div>
   );

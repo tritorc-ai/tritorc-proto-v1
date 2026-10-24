@@ -153,6 +153,44 @@ async function main() {
   else await app.documents(API.brand).create({ data: brandPayload, status: "published" });
   counts[API.brand] = 1;
 
+  // Page-level single types: founder message, home page, company page, site contact.
+  // Images start as the local /public paths the app already uses (imageUrl); an image
+  // uploaded in Strapi takes priority over them.
+  async function upsertSingle(uid, payload) {
+    const doc = await app.documents(uid).findFirst();
+    if (doc) await app.documents(uid).update({ documentId: doc.documentId, data: payload, status: "published" });
+    else await app.documents(uid).create({ data: payload, status: "published" });
+    counts[uid] = 1;
+  }
+  const f = data.founder, h = data.homePage, c = data.companyPage, ct = data.contact;
+  await upsertSingle("api::founder-message.founder-message", { name: f.name, role: f.role, message: f.message, photoUrl: f.photo || null });
+  await upsertSingle("api::home-page.home-page", {
+    heroSlides: h.heroSlides.map((s) => ({
+      imageUrl: s.image, imagePosition: s.imagePosition || null, eyebrow: s.eyebrow || null,
+      lines: s.lines, side: s.side, href: s.href || null,
+    })),
+    primaryCtaLabel: h.primary.label, primaryCtaHref: h.primary.href,
+    secondaryCtaLabel: h.secondary.label, secondaryCtaHref: h.secondary.href,
+    caseTiles: h.caseTiles.map((t) => ({
+      title: t.title, note: t.note, imageUrl: t.image, imagePosition: t.pos, alt: t.alt, href: t.href,
+    })),
+    quotes: h.quotes.map((q) => ({ quote: q.quote, author: q.author })),
+  });
+  await upsertSingle("api::company-page.company-page", {
+    overviewText: c.overviewText,
+    overviewLines: c.overviewLines,
+    slides: c.slides.map((s) => ({ imageUrl: s.src, position: s.position })),
+    stats: c.stats.map((s) => ({ value: s.value, label: s.label })),
+    certificationBadges: c.certifications.map((b) => ({ title: b.title, note: b.note, imageUrl: b.image, alt: b.alt })),
+    profileTitle: c.profileTitle,
+    profileMeta: c.profileMeta,
+  });
+  await upsertSingle("api::site-contact.site-contact", {
+    email: ct.email, phoneIndia: ct.phoneIndia, phoneIndiaHref: ct.phoneIndiaHref,
+    phoneUsa: ct.phoneUsa, phoneUsaHref: ct.phoneUsaHref, website: ct.website, contactPage: ct.contactPage,
+    social: ct.social.map((s) => ({ label: s.label, href: s.href })),
+  });
+
   // Read-only API token for the Next.js app (the key is only shown once, so re-running regenerates it).
   const tokenService = app.service("admin::api-token");
   const existing = await tokenService.getByName("tritorc-app");

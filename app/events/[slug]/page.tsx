@@ -1,24 +1,23 @@
 import { notFound } from "next/navigation";
 import { ArrowUpRight, CalendarDays, Clock, MapPin, Store } from "lucide-react";
 import { jakarta } from "@/lib/fonts";
-import { CONTACT } from "@/lib/mock/appContent";
-import { EVENTS, getEvent } from "@/lib/mock/events";
+import { getEvent, getEvents, getSiteContact } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { Photo, SectionHead } from "@/components/app/ui";
 
-export function generateStaticParams() {
-  return EVENTS.map((e) => ({ slug: e.slug }));
+export async function generateStaticParams() {
+  return (await getEvents()).map((e) => ({ slug: e.slug }));
 }
 
 export async function generateMetadata(props: PageProps<"/events/[slug]">) {
   const { slug } = await props.params;
-  const event = getEvent(slug);
+  const event = await getEvent(slug);
   return { title: event ? `${event.title} | Tritorc` : "Event | Tritorc" };
 }
 
 export default async function EventDetailPage(props: PageProps<"/events/[slug]">) {
   const { slug } = await props.params;
-  const event = getEvent(slug);
+  const [event, contact] = await Promise.all([getEvent(slug), getSiteContact()]);
   if (!event) notFound();
 
   const facts = [
@@ -94,7 +93,7 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
 
         <div className="grid gap-3">
           <a
-            href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(event.title)}`}
+            href={`mailto:${contact.email}?subject=${encodeURIComponent(event.title)}`}
             className="press flex items-center justify-center rounded-2xl bg-brand-dark py-3.5 text-[15px] font-semibold text-white"
           >
             {event.status === "upcoming" ? "Book a meeting with us" : "Get in touch"}

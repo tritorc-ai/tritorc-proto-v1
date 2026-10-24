@@ -1299,6 +1299,173 @@
     "quote": "At Tritorc, we don't just take on challenges — we turn them into outcomes.",
     "since": "Since 1989"
   },
+  "founder": {
+    "name": "Founder Name",
+    "role": "Founder, Tritorc",
+    "message": "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule."
+  },
+  "homePage": {
+    "heroSlides": [
+      {
+        "image": "/images/home/hero-tsl3.webp",
+        "imagePosition": "38% center",
+        "eyebrow": "SINCE 1988",
+        "lines": [
+          "Precision",
+          "bolting,",
+          "delivered."
+        ],
+        "side": "right"
+      },
+      {
+        "image": "/images/home/hero-zero-shutdown-clean.webp",
+        "imagePosition": "50% 0%",
+        "lines": [
+          "Zero shutdown",
+          "tapping."
+        ],
+        "side": "left",
+        "href": "/services/hot-tapping-line-stopping"
+      },
+      {
+        "image": "/images/home/hero-precision-bolting-clean.webp",
+        "imagePosition": "50% 30%",
+        "lines": [
+          "Precision",
+          "bolting,",
+          "delivered."
+        ],
+        "side": "left",
+        "href": "/services"
+      }
+    ],
+    "primary": {
+      "href": "/products",
+      "label": "Explore products"
+    },
+    "secondary": {
+      "href": "/services",
+      "label": "Our services"
+    },
+    "caseTiles": [
+      {
+        "title": "Hot tapping at ONGC NQP",
+        "note": "Live 16\" pipeline, zero downtime.",
+        "image": "/images/home/case-hot-tapping-clean.webp",
+        "pos": "8% 50%",
+        "alt": "Technician operating a hot tapping machine on a live pipeline at sunset",
+        "href": "https://www.tritorc.com/blog/hot-tapping-operation-completed-in-3-days-at-nqc"
+      },
+      {
+        "title": "SARB leak testing",
+        "note": "Nitrogen-helium, 1\"–6\" piping.",
+        "image": "/images/home/case-leak-testing-clean.webp",
+        "pos": "12% 50%",
+        "alt": "Technician leak testing a flanged pipeline with a pressure gauge at sunset",
+        "href": "https://www.tritorc.com/blog/nitrogen-helium-leak-testing-sarb-project-uae"
+      }
+    ],
+    "quotes": [
+      {
+        "quote": "From refineries to remote pipelines, our tools perform where it matters most.",
+        "author": "Field Operations, Oil & Gas Sector"
+      },
+      {
+        "quote": "Reliable service and world-class support.",
+        "author": "Maintenance Head, Power Sector"
+      },
+      {
+        "quote": "Behind the bolts of India's first vertical-lift sea bridge.",
+        "author": "The New Pamban Bridge, India"
+      }
+    ]
+  },
+  "companyPage": {
+    "overviewText": "Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity solutions — delivering turnkey expertise to industrial teams across 11 countries.",
+    "overviewLines": [
+      "Founded in 1989, with more than 35 years of experience.",
+      "Offices across India, the UAE, the USA, Algeria, Oman, Canada and Germany.",
+      "In-house manufacturing of bolting and machining tools since 2013.",
+      "ISO 9001:2015 certified quality management.",
+      "500+ projects delivered by 100+ expert engineers.",
+      "Live pipelines hot-tapped with zero downtime."
+    ],
+    "slides": [
+      {
+        "src": "/company/slide-1-tube-bundle.jpg",
+        "position": "30% 50%"
+      },
+      {
+        "src": "/company/slide-2-onsite-machining.jpg",
+        "position": "25% 40%"
+      },
+      {
+        "src": "/company/slide-3-offshore.webp",
+        "position": "45% 50%"
+      },
+      {
+        "src": "/company/slide-4-sharjah.jpg",
+        "position": "50% 45%"
+      },
+      {
+        "src": "/company/slide-5-wellhead.jpg",
+        "position": "72% 50%"
+      }
+    ],
+    "stats": [
+      {
+        "value": "54+",
+        "label": "Oil & gas projects"
+      },
+      {
+        "value": "300+",
+        "label": "Turbines installed"
+      }
+    ],
+    "certifications": [
+      {
+        "title": "ISO 9001:2015",
+        "note": "Certified company",
+        "image": "/images/certs/iso-9001-2015.webp",
+        "alt": "ISO 9001:2015 certified company"
+      },
+      {
+        "title": "ECITB",
+        "note": "Approved provider",
+        "image": "/images/certs/ecitb-approved-provider.webp",
+        "alt": "ECITB approved provider"
+      }
+    ],
+    "profileTitle": "Company Profile",
+    "profileMeta": "6.4 MB · Updated Jul 2026"
+  },
+  "contact": {
+    "email": "response@tritorc.com",
+    "phoneIndia": "+91 84337 08957",
+    "phoneIndiaHref": "tel:+918433708957",
+    "phoneUsa": "+1 704 749 4050",
+    "phoneUsaHref": "tel:+17047494050",
+    "website": "https://www.tritorc.com",
+    "contactPage": "https://www.tritorc.com/contact-us",
+    "social": [
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/company/tritorc/"
+      },
+      {
+        "label": "YouTube",
+        "href": "https://www.youtube.com/c/TritorcEquipments"
+      },
+      {
+        "label": "Instagram",
+        "href": "https://www.instagram.com/tritorcgroup/"
+      },
+      {
+        "label": "Facebook",
+        "href": "https://www.facebook.com/tritorcequipment"
+      }
+    ]
+  },
   "events": [
     {
       "slug": "adipec-2026",
