@@ -24,11 +24,13 @@ import {
   JOURNEY,
   LIBRARY_MEDIA_ASSETS,
   PRODUCTS,
+  PRODUCT_LIST,
   SERVICES,
   SERVICE_CATEGORIES,
   SERVICE_SECTIONS,
   TESTIMONIALS,
   BRAND,
+  type ProductListSection,
   type CaseStudy,
   type Certification,
   type CoreValue,
@@ -307,28 +309,157 @@ export async function getJourney(): Promise<JourneyMilestone[]> {
   return JOURNEY;
 }
 
+// ---------------------------------------------------------------------------
+// Products and services come from the Tritorc Strapi (collection types
+// "product", "service", "product-section", "service-section"). Every getter
+// falls back to the built-in sample content in lib/mock/content.ts when Strapi
+// is unreachable, errors, or has no entries yet, so the app never renders empty.
+// Photos are still resolved separately (captions / file names, see above); the
+// mock `imageKey`s are kept as a fallback so existing photos keep working.
+// ---------------------------------------------------------------------------
+
+interface StrapiProduct {
+  slug: string;
+  name: string;
+  series?: string | null;
+  tagline?: string | null;
+  specs?: { label: string; value: string }[] | null;
+  directImageUrl?: string | null;
+  catalogueTitle?: string | null;
+  category?: { name: string } | null;
+}
+
+interface StrapiService {
+  slug: string;
+  name: string;
+  category?: string | null;
+  tagline?: string | null;
+  description?: string | null;
+  directImageUrl?: string | null;
+  catalogueTitle?: string | null;
+}
+
+const MOCK_PRODUCTS_BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
+const MOCK_SERVICES_BY_SLUG = new Map(SERVICES.map((s) => [s.slug, s]));
+
+type Catalogue = { title: string; meta: string; url: string };
+
+/**
+ * Strapi only stores the catalogue's title. When it matches the sample entry,
+ * keep that entry's subtitle ("10.9 MB · Updated ...") and link, so cards look
+ * the same whether the data came from Strapi or the built-in sample content.
+ */
+function toCatalogue(title?: string | null, mock?: Catalogue | null): Catalogue | null {
+  if (!title) return null;
+  const same = mock && mock.title === title;
+  return { title, meta: same ? mock.meta : "", url: same ? mock.url : "#" };
+}
+
+export async function getProducts(): Promise<Product[]> {
+  const res = await strapiFetch<{ data: StrapiProduct[] }>("/api/products", {
+    "populate[specs]": "true",
+    "populate[category]": "true",
+    sort: "order:asc",
+    "pagination[pageSize]": "200",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.length === 0) return PRODUCTS;
+  return res.data.map((p) => {
+    const mock = MOCK_PRODUCTS_BY_SLUG.get(p.slug);
+    return {
+      slug: p.slug,
+      name: p.name,
+      series: p.series ?? mock?.series ?? "",
+      category: p.category?.name ?? mock?.category ?? "",
+      tagline: p.tagline ?? mock?.tagline ?? "",
+      specs: (p.specs ?? []).map((s) => ({ label: s.label, value: s.value })),
+      media: [],
+      catalogue: toCatalogue(p.catalogueTitle, mock?.catalogue) ?? mock?.catalogue ?? null,
+      heroImageKey: mock?.heroImageKey,
+      directImageUrl: p.directImageUrl ?? mock?.directImageUrl,
+    };
+  });
+}
+
+export async function getProduct(slug: string): Promise<Product | undefined> {
+  return (await getProducts()).find((p) => p.slug === slug);
+}
+
+/** The sections and cards shown on the Products page, in order. */
+export async function getProductList(): Promise<ProductListSection[]> {
+  const res = await strapiFetch<{
+    data: { name: string; products?: { slug: string; name: string; listingTitle?: string | null; listingSeries?: string | null; series?: string | null }[] }[];
+  }>("/api/product-sections", {
+    sort: "order:asc",
+    "populate[products][sort]": "order:asc",
+    "populate[products][fields][0]": "slug",
+    "populate[products][fields][1]": "name",
+    "populate[products][fields][2]": "listingTitle",
+    "populate[products][fields][3]": "listingSeries",
+    "populate[products][fields][4]": "series",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.every((s) => !s.products?.length)) return PRODUCT_LIST;
+  return res.data
+    .filter((s) => s.products && s.products.length > 0)
+    .map((s) => ({
+      name: s.name,
+      items: (s.products ?? []).map((p) => ({
+        slug: p.slug,
+        title: p.listingTitle ?? p.name,
+        series: p.listingSeries ?? p.series ?? "",
+      })),
+    }));
+}
+
+function mapService(s: StrapiService): Service {
+  const mock = MOCK_SERVICES_BY_SLUG.get(s.slug);
+  return {
+    slug: s.slug,
+    name: s.name,
+    category: s.category ?? mock?.category ?? s.name,
+    tagline: s.tagline ?? mock?.tagline ?? "",
+    description: s.description ?? mock?.description ?? "",
+    imageKey: mock?.imageKey,
+    directImageUrl: s.directImageUrl ?? mock?.directImageUrl,
+    media: [],
+    catalogue: toCatalogue(s.catalogueTitle, mock?.catalogue) ?? mock?.catalogue ?? null,
+  };
+}
+
 export async function getServices(): Promise<Service[]> {
-  return SERVICES;
+  const res = await strapiFetch<{ data: StrapiService[] }>("/api/services", {
+    sort: "order:asc",
+    "pagination[pageSize]": "200",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.length === 0) return SERVICES;
+  return res.data.map(mapService);
 }
 
 export async function getService(slug: string): Promise<Service | undefined> {
-  return SERVICES.find((s) => s.slug === slug);
+  return (await getServices()).find((s) => s.slug === slug);
 }
 
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   return SERVICE_CATEGORIES;
 }
 
+/** The six service groups. Each group's `categories` are its services' category names, in order. */
 export async function getServiceSections(): Promise<ServiceSection[]> {
-  return SERVICE_SECTIONS;
-}
-
-export async function getProducts(): Promise<Product[]> {
-  return PRODUCTS;
-}
-
-export async function getProduct(slug: string): Promise<Product | undefined> {
-  return PRODUCTS.find((p) => p.slug === slug);
+  const res = await strapiFetch<{
+    data: { name: string; color?: string | null; services?: { category?: string | null; name: string }[] }[];
+  }>("/api/service-sections", {
+    sort: "order:asc",
+    "populate[services][sort]": "order:asc",
+    "populate[services][fields][0]": "category",
+    "populate[services][fields][1]": "name",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.every((s) => !s.services?.length)) return SERVICE_SECTIONS;
+  return res.data
+    .filter((s) => s.services && s.services.length > 0)
+    .map((s) => ({
+      name: s.name,
+      color: s.color ?? "#171717",
+      categories: (s.services ?? []).map((sv) => sv.category ?? sv.name),
+    }));
 }
 
 export async function getTestimonials(): Promise<Testimonial[]> {

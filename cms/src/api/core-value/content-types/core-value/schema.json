@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "core_values",
+  "info": {
+    "singularName": "core-value",
+    "pluralName": "core-values",
+    "displayName": "Core Value"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}

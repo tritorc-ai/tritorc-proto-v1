@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_shared_hours",
+  "info": {
+    "displayName": "Hour"
+  },
+  "options": {},
+  "attributes": {
+    "day": {
+      "type": "string",
+      "required": true
+    },
+    "hours": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
