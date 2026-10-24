@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "global_offices",
+  "info": {
+    "singularName": "global-office",
+    "pluralName": "global-offices",
+    "displayName": "Global Office"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}

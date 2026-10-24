@@ -1,6 +1,5 @@
 import { jakarta } from "@/lib/fonts";
-import { getImageUrls, getProducts, getThumbnailMap } from "@/lib/strapi";
-import { PRODUCT_LIST } from "@/lib/mock/content";
+import { getImageUrls, getProductList, getProducts, getThumbnailMap } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { FrontAndList } from "@/components/app/FrontAndList";
 import { SectionHead, slugify } from "@/components/app/ui";
@@ -9,16 +8,17 @@ import { Reveal } from "@/components/app/Reveal";
 
 
 export default async function ProductsPage() {
-  const [products, images, thumbnails] = await Promise.all([
+  const [productList, products, images, thumbnails] = await Promise.all([
+    getProductList(),
     getProducts(),
     getImageUrls(),
     getThumbnailMap("product"),
   ]);
   const bySlug = new Map(products.map((p) => [p.slug, p]));
 
-  // Sections and order come from PRODUCT_LIST (lib/mock/content.ts); each card
+  // Sections and order come from Strapi (product sections; sample content is the fallback); each card
   // opens that product directly.
-  const sections = PRODUCT_LIST.map((section) => ({
+  const sections = productList.map((section) => ({
     ...section,
     cards: section.items.flatMap((item) => {
       const product = bySlug.get(item.slug);

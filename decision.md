@@ -4,7 +4,7 @@
 without re-reading the whole repo. **Read this first. Update it at the end of every task** (see
 "How to maintain" at the bottom).
 
-_Last updated: 2026-10-23 (one typeface across the home page)_
+_Last updated: 2026-10-24 (own content CMS in `cms/`; products + services read from it)_
 
 ---
 
@@ -64,9 +64,17 @@ lib/
 - Env (Next `.env.local`, gitignored): `NOTIF_API_URL`, `NOTIF_API_WRITE_TOKEN`, `NOTIF_API_READ_TOKEN`, `NEXT_PUBLIC_VAPID_PUBLIC_KEY`. Env (Strapi `.env`): `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (placeholder mailto: change it). `STRAPI_API_URL`/`STRAPI_API_READ_TOKEN` still = cms.tritorc.com catalogue.
 - Phases: 1 Foundation ✅ · 2 inbox ✅ (live `GET /api/notifications`, unread badge, in-app banner) · 3 auto triggers + topics · 4 enquiry (`EnquiryForm` still `mailto:`) · 5 LinkedIn.
 
+## 4c. Content CMS (own Strapi in `cms/`) - branch `new-strapi`
+- Why: access to the shared `cms.tritorc.com` is held by someone else (token returned 401), so the app gets its **own content Strapi 5** at `cms/` (separate from `tritorc-strapi` = notifications/enquiries). Default port **1338** (`tritorc-strapi` uses 1337).
+- 14 content types as code in `cms/src/api/*` (Draft & Publish on): product-section, product-category, product, service-section, service, case-study, testimonial, certification, journey-milestone, impact-stat, core-value, global-office, event, brand. `cms/scripts/seed.js` loads them from `cms/scripts/seed-data.json` (exported from `lib/mock/content.ts`/`events.ts`) and creates the read-only token `tritorc-app`; safe to re-run.
+- **Wired so far:** `getProducts`, `getProduct`, `getProductList` (Products page sections), `getServices`, `getService`, `getServiceSections` in `lib/strapi.ts`. Each falls back to `lib/mock/*` when Strapi fails or is empty. Everything else (case studies, company, events, testimonials) is still mock.
+- Images: unchanged convention - caption `product:<slug>:thumbnail|hero|gallery:product|gallery:in-use` (`service:` likewise); `directImageUrl` text field keeps existing remote photos working. No code change needed to add photos later.
+- Env (Next `.env.local`): `STRAPI_API_URL=http://localhost:1338` + `STRAPI_API_READ_TOKEN` (seed script writes both). Run CMS: `powershell -File cms/start-dev.ps1`. Notes: `cms/TRITORC-NOTES.md`.
+
 ## 5. Change log (newest first)
 | Date | Change | Files |
 |---|---|---|
+| 2026-10-24 | **Own content Strapi added (`cms/`) and products/services wired to it** (branch `new-strapi`). 14 content types, seed script, read-only token; `getProducts/getProduct/getProductList/getServices/getService/getServiceSections` read Strapi with mock fallback; Products page takes its sections from `getProductList` (teammates' `FrontAndList` layout kept). Seed data mirrors `main`'s curated lists (4 service groups; Onsite Controlled Bolting + Dry Rental ungrouped). Event type also carries category/hours/sourceUrl; catalogue subtitle kept from sample data. Audit: 489 field checks Strapi vs project = 0 mismatches; 72 pages identical on Strapi data vs sample data (and with Strapi off). Not yet: hosting, Postgres/S3, remaining content types wired | `cms/**`, `lib/strapi.ts`, `app/products/page.tsx`, `decision.md` |
 | 2026-10-23 | **One typeface on Home = Plus Jakarta Sans** (the font of the section names on Products: "Controlled Bolting", "Pumps"). (1) Removed every `font-mono` label/numeral on Home (hero eyebrow, events meta, founder label, stats numerals) and put `jakarta` on `BottomNav` (it was Helvetica). Verified in the browser: all visible text on `/` computes to Plus Jakarta Sans (only `<script>` tags differ). (2) **Lettering inside the pictures removed and re-drawn live**: erased the baked-in text from the two case-study pictures and the two hero posters by interpolating across the letter strokes only (script kept out of the repo; outputs `case-hot-tapping-clean.webp`, `case-leak-testing-clean.webp`, `hero-zero-shutdown-clean.webp`, `hero-precision-bolting-clean.webp`). `BentoHero` slides are now one shape `{image, lines[], side, eyebrow?, href?}` (no more poster/text kinds); case tiles draw label/title/rule/note live again (so headings are level by construction). Old picture variants (v4/v6, baked-text hero files) deleted except `hero-zero-shutdown.webp`/`hero-precision-bolting*.webp` originals kept unused | `components/home/*`, `components/app/BottomNav.tsx`, `app/page.tsx`, `public/images/home/*-clean.webp` |
 | 2026-10-23 | **Case-study tile headings on one level**: the lettering is baked into the two pictures and sat ~10px higher in the SARB one. Measured the text rows in both files (label top 99px/743 vs 72px/890) and added 124px of smooth sky fill above the SARB picture (`case-leak-testing-v6.webp`, 700x944; top 70 rows replaced by a blurred colour band) so its "CASE STUDY" and title now sit at the same height as the ONGC tile (within ~1px). The SARB lettering is still slightly smaller than ONGC's (picture proportions) - a designer re-export with equal type size would fix that fully | `public/images/home/case-leak-testing-v6.webp`, `app/page.tsx` |
 | 2026-10-23 | **Hero buttons softened** (user: "very sharp boundary"): removed the 1px dark outline on "Our services"; both buttons are now frosted glass (`backdrop-blur-md`) with a faint top highlight and a diffuse shadow instead of a hard edge: primary = `#1a1a1c` at 90%, secondary = white at 60% | `components/home/BentoHero.tsx` |
@@ -123,12 +131,13 @@ lib/
 
 ## 6. Open items / TODO
 - Strapi: create admin user at /admin; set real `VAPID_SUBJECT`; production DB (Postgres) + hosting; enquiry email alert (Phase 4); lifecycle hooks for event/product/service/library; regenerate tokens for prod with `npm run create-tokens` (set `TOKEN_ENV_FILE` to write them to a file).
-- Wire remaining mock content (products, services, testimonials, etc.) to Strapi when ready.
+- Content CMS (`cms/`): hosting + Postgres + S3 media + backups; create admin user; wire the remaining types (case studies, testimonials, certifications, journey, impact stats, core values, offices, events, brand); optional: real image fields instead of caption tags; webhook revalidation. Decide with the team whether notifications and content should share one Strapi.
 - (add as they come up)
 
 ## 7. Gotchas
 - Windows dev machine; git warns LF→CRLF on edits (harmless).
 - `lib/strapi.ts` is `server-only` — don't import from client components.
+- Windows: Strapi's admin build can fail with swc "Failed to load native binding" when a drive root lets all users replace files; `cms/start-dev.ps1` works around it with a temporary drive letter. SQLite allows one writer: stop Strapi before `node cms/scripts/seed.js`.
 
 ---
 

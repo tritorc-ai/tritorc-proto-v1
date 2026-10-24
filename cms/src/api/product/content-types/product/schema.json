@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "listingTitle": {
+      "type": "string"
+    },
+    "listingSeries": {
+      "type": "string"
+    },
+    "series": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "text"
+    },
+    "specs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.spec"
+    },
+    "directImageUrl": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    },
+    "catalogueTitle": {
+      "type": "string"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-category.product-category",
+      "inversedBy": "products"
+    },
+    "listingSection": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product-section.product-section",
+      "inversedBy": "products"
+    }
+  }
+}
