@@ -71,7 +71,8 @@ Push needs HTTPS, and the phone only has to reach the app (the app talks to Stra
    iPhone: tap Share, then Add to Home Screen, and open it from the home-screen icon.
 2. In the app tap the bell (top right), then turn notifications on and allow them.
 3. On the computer open `/admin`, create your admin account the first time, then Content Manager,
-   Notification, Create: fill Title and Body, leave Topic on general, tick **Send Push**, Save.
+   Notification, Create: fill Title and Body, leave Topic on general, set the **`sendPush`** toggle to True
+   (it is a toggle named `sendPush`, easy to miss, and False by default), Save.
 4. Within about 5 seconds the phone shows the alert (the app inbox shows it too). `Push Sent` on the entry
    says how many phones got it; a dead phone is removed automatically.
 Check the Push Subscription collection: you should see one entry for your phone.
@@ -94,7 +95,7 @@ Collections: Notification, Push Subscription (created by the app, do not edit), 
 - **Send a notification:** Content Manager, Notification, Create. Fill Title and Body; Url is where a tap goes
   (for example `/events/adipec-2026`); Type sets the label in the app; Topic picks who gets the phone alert
   (`general` = everyone, otherwise only people who follow that topic). It always appears in the app's inbox.
-  Tick **Send Push** BEFORE saving to also alert phones. Within about 5 seconds it is sent once; `Pushed At` and
+  Set the **`sendPush`** toggle (named exactly that, False by default) to True BEFORE saving to also alert phones. Within about 5 seconds it is sent once; `Pushed At` and
   `Push Sent` show the result. Saving again never re-sends.
 - **Setup on a new machine / server:**
   1. `npx web-push generate-vapid-keys`, put them in this folder's `.env` as `VAPID_PUBLIC_KEY`,
