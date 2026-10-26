@@ -12,16 +12,6 @@ import { CertificationsBento } from "@/components/company/CertificationsBento";
 // and the company-profile card are edited in Strapi (Company Page); the built-in
 // defaults live in lib/mock/siteContent.ts.
 
-// Local flag images (public/flags) keyed by the country names used in the office data.
-const FLAG_CODE: Record<string, string> = {
-  India: "in",
-  USA: "us",
-  UAE: "ae",
-  Algeria: "dz",
-  Oman: "om",
-  Canada: "ca",
-  Germany: "de",
-};
 
 export default async function CompanyPage() {
   const [company, globalOffices, companyProfileUrl] = await Promise.all([
