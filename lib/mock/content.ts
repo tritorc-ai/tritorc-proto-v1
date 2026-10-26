@@ -522,7 +522,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    heroImageKey: "productTorqueHero",
+    directImageUrl: "/products/tsl-20.png",
   },
   {
     slug: "btl-19",
@@ -872,8 +872,7 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: "Torque Range", value: "275 - 12,834 Nm" }],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/hydraulic_torque_wrench_thl_series_ultra_slim_2_a15de7d5f2.webp",
+    directImageUrl: "/products/thl-ultra-slim.webp",
   },
   {
     slug: "slt-series",
