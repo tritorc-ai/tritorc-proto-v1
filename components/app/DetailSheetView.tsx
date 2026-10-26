@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ChevronLeft, ChevronRight, Download, FileText, Images, Info, ListChecks, Play } from "lucide-react";
+import { ArrowLeft, Download, FileText, Info, ListChecks, Play } from "lucide-react";
 import type { ProductSpec } from "@/lib/mock/content";
 import { MediaPreviewModal, type PreviewableAsset } from "./MediaPreviewModal";
 import { PdfPreviewModal } from "./PdfPreviewModal";
@@ -27,150 +27,6 @@ function SectionTitle({ title, hint }: { title: string; hint?: string }) {
   );
 }
 
-function ContextToggle({
-  value,
-  onChange,
-  productLabel,
-}: {
-  value: "product" | "in-use";
-  onChange: (v: "product" | "in-use") => void;
-  productLabel: string;
-}) {
-  return (
-    <div role="tablist" aria-label="Photo type" className="flex rounded-full bg-[#e4e5e7] p-0.75">
-      {(["product", "in-use"] as const).map((v) => (
-        <button
-          key={v}
-          role="tab"
-          aria-selected={value === v}
-          onClick={() => onChange(v)}
-          className={cn(
-            "rounded-full px-3.5 py-1.5 text-[12px] font-semibold transition-colors duration-300",
-            value === v ? "bg-brand-dark text-white" : "text-brand-text-secondary hover:text-brand-dark",
-          )}
-        >
-          {v === "product" ? productLabel : "In use"}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Gallery({
-  photos,
-  name,
-  onOpen,
-}: {
-  photos: { id: string; url: string }[];
-  name: string;
-  onOpen: (index: number) => void;
-}) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-
-  const goTo = useCallback((i: number) => {
-    const track = trackRef.current;
-    const el = track?.children[i] as HTMLElement | undefined;
-    if (!track || !el) return;
-    track.scrollTo({
-      left: el.offsetLeft - (track.clientWidth - el.clientWidth) / 2,
-      behavior: prefersReducedMotion() ? "auto" : "smooth",
-    });
-  }, []);
-
-  const onScroll = () => {
-    const track = trackRef.current;
-    if (!track) return;
-    const center = track.scrollLeft + track.clientWidth / 2;
-    let best = 0;
-    let bestDist = Infinity;
-    Array.from(track.children).forEach((c, i) => {
-      const el = c as HTMLElement;
-      const d = Math.abs(el.offsetLeft + el.clientWidth / 2 - center);
-      if (d < bestDist) {
-        bestDist = d;
-        best = i;
-      }
-    });
-    setActive(best);
-  };
-
-  return (
-    <div>
-      <div className="group/gallery relative">
-        <div
-          ref={trackRef}
-          onScroll={onScroll}
-          role="group"
-          aria-label={`${name} photos`}
-          className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth pb-1 before:block before:w-[calc(10%-12px)] before:shrink-0 after:block after:w-[calc(10%-12px)] after:shrink-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {photos.map((p, i) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => onOpen(i)}
-              aria-label={`Open photo ${i + 1} of ${photos.length}`}
-              className="relative aspect-[4/5] w-[80%] shrink-0 snap-center overflow-hidden rounded-[26px] bg-[#e4e5e7] outline-none transition-transform duration-500 ease-(--ease-premium) focus-visible:ring-2 focus-visible:ring-brand-dark/40 active:scale-[0.985]"
-            >
-              <Image
-                src={p.url}
-                alt={`${name}, photo ${i + 1}`}
-                fill
-                sizes="(max-width: 448px) 84vw, 376px"
-                className="object-cover"
-              />
-            </button>
-          ))}
-        </div>
-        {photos.length > 1 && (
-          <>
-            <button
-              type="button"
-              aria-label="Previous photo"
-              onClick={() => goTo(Math.max(0, active - 1))}
-              disabled={active === 0}
-              className="absolute left-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-brand-dark shadow-sm backdrop-blur transition-opacity hover:bg-white disabled:opacity-0 md:flex"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              type="button"
-              aria-label="Next photo"
-              onClick={() => goTo(Math.min(photos.length - 1, active + 1))}
-              disabled={active === photos.length - 1}
-              className="absolute right-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-brand-dark shadow-sm backdrop-blur transition-opacity hover:bg-white disabled:opacity-0 md:flex"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </>
-        )}
-      </div>
-      {photos.length > 1 && (
-        <div className="mt-3.5 flex items-center justify-center gap-1.5">
-          {photos.map((p, i) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => goTo(i)}
-              aria-label={`Show photo ${i + 1} of ${photos.length}`}
-              aria-current={i === active}
-              className="flex h-4 items-center"
-            >
-              <span
-                className={cn(
-                  "h-1 rounded-full transition-all duration-500 ease-(--ease-premium)",
-                  i === active ? "w-5 bg-brand-dark" : "w-1.5 bg-black/20",
-                )}
-              />
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export interface DetailMedia {
   id: string;
   kind: "photo" | "video";
@@ -180,11 +36,10 @@ export interface DetailMedia {
 
 /**
  * Shared detail screen for products and services: a hero card behind a
- * rounded information sheet (overview, gallery, video, about, specs,
+ * rounded information sheet (overview, video, about, specs,
  * catalogue). Optional sections only render when their data exists.
  */
 export function DetailSheetView({
-  slug,
   name,
   tagline,
   eyebrow,
@@ -196,7 +51,6 @@ export function DetailSheetView({
   heroImageUrl,
   heroVideo,
   backHref,
-  overviewLabel = "Product",
 }: {
   slug: string;
   name: string;
@@ -211,10 +65,9 @@ export function DetailSheetView({
   /** Muted looping clip that plays in the hero instead of the still image. */
   heroVideo?: HeroVideoSource;
   backHref: string;
-  /** Name of the non-"in use" photo group in the toggle. */
+  /** No longer used (the photo gallery was removed); kept so existing callers still compile. */
   overviewLabel?: string;
 }) {
-  const [photoMode, setPhotoMode] = useState<"product" | "in-use">("product");
   const [expanded, setExpanded] = useState(false);
   const [viewer, setViewer] = useState<{ items: PreviewableAsset[]; index: number } | null>(null);
   const [pdfOpen, setPdfOpen] = useState(false);
@@ -224,20 +77,8 @@ export function DetailSheetView({
   const sheetRef = useRef<HTMLDivElement>(null);
 
   const productPhotos = media.filter((m) => m.kind === "photo" && m.context === "product");
-  const inUsePhotos = media.filter((m) => m.kind === "photo" && m.context === "in-use");
   const videos = media.filter((m) => m.kind === "video");
   const heroImage = heroImageUrl ?? productPhotos[0]?.url;
-
-  // With no tagged product shots, the hero image stands in as the one gallery photo.
-  const productGallery =
-    productPhotos.length > 0
-      ? productPhotos
-      : heroImageUrl
-        ? [{ id: `${slug}-hero`, url: heroImageUrl }]
-        : [];
-  const hasToggle = productGallery.length > 0 && inUsePhotos.length > 0;
-  const mode = hasToggle ? photoMode : inUsePhotos.length > 0 && productGallery.length === 0 ? "in-use" : "product";
-  const photos = mode === "in-use" ? inUsePhotos : productGallery;
 
   const catalogueUrl = catalogue?.url && catalogue.url !== "#" ? catalogue.url : undefined;
 
@@ -288,17 +129,10 @@ export function DetailSheetView({
   };
 
   const shortcuts = [
-    photos.length > 0 && { id: "pd-gallery", label: "Photos", count: `${photos.length}`, icon: Images },
     specs.length > 0 && { id: "pd-specs", label: "Specs", count: `${specs.length}`, icon: ListChecks },
     about && { id: "pd-about", label: "About", count: undefined, icon: Info },
     catalogue && { id: "pd-catalogue", label: "Catalogue", count: undefined, icon: FileText },
-  ].filter(Boolean) as { id: string; label: string; count?: string; icon: typeof Images }[];
-
-  const openPhoto = (index: number) =>
-    setViewer({
-      items: photos.map((p, i) => ({ type: "Photo", title: `${name} — photo ${i + 1}`, imageUrl: p.url })),
-      index,
-    });
+  ].filter(Boolean) as { id: string; label: string; count?: string; icon: typeof Info }[];
 
   const openVideo = (index: number) =>
     setViewer({
@@ -418,19 +252,6 @@ export function DetailSheetView({
             </div>
           )}
         </section>
-
-        {photos.length > 0 && (
-          <section id="pd-gallery" className="mt-10 scroll-mt-20">
-            <div className="mb-3.5 flex items-end justify-between gap-3">
-              <div>
-                <h2 className="text-[26px] font-bold leading-[1.1] tracking-[-0.02em] text-brand-dark">Gallery</h2>
-                <p className="mt-1 text-[14px] text-brand-text-tertiary">See it from every angle</p>
-              </div>
-              {hasToggle && <ContextToggle value={mode} onChange={setPhotoMode} productLabel={overviewLabel} />}
-            </div>
-            <Gallery key={mode} photos={photos} name={name} onOpen={openPhoto} />
-          </section>
-        )}
 
         {videos.length > 0 && (
           <section id="pd-video" className="mt-10 scroll-mt-20">
