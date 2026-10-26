@@ -590,6 +590,7 @@ export const PRODUCTS: Product[] = [
     media: [],
     catalogue: IN_SITU_MACHINING_CATALOGUE,
     heroImageKey: "catPipeColdCutting",
+    directImageUrl: "/products/pipe-cold-cutting-beveling-machines-studio.webp",
   },
   {
     slug: "flange-facing-machines",
@@ -920,6 +921,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     media: [],
     catalogue: BOLTING_CATALOGUE,
+    directImageUrl: "/products/twe-3-studio.webp",
   },
   {
     slug: "twp-3",

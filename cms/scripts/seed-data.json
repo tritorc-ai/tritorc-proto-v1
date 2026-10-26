@@ -322,7 +322,8 @@
         "meta": "6.3 MB · Updated Aug 2026",
         "url": "#"
       },
-      "heroImageKey": "catPipeColdCutting"
+      "heroImageKey": "catPipeColdCutting",
+      "directImageUrl": "/products/pipe-cold-cutting-beveling-machines-studio.webp"
     },
     {
       "slug": "flange-facing-machines",
@@ -841,7 +842,8 @@
         "title": "Bolting & Machining Solutions Catalogue",
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/products/twe-3-studio.webp"
     },
     {
       "slug": "twp-3",
@@ -1306,7 +1308,7 @@
     "name": "Mr. Naresh P Purswani",
     "role": "Founder, Tritorc",
     "photo": "/founder/naresh-p-purswani-white.png",
-    "message": "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule."
+    "message": "At Tritorc we don't give up easily. We keep going and keep growing. We operate with unshakeable faith and trust."
   },
   "homePage": {
     "heroSlides": [
@@ -1440,6 +1442,8 @@
         "alt": "ECITB approved provider"
       }
     ],
+    "vision": "Growth for all, Limits on none.",
+    "mission": "50X",
     "profileTitle": "Company Profile",
     "profileMeta": "6.4 MB · Updated Jul 2026"
   },
