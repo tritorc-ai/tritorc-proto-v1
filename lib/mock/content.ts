@@ -861,8 +861,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_862e155acf2012c3fb5c_862e155acf2012c3_43c95b4f12.png",
+    directImageUrl: "/products/thl-series.webp",
   },
   {
     slug: "thl-ultra-slim",
