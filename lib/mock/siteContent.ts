@@ -121,7 +121,7 @@ export const HOME_PAGE: HomePageContent = {
 export const FOUNDER: FounderContent = {
   name: "Mr. Naresh P Purswani",
   role: "Founder, Tritorc",
-  photo: "/founder/naresh-p-purswani.png",
+  photo: "/founder/naresh-p-purswani-white.png",
   message:
     "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule.",
 };
