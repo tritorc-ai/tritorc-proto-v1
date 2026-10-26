@@ -119,8 +119,9 @@ export const HOME_PAGE: HomePageContent = {
 
 // PLACEHOLDER name, role and message: replace them in Strapi (Founder Message) and upload the portrait.
 export const FOUNDER: FounderContent = {
-  name: "Founder Name",
+  name: "Mr. Naresh P Purswani",
   role: "Founder, Tritorc",
+  photo: "/founder/naresh-p-purswani.png",
   message:
     "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule.",
 };
