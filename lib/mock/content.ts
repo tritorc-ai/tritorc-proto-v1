@@ -522,7 +522,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl: "/products/tsl-20.png",
+    directImageUrl: "/products/tsl-20.webp",
   },
   {
     slug: "btl-19",
