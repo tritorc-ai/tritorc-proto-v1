@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3f3f2" />
+  <title>Offline | Tritorc</title>
+  <!-- Self-contained on purpose: shown by the service worker when the network is down, so it must
+       not depend on the app's CSS or scripts, which would not load either. -->
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #f3f3f2;
+      color: #0f0f10;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    main { width: 100%; max-width: 360px; text-align: center; }
+    .logo { height: 14px; width: auto; filter: brightness(0); margin-bottom: 36px; }
+    .ring {
+      width: 84px; height: 84px; margin: 0 auto 24px;
+      border-radius: 50%; background: #e4e5e7;
+      display: flex; align-items: center; justify-content: center;
+    }
+    h1 { margin: 0 0 8px; font-size: 24px; line-height: 1.15; letter-spacing: -0.02em; }
+    p { margin: 0 0 28px; font-size: 15px; line-height: 1.5; color: #5f5f64; }
+    button {
+      appearance: none; border: 0; cursor: pointer;
+      padding: 14px 28px; border-radius: 999px;
+      background: #171717; color: #fff;
+      font: inherit; font-size: 15px; font-weight: 600;
+    }
+    button:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+  <main>
+    <img class="logo" src="/brand/tritorc-logo.png" alt="Tritorc" width="2736" height="371" />
+    <div class="ring" aria-hidden="true">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#171717" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 8.8a15 15 0 0 1 20 0" />
+        <path d="M5 12.5a10 10 0 0 1 14 0" />
+        <path d="M8.5 16a5 5 0 0 1 7 0" />
+        <circle cx="12" cy="19.5" r="0.6" fill="#171717" />
+        <path d="M3 3l18 18" />
+      </svg>
+    </div>
+    <h1>You are offline</h1>
+    <p>Tritorc needs a connection to load products, services and updates. Check your signal or Wi-Fi and try again.</p>
+    <button type="button" onclick="location.reload()">Try again</button>
+  </main>
+</body>
+</html>

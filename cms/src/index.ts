@@ -30,11 +30,61 @@ async function sendPending(strapi: Core.Strapi) {
   }
 }
 
+const ENQUIRY_UID = 'api::enquiry.enquiry';
+let alertBusy = false;
+
+// New enquiries are emailed to ENQUIRY_ALERT_TO when SMTP is set up (SMTP_HOST in .env, see
+// .env.example); otherwise they are only stored and nothing is sent. Polled for the same reasons
+// as the push sender above: it runs outside the save's transaction and survives restarts.
+async function sendEnquiryAlerts(strapi: Core.Strapi) {
+  const to = process.env.ENQUIRY_ALERT_TO;
+  if (!to || !process.env.SMTP_HOST || alertBusy) return;
+  alertBusy = true;
+  try {
+    const pending = await strapi.db.query(ENQUIRY_UID).findMany({ where: { alertSentAt: null } });
+    for (const e of pending) {
+      const claimed = await strapi.db.query(ENQUIRY_UID).updateMany({
+        where: { id: e.id, alertSentAt: null },
+        data: { alertSentAt: new Date() },
+      });
+      if (!claimed?.count) continue;
+      try {
+        await strapi.plugin('email').service('email').send({
+          to,
+          replyTo: e.email,
+          subject: `New Tritorc app enquiry: ${e.interest || 'General'} (${e.name})`,
+          text: [
+            `Name: ${e.name}`,
+            `Email: ${e.email}`,
+            `Phone: ${e.phone || '-'}`,
+            `Company: ${e.company || '-'}`,
+            `Interested in: ${e.interest || '-'}`,
+            '',
+            e.message,
+          ].join('\n'),
+        });
+      } catch (err: any) {
+        // Put it back so the next tick retries.
+        await strapi.db.query(ENQUIRY_UID).update({ where: { id: e.id }, data: { alertSentAt: null } });
+        strapi.log.error(`[enquiry] alert email failed: ${err?.message ?? err}`);
+        break;
+      }
+    }
+  } catch (err: any) {
+    strapi.log.error(`[enquiry] alert check failed: ${err?.message ?? err}`);
+  } finally {
+    alertBusy = false;
+  }
+}
+
 export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   bootstrap({ strapi }: { strapi: Core.Strapi }) {
-    timer = setInterval(() => void sendPending(strapi), POLL_MS);
+    timer = setInterval(() => {
+      void sendPending(strapi);
+      void sendEnquiryAlerts(strapi);
+    }, POLL_MS);
     timer.unref();
   },
 

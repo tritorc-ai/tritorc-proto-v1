@@ -34,10 +34,47 @@ Slugs: tsl-20, thl-series, thl-ultra-slim, btl-19, slt-series, mst-series, tsf-s
 twe-3, twp-3, tbp-150, tbe-200, pipe-cold-cutting-beveling-machines.
 Sizes: 1200x1600 (hero images 1344x1800), WebP under about 300 KB.
 
-## Before going live
-SQLite and local disk are for development. Production needs Postgres, media on S3,
-secrets from the environment (APP_KEYS, API_TOKEN_SALT, ADMIN_JWT_SECRET,
-TRANSFER_TOKEN_SALT, JWT_SECRET, DATABASE_URL) and backups.
+## Going live (production setup)
+SQLite and local disk are for development. The code is ready for production; each part below switches on
+through environment variables (every name, with comments, is in `.env.example`; nothing changes locally
+until you set them). Tested: Strapi on Postgres (the full seed, content API, push routes, enquiries),
+the admin production build, the S3 settings loading, and the enquiry alert email.
+NOT tested against a real S3 bucket, a real SMTP server or a real host: do one upload and one test
+enquiry as soon as they exist.
+
+1. **Secrets:** generate fresh values for `APP_KEYS` (four comma-separated), `API_TOKEN_SALT`,
+   `ADMIN_JWT_SECRET`, `TRANSFER_TOKEN_SALT`, `JWT_SECRET`, `ENCRYPTION_KEY` and the VAPID pair.
+   Never reuse the local ones. Keep them in the host's secret settings, not in git.
+2. **Address:** `PUBLIC_URL=https://cms.tritorc.com` (or the real address) and `IS_PROXIED=true` when the
+   host puts HTTPS in front of Strapi. `PORT` is whatever the host gives you.
+3. **Postgres:** `DATABASE_CLIENT=postgres` and `DATABASE_URL=...` (and `DATABASE_SSL=true` if the host
+   needs it). Strapi creates the tables on first start.
+4. **Media on S3:** `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, plus
+   `S3_PUBLIC_URL` (the address pictures are served from). Cloudflare R2 or another S3-compatible store
+   also needs `S3_ENDPOINT`. Leave `S3_ACL` empty for new buckets and R2. The same public address goes
+   into the app as `STRAPI_MEDIA_URL` so next/image may load it. Without `S3_BUCKET`, uploads stay on the
+   server's disk and disappear when the server is rebuilt.
+5. **Enquiry emails:** `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` and
+   `ENQUIRY_ALERT_TO` (who gets the alert; the enquirer's address is set as Reply-To). Without them
+   enquiries are only stored in the Enquiry collection.
+6. **Build and start:** `npm run build` then `npm run start`.
+7. **First start:** open `/admin` on the live address and create the first Super Admin (accounts do not
+   carry over from a laptop), then load the content once:
+   `node scripts/seed.js "<path to the app's .env>"` and `node scripts/setup-notifications.js "<same path>"`
+   (they write the app's Strapi address and tokens; set `STRAPI_API_URL` / `NOTIF_API_URL` to the live
+   address afterwards). Stop other writers while they run.
+8. **Backups:** turn on automatic database backups at the host and keep a copy of the S3 bucket.
+
+## Test push on a real phone
+Push needs HTTPS, and the phone only has to reach the app (the app talks to Strapi on the computer).
+1. Start Strapi and the app, and open the app's HTTPS address on the phone (a Cloudflare link works).
+   iPhone: tap Share, then Add to Home Screen, and open it from the home-screen icon.
+2. In the app tap the bell (top right), then turn notifications on and allow them.
+3. On the computer open `/admin`, create your admin account the first time, then Content Manager,
+   Notification, Create: fill Title and Body, leave Topic on general, tick **Send Push**, Save.
+4. Within about 5 seconds the phone shows the alert (the app inbox shows it too). `Push Sent` on the entry
+   says how many phones got it; a dead phone is removed automatically.
+Check the Push Subscription collection: you should see one entry for your phone.
 
 ## Editing page content (no code)
 Every piece of text the app shows is now a Strapi entry. In the admin, Content Manager:
@@ -66,6 +103,7 @@ Collections: Notification, Push Subscription (created by the app, do not edit), 
   2. Stop Strapi, then `node scripts/setup-notifications.js "<app>\.env.local"`. It creates the two limited tokens
      (`tritorc-notif-read`, `tritorc-notif-write`) and writes `NOTIF_API_URL` and both tokens into the app's `.env.local`.
   3. Rebuild the app (the public key is baked into the build).
-- Enquiries: the Enquiry collection and the write token's permission exist, but the app's enquiry form still opens
-  the mail app. Wiring the form to `POST /api/enquiries` is a separate step.
+- Enquiries: the app's enquiry form sends to `/api/enquiries`, which stores it in the Enquiry collection (and
+  falls back to opening the mail app if the backend is down). NOTE: the form component exists but is not placed
+  on any screen yet. With SMTP set up (see Going live) each new enquiry is also emailed to `ENQUIRY_ALERT_TO`.
 - Push only works over HTTPS (or localhost); on iPhone the app must be added to the Home Screen first.
