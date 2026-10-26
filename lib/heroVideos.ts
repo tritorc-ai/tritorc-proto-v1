@@ -5,9 +5,10 @@ export interface HeroVideoSource {
 }
 
 /**
- * Clips that replace a service's still image (detail-page hero and its card on
- * the Services list), keyed by service slug. Files live in /public/services;
- * they are trimmed to 10s, silent and H.264 so they autoplay on mobile.
+ * Clips that replace a service's still image on its card in the Services list,
+ * keyed by service slug. The service's detail page opens with its photo instead.
+ * Files live in /public/services; they are trimmed to 10s, silent and H.264 so
+ * they autoplay on mobile.
  */
 export const HERO_VIDEOS: Record<string, HeroVideoSource> = {
   "hot-tapping-line-stopping": {

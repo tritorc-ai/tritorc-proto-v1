@@ -254,6 +254,7 @@ export const SERVICES: Service[] = [
       "Professional controlled bolting services with precision torque application for critical industrial applications and maintenance operations. Torqueing up to 700 bar / 69,427 Nm max, bolts 19-175mm; tensioning up to 1,500 bar / 5,406 kN max, bolts 16-150mm.",
     imageKey: "productTorqueHero",
     media: [],
+    directImageUrl: "/services/onsite-controlled-bolting-photo.webp",
   },
   {
     slug: "pipeline-coldcutting-bevelling",
@@ -263,6 +264,7 @@ export const SERVICES: Service[] = [
     description: "Precise pipeline cutting and bevelling services using advanced cold cutting technology.",
     imageKey: "catPipeColdCutting",
     media: [],
+    directImageUrl: "/services/pipeline-coldcutting-bevelling-photo.webp",
   },
   {
     slug: "flange-facing",
@@ -272,6 +274,7 @@ export const SERVICES: Service[] = [
     description: "Expert flange facing services to ensure perfect sealing surfaces and optimal performance.",
     imageKey: "catFlangeFacing",
     media: [],
+    directImageUrl: "/services/flange-facing-photo.webp",
   },
   {
     slug: "dewatering-dry-air-flushing",
@@ -313,6 +316,7 @@ export const SERVICES: Service[] = [
     imageKey: "svcNitrogenPurging",
     media: [],
     catalogue: PIPELINE_PROCESS_CATALOGUE,
+    directImageUrl: "/services/nitrogen-purging-preservation-photo.webp",
   },
   {
     slug: "pneumatic-testing",
@@ -331,7 +335,7 @@ export const SERVICES: Service[] = [
     tagline: "Heat exchanger tube replacement",
     description:
       "Complete retubing solutions for heat exchangers and industrial equipment: tube removal (1/2\"-4-1/2\" OD, pulling force to 22 T), tube insertion/expansion (3/8\"-2-1/2\" OD), tube sheet prep, weld overlay (GTAW/FCAW/SAW), and tube plugging (up to 7,000 psi).",
-    directImageUrl: "https://www.tritorc.com/assets/services/Retubing.jpg",
+    directImageUrl: "/services/retubing-services-photo.webp",
     media: [],
   },
   {
@@ -344,6 +348,7 @@ export const SERVICES: Service[] = [
     imageKey: "svcHotTapping",
     media: [],
     catalogue: HOT_TAPPING_CATALOGUE,
+    directImageUrl: "/services/hot-tapping-line-stopping-photo.webp",
   },
   {
     slug: "calibration-services",
