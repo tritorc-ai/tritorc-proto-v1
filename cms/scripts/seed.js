@@ -182,8 +182,6 @@ async function main() {
     slides: c.slides.map((s) => ({ imageUrl: s.src, position: s.position })),
     stats: c.stats.map((s) => ({ value: s.value, label: s.label })),
     certificationBadges: c.certifications.map((b) => ({ title: b.title, note: b.note, imageUrl: b.image, alt: b.alt })),
-    vision: c.vision,
-    mission: c.mission,
     profileTitle: c.profileTitle,
     profileMeta: c.profileMeta,
   });

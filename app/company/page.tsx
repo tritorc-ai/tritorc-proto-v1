@@ -46,18 +46,6 @@ export default async function CompanyPage() {
           </div>
         </section>
 
-        {/* Vision and mission (edited in Strapi, Company Page) */}
-        <section className="space-y-3">
-          <div className="rounded-[24px] bg-[#e4e5e7] px-5 py-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-text-secondary">Vision</div>
-            <p className="mt-2 text-[24px] font-bold leading-[1.15] tracking-[-0.02em] text-brand-dark">{company.vision}</p>
-          </div>
-          <div className="rounded-[24px] bg-brand-dark px-5 py-5">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/60">Mission</div>
-            <p className="mt-2 text-[44px] font-extrabold leading-none tracking-[-0.03em] text-white">{company.mission}</p>
-          </div>
-        </section>
-
         {/* 02 — Global offices */}
         <section id="global-offices" className="scroll-mt-24">
           <SectionHead title="Global offices" />

@@ -433,7 +433,6 @@ export async function getCompanyPage(): Promise<CompanyPageContent> {
     slides?: { image?: StrapiMedia; imageUrl?: string | null; position?: string | null }[] | null;
     stats?: { value: string; label: string }[] | null;
     certificationBadges?: { title: string; note?: string | null; image?: StrapiMedia; imageUrl?: string | null; alt?: string | null }[] | null;
-    vision?: string | null; mission?: string | null;
     profileTitle?: string | null; profileMeta?: string | null;
   }>("/api/company-page", {
     "populate[slides][populate][0]": "image",
@@ -460,8 +459,6 @@ export async function getCompanyPage(): Promise<CompanyPageContent> {
           alt: c.alt ?? c.title,
         }))
       : COMPANY_PAGE.certifications,
-    vision: d.vision ?? COMPANY_PAGE.vision,
-    mission: d.mission ?? COMPANY_PAGE.mission,
     profileTitle: d.profileTitle ?? COMPANY_PAGE.profileTitle,
     profileMeta: d.profileMeta ?? COMPANY_PAGE.profileMeta,
   };

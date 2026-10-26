@@ -560,7 +560,6 @@ export interface ApiCompanyPageCompanyPage extends Struct.SingleTypeSchema {
       'api::company-page.company-page'
     > &
       Schema.Attribute.Private;
-    mission: Schema.Attribute.String;
     overviewLines: Schema.Attribute.JSON;
     overviewText: Schema.Attribute.Text;
     profileMeta: Schema.Attribute.String;
@@ -571,7 +570,6 @@ export interface ApiCompanyPageCompanyPage extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    vision: Schema.Attribute.String;
   };
 }
 
