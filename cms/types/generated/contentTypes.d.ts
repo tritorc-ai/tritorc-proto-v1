@@ -617,6 +617,7 @@ export interface ApiEnquiryEnquiry extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    alertSentAt: Schema.Attribute.DateTime;
     company: Schema.Attribute.String &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 160;

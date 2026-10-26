@@ -21,6 +21,7 @@
       "type": "enumeration",
       "enum": ["new", "contacted", "closed"],
       "default": "new"
-    }
+    },
+    "alertSentAt": { "type": "datetime" }
   }
 }

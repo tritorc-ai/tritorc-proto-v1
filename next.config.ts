@@ -6,6 +6,9 @@ import type { NextConfig } from "next";
 // local addresses are fine; that only happens when STRAPI_API_URL itself points at localhost.
 const strapiUrl = process.env.STRAPI_API_URL ? new URL(process.env.STRAPI_API_URL) : null;
 const strapiIsLocal = !!strapiUrl && ["localhost", "127.0.0.1"].includes(strapiUrl.hostname);
+// Once Strapi stores uploads on S3 / a CDN (S3_PUBLIC_URL in its .env), set the same address here
+// as STRAPI_MEDIA_URL so next/image may load those pictures.
+const mediaUrl = process.env.STRAPI_MEDIA_URL ? new URL(process.env.STRAPI_MEDIA_URL) : null;
 
 const nextConfig: NextConfig = {
   // Lets other devices on the local network (e.g. a phone) and Cloudflare quick
@@ -25,6 +28,15 @@ const nextConfig: NextConfig = {
               protocol: strapiUrl.protocol.replace(":", "") as "http" | "https",
               hostname: strapiUrl.hostname,
               ...(strapiUrl.port && { port: strapiUrl.port }),
+            },
+          ]
+        : []),
+      ...(mediaUrl
+        ? [
+            {
+              protocol: mediaUrl.protocol.replace(":", "") as "http" | "https",
+              hostname: mediaUrl.hostname,
+              ...(mediaUrl.port && { port: mediaUrl.port }),
             },
           ]
         : []),

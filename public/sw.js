@@ -5,13 +5,18 @@
 // latest from Strapi" requirement. Only static, rarely-changing shell assets
 // are cached so the app can be added to the home screen.
 
-const CACHE_NAME = "tritorc-shell-v2";
+const CACHE_NAME = "tritorc-shell-v3";
+// /offline.html (self-contained, inline styles) and the logo it shows are cached so a page
+// request made without a network gets a friendly screen instead of the browser's error page.
+const OFFLINE_URL = "/offline.html";
 const SHELL_ASSETS = [
   "/icon-192.png",
   "/icon-512.png",
   "/icon-maskable-512.png",
   "/apple-touch-icon.png",
   "/manifest.webmanifest",
+  OFFLINE_URL,
+  "/brand/tritorc-logo.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -42,7 +47,15 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Everything else (pages, Strapi-backed data) always goes to the network.
+  // Page navigations go to the network as always; only if that fails (no connection) the
+  // cached offline screen is shown. Pages and Strapi-backed data are never served from cache.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(async () => (await caches.match(OFFLINE_URL)) || Response.error())
+    );
+  }
+
+  // Everything else (images, API calls, Strapi-backed data) always goes to the network.
 });
 
 // ---------------------------------------------------------------------------
