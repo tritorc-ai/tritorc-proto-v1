@@ -44,10 +44,28 @@ Every piece of text the app shows is now a Strapi entry. In the admin, Content M
 - Single types (one entry each): Founder Message, Home Page, Company Page, Site Contact, Brand.
   - Home Page: Hero slides (image, headline lines, side, link), the two Case tiles, Quotes, hero buttons.
   - Company Page: overview text, rotating lines, slideshow photos, the two stat tiles, certification badges, profile card.
-  - Founder Message starts as a PLACEHOLDER ("Founder Name"): replace name, role, message and upload the portrait.
+  - Founder Message: name and portrait are set; replace the message text and role with his real words.
 - Collections: Products, Product Sections (which products show on the Products page and in what order),
   Services, Service Sections (groups; a service with no group is not listed), Events, Global Offices and the rest.
 - Images: each picture field has an upload slot (`image` / `photo`) AND a text field (`imageUrl` / `photoUrl`).
   An uploaded image wins; the text field is the fallback and starts as a local /public path.
 - After clicking Publish the app shows the change within about 30 seconds, with no rebuild.
-- Not here: notifications (the other Strapi, `tritorc-strapi`), the home notification strip and the industries list.
+- Not here: the home notification strip's built-in sample items and the industries list.
+
+## Notifications, push and enquiries (this Strapi handles them too)
+Collections: Notification, Push Subscription (created by the app, do not edit), Enquiry.
+- **Send a notification:** Content Manager, Notification, Create. Fill Title and Body; Url is where a tap goes
+  (for example `/events/adipec-2026`); Type sets the label in the app; Topic picks who gets the phone alert
+  (`general` = everyone, otherwise only people who follow that topic). It always appears in the app's inbox.
+  Tick **Send Push** BEFORE saving to also alert phones. Within about 5 seconds it is sent once; `Pushed At` and
+  `Push Sent` show the result. Saving again never re-sends.
+- **Setup on a new machine / server:**
+  1. `npx web-push generate-vapid-keys`, put them in this folder's `.env` as `VAPID_PUBLIC_KEY`,
+     `VAPID_PRIVATE_KEY` (see `.env.example`) and the PUBLIC one in the app's `.env.local` as
+     `NEXT_PUBLIC_VAPID_PUBLIC_KEY`. Never change the pair after launch: every phone would have to subscribe again.
+  2. Stop Strapi, then `node scripts/setup-notifications.js "<app>\.env.local"`. It creates the two limited tokens
+     (`tritorc-notif-read`, `tritorc-notif-write`) and writes `NOTIF_API_URL` and both tokens into the app's `.env.local`.
+  3. Rebuild the app (the public key is baked into the build).
+- Enquiries: the Enquiry collection and the write token's permission exist, but the app's enquiry form still opens
+  the mail app. Wiring the form to `POST /api/enquiries` is a separate step.
+- Push only works over HTTPS (or localhost); on iPhone the app must be added to the Home Screen first.

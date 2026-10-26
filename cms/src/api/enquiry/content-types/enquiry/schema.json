@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "enquiries",
+  "info": {
+    "singularName": "enquiry",
+    "pluralName": "enquiries",
+    "displayName": "Enquiry",
+    "description": "Messages sent from the app's enquiry form."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": { "type": "string", "required": true, "maxLength": 120 },
+    "email": { "type": "email", "required": true },
+    "phone": { "type": "string", "maxLength": 40 },
+    "company": { "type": "string", "maxLength": 160 },
+    "interest": { "type": "string", "maxLength": 160 },
+    "message": { "type": "text", "required": true, "maxLength": 2000 },
+    "enquiryStatus": {
+      "type": "enumeration",
+      "enum": ["new", "contacted", "closed"],
+      "default": "new"
+    }
+  }
+}
