@@ -50,6 +50,8 @@ export interface CompanyPageContent {
   slides: { src: string; position: string }[];
   stats: { value: string; label: string }[];
   certifications: { title: string; note: string; image: string; alt: string }[];
+  vision: string;
+  mission: string;
   profileTitle: string;
   profileMeta: string;
 }
@@ -164,6 +166,8 @@ export const COMPANY_PAGE: CompanyPageContent = {
       alt: "ECITB approved provider",
     },
   ],
+  vision: "Growth for all, Limits on none.",
+  mission: "50X",
   profileTitle: "Company Profile",
   profileMeta: "6.4 MB · Updated Jul 2026",
 };

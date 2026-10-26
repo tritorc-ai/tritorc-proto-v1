@@ -31,6 +31,12 @@
       "repeatable": true,
       "component": "company.certification-badge"
     },
+    "vision": {
+      "type": "string"
+    },
+    "mission": {
+      "type": "string"
+    },
     "profileTitle": {
       "type": "string"
     },
