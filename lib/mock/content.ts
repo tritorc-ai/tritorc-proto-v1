@@ -254,6 +254,7 @@ export const SERVICES: Service[] = [
       "Professional controlled bolting services with precision torque application for critical industrial applications and maintenance operations. Torqueing up to 700 bar / 69,427 Nm max, bolts 19-175mm; tensioning up to 1,500 bar / 5,406 kN max, bolts 16-150mm.",
     imageKey: "productTorqueHero",
     media: [],
+    directImageUrl: "/services/onsite-controlled-bolting-photo.webp",
   },
   {
     slug: "pipeline-coldcutting-bevelling",
@@ -263,6 +264,7 @@ export const SERVICES: Service[] = [
     description: "Precise pipeline cutting and bevelling services using advanced cold cutting technology.",
     imageKey: "catPipeColdCutting",
     media: [],
+    directImageUrl: "/services/pipeline-coldcutting-bevelling-photo.webp",
   },
   {
     slug: "flange-facing",
@@ -272,6 +274,7 @@ export const SERVICES: Service[] = [
     description: "Expert flange facing services to ensure perfect sealing surfaces and optimal performance.",
     imageKey: "catFlangeFacing",
     media: [],
+    directImageUrl: "/services/flange-facing-photo.webp",
   },
   {
     slug: "dewatering-dry-air-flushing",
@@ -313,6 +316,7 @@ export const SERVICES: Service[] = [
     imageKey: "svcNitrogenPurging",
     media: [],
     catalogue: PIPELINE_PROCESS_CATALOGUE,
+    directImageUrl: "/services/nitrogen-purging-preservation-photo.webp",
   },
   {
     slug: "pneumatic-testing",
@@ -331,7 +335,7 @@ export const SERVICES: Service[] = [
     tagline: "Heat exchanger tube replacement",
     description:
       "Complete retubing solutions for heat exchangers and industrial equipment: tube removal (1/2\"-4-1/2\" OD, pulling force to 22 T), tube insertion/expansion (3/8\"-2-1/2\" OD), tube sheet prep, weld overlay (GTAW/FCAW/SAW), and tube plugging (up to 7,000 psi).",
-    directImageUrl: "https://www.tritorc.com/assets/services/Retubing.jpg",
+    directImageUrl: "/services/retubing-services-photo.webp",
     media: [],
   },
   {
@@ -344,6 +348,7 @@ export const SERVICES: Service[] = [
     imageKey: "svcHotTapping",
     media: [],
     catalogue: HOT_TAPPING_CATALOGUE,
+    directImageUrl: "/services/hot-tapping-line-stopping-photo.webp",
   },
   {
     slug: "calibration-services",
@@ -522,7 +527,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl: "/products/tsl-20.webp",
+    directImageUrl: "/products/tsl-20-studio.webp",
   },
   {
     slug: "btl-19",
@@ -539,8 +544,7 @@ export const PRODUCTS: Product[] = [
     media: [],
     catalogue: BOLTING_CATALOGUE,
     heroImageKey: "productTensionerHero",
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/ppc_images_products_bolt_tensioners_btl_piyush_m_001_webp_173df31de207de6a_3403de1a81.webp",
+    directImageUrl: "/products/btl-19-studio.webp",
   },
   {
     slug: "wbt-series",
@@ -591,6 +595,7 @@ export const PRODUCTS: Product[] = [
     media: [],
     catalogue: IN_SITU_MACHINING_CATALOGUE,
     heroImageKey: "catPipeColdCutting",
+    directImageUrl: "/products/pipe-cold-cutting-beveling-machines-studio.webp",
   },
   {
     slug: "flange-facing-machines",
@@ -861,7 +866,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl: "/products/thl-series.webp",
+    directImageUrl: "/products/thl-series-studio.webp",
   },
   {
     slug: "thl-ultra-slim",
@@ -872,7 +877,7 @@ export const PRODUCTS: Product[] = [
     specs: [{ label: "Torque Range", value: "275 - 12,834 Nm" }],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl: "/products/thl-ultra-slim.webp",
+    directImageUrl: "/products/thl-ultra-slim-studio.webp",
   },
   {
     slug: "slt-series",
@@ -883,6 +888,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     media: [],
     catalogue: BOLTING_CATALOGUE,
+    directImageUrl: "/products/slt-series-studio.webp",
   },
   {
     slug: "mst-series",
@@ -893,6 +899,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     media: [],
     catalogue: BOLTING_CATALOGUE,
+    directImageUrl: "/products/mst-series-studio.webp",
   },
   {
     slug: "tsf-series",
@@ -908,8 +915,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: IN_SITU_MACHINING_CATALOGUE,
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/pipe_cutting_machine_tsf_series_1_48aa3ef18f.webp",
+    directImageUrl: "/products/tsf-series-studio.webp",
   },
   {
     slug: "twe-3",
@@ -920,6 +926,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     media: [],
     catalogue: BOLTING_CATALOGUE,
+    directImageUrl: "/products/twe-3-studio.webp",
   },
   {
     slug: "twp-3",
@@ -936,8 +943,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_4872f60d3545a7305ee7_4872f60d3545a730_bfbff2c9f8.jpg",
+    directImageUrl: "/products/twp-3-studio.webp",
   },
   {
     slug: "tbp-150",
@@ -953,8 +959,7 @@ export const PRODUCTS: Product[] = [
     ],
     media: [],
     catalogue: BOLTING_CATALOGUE,
-    directImageUrl:
-      "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_40f68772506aa6231b12_40f68772506aa623_5ce46f6ab9.png",
+    directImageUrl: "/products/tbp-150-studio.webp",
   },
   {
     slug: "tbe-200",
@@ -965,6 +970,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     media: [],
     catalogue: BOLTING_CATALOGUE,
+    directImageUrl: "/products/tbe-200-studio.webp",
   },
 ];
 

@@ -197,7 +197,7 @@
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "/products/tsl-20.webp"
+      "directImageUrl": "/products/tsl-20-studio.webp"
     },
     {
       "slug": "btl-19",
@@ -226,7 +226,7 @@
         "url": "#"
       },
       "heroImageKey": "productTensionerHero",
-      "directImageUrl": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/ppc_images_products_bolt_tensioners_btl_piyush_m_001_webp_173df31de207de6a_3403de1a81.webp"
+      "directImageUrl": "/products/btl-19-studio.webp"
     },
     {
       "slug": "wbt-series",
@@ -322,7 +322,8 @@
         "meta": "6.3 MB · Updated Aug 2026",
         "url": "#"
       },
-      "heroImageKey": "catPipeColdCutting"
+      "heroImageKey": "catPipeColdCutting",
+      "directImageUrl": "/products/pipe-cold-cutting-beveling-machines-studio.webp"
     },
     {
       "slug": "flange-facing-machines",
@@ -749,7 +750,7 @@
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "/products/thl-series.webp"
+      "directImageUrl": "/products/thl-series-studio.webp"
     },
     {
       "slug": "thl-ultra-slim",
@@ -769,7 +770,7 @@
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "/products/thl-ultra-slim.webp"
+      "directImageUrl": "/products/thl-ultra-slim-studio.webp"
     },
     {
       "slug": "slt-series",
@@ -783,7 +784,8 @@
         "title": "Bolting & Machining Solutions Catalogue",
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/products/slt-series-studio.webp"
     },
     {
       "slug": "mst-series",
@@ -797,7 +799,8 @@
         "title": "Bolting & Machining Solutions Catalogue",
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/products/mst-series-studio.webp"
     },
     {
       "slug": "tsf-series",
@@ -825,7 +828,7 @@
         "meta": "6.3 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/pipe_cutting_machine_tsf_series_1_48aa3ef18f.webp"
+      "directImageUrl": "/products/tsf-series-studio.webp"
     },
     {
       "slug": "twe-3",
@@ -839,7 +842,8 @@
         "title": "Bolting & Machining Solutions Catalogue",
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/products/twe-3-studio.webp"
     },
     {
       "slug": "twp-3",
@@ -871,7 +875,7 @@
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_4872f60d3545a7305ee7_4872f60d3545a730_bfbff2c9f8.jpg"
+      "directImageUrl": "/products/twp-3-studio.webp"
     },
     {
       "slug": "tbp-150",
@@ -899,7 +903,7 @@
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
       },
-      "directImageUrl": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/product_40f68772506aa6231b12_40f68772506aa623_5ce46f6ab9.png"
+      "directImageUrl": "/products/tbp-150-studio.webp"
     },
     {
       "slug": "tbe-200",
@@ -913,7 +917,8 @@
         "title": "Bolting & Machining Solutions Catalogue",
         "meta": "10.9 MB · Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/products/tbe-200-studio.webp"
     }
   ],
   "serviceSections": [
@@ -960,7 +965,8 @@
       "tagline": "Precision torque, delivered in the field",
       "description": "Professional controlled bolting services with precision torque application for critical industrial applications and maintenance operations. Torqueing up to 700 bar / 69,427 Nm max, bolts 19-175mm; tensioning up to 1,500 bar / 5,406 kN max, bolts 16-150mm.",
       "imageKey": "productTorqueHero",
-      "media": []
+      "media": [],
+      "directImageUrl": "/services/onsite-controlled-bolting-photo.webp"
     },
     {
       "slug": "pipeline-coldcutting-bevelling",
@@ -969,7 +975,8 @@
       "tagline": "Advanced cold cutting technology",
       "description": "Precise pipeline cutting and bevelling services using advanced cold cutting technology.",
       "imageKey": "catPipeColdCutting",
-      "media": []
+      "media": [],
+      "directImageUrl": "/services/pipeline-coldcutting-bevelling-photo.webp"
     },
     {
       "slug": "flange-facing",
@@ -978,7 +985,8 @@
       "tagline": "Perfect sealing surfaces, every time",
       "description": "Expert flange facing services to ensure perfect sealing surfaces and optimal performance.",
       "imageKey": "catFlangeFacing",
-      "media": []
+      "media": [],
+      "directImageUrl": "/services/flange-facing-photo.webp"
     },
     {
       "slug": "dewatering-dry-air-flushing",
@@ -1034,7 +1042,8 @@
         "title": "Pipeline Process Services",
         "meta": "Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/services/nitrogen-purging-preservation-photo.webp"
     },
     {
       "slug": "pneumatic-testing",
@@ -1056,7 +1065,7 @@
       "category": "Retubing Services",
       "tagline": "Heat exchanger tube replacement",
       "description": "Complete retubing solutions for heat exchangers and industrial equipment: tube removal (1/2\"-4-1/2\" OD, pulling force to 22 T), tube insertion/expansion (3/8\"-2-1/2\" OD), tube sheet prep, weld overlay (GTAW/FCAW/SAW), and tube plugging (up to 7,000 psi).",
-      "directImageUrl": "https://www.tritorc.com/assets/services/Retubing.jpg",
+      "directImageUrl": "/services/retubing-services-photo.webp",
       "media": []
     },
     {
@@ -1071,7 +1080,8 @@
         "title": "Hot Tapping Cata",
         "meta": "Updated Aug 2026",
         "url": "#"
-      }
+      },
+      "directImageUrl": "/services/hot-tapping-line-stopping-photo.webp"
     },
     {
       "slug": "calibration-services",
@@ -1303,7 +1313,7 @@
     "name": "Mr. Naresh P Purswani",
     "role": "Founder, Tritorc",
     "photo": "/founder/naresh-p-purswani-white.png",
-    "message": "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule."
+    "message": "At Tritorc we don't give up easily. We keep going and keep growing. We operate with unshakeable faith and trust."
   },
   "homePage": {
     "heroSlides": [
@@ -1437,6 +1447,8 @@
         "alt": "ECITB approved provider"
       }
     ],
+    "vision": "Growth for all, Limits on none.",
+    "mission": "50X",
     "profileTitle": "Company Profile",
     "profileMeta": "6.4 MB · Updated Jul 2026"
   },

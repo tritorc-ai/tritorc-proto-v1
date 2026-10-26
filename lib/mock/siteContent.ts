@@ -50,6 +50,8 @@ export interface CompanyPageContent {
   slides: { src: string; position: string }[];
   stats: { value: string; label: string }[];
   certifications: { title: string; note: string; image: string; alt: string }[];
+  vision: string;
+  mission: string;
   profileTitle: string;
   profileMeta: string;
 }
@@ -123,7 +125,7 @@ export const FOUNDER: FounderContent = {
   role: "Founder, Tritorc",
   photo: "/founder/naresh-p-purswani-white.png",
   message:
-    "Since 1988, we have built Tritorc on one promise: precision you can trust, wherever the job is, keeping your plant safe and on schedule.",
+    "At Tritorc we don't give up easily. We keep going and keep growing. We operate with unshakeable faith and trust.",
 };
 
 export const COMPANY_PAGE: CompanyPageContent = {
@@ -164,6 +166,8 @@ export const COMPANY_PAGE: CompanyPageContent = {
       alt: "ECITB approved provider",
     },
   ],
+  vision: "Growth for all, Limits on none.",
+  mission: "50X",
   profileTitle: "Company Profile",
   profileMeta: "6.4 MB · Updated Jul 2026",
 };

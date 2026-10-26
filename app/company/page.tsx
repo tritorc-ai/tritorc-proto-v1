@@ -46,6 +46,54 @@ export default async function CompanyPage() {
           </div>
         </section>
 
+        {/* Vision and mission (edited in Strapi, Company Page). Two compact tiles side by side in the
+            home page's grey/black style: a dark vision tile with a two-tone headline (like the hero)
+            and a light mission tile with a big figure over a rising-bars motif. Art is decorative. */}
+        <section aria-label="Vision and mission" className="grid grid-cols-2 gap-3">
+          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-gradient-to-br from-[#222225] to-[#0a0a0b] p-4">
+            <svg
+              aria-hidden
+              viewBox="0 0 200 200"
+              className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 text-white/[0.1]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <circle cx="100" cy="100" r="28" />
+              <circle cx="100" cy="100" r="55" />
+              <circle cx="100" cy="100" r="82" />
+            </svg>
+            <span className="relative w-fit rounded-full bg-white/10 px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-white/80">
+              Vision
+            </span>
+            <p className="relative text-[19px] font-extrabold leading-[1.1] tracking-[-0.025em] text-white">
+              {company.vision.includes(",") ? (
+                <>
+                  {company.vision.slice(0, company.vision.indexOf(",") + 1)}
+                  <br />
+                  <span className="text-white/45">{company.vision.slice(company.vision.indexOf(",") + 1).trim()}</span>
+                </>
+              ) : (
+                company.vision
+              )}
+            </p>
+          </div>
+
+          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-[#e4e5e7] p-4">
+            <div aria-hidden className="pointer-events-none absolute bottom-0 right-3 flex h-16 items-end gap-1">
+              {[16, 26, 38, 52, 66].map((h) => (
+                <span key={h} className="w-2.5 rounded-t-[5px] bg-black/[0.08]" style={{ height: h }} />
+              ))}
+            </div>
+            <span className="relative w-fit rounded-full bg-black/[0.07] px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-brand-text-secondary">
+              Mission
+            </span>
+            <p className="relative text-[52px] font-extrabold leading-[0.9] tracking-[-0.045em] text-brand-dark">
+              {company.mission}
+            </p>
+          </div>
+        </section>
+
         {/* 02 — Global offices */}
         <section id="global-offices" className="scroll-mt-24">
           <SectionHead title="Global offices" />
