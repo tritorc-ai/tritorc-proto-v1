@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_home_hero-slides",
+  "info": {
+    "displayName": "Hero slide"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "imagePosition": {
+      "type": "string"
+    },
+    "eyebrow": {
+      "type": "string"
+    },
+    "lines": {
+      "type": "json"
+    },
+    "side": {
+      "type": "enumeration",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "default": "right"
+    },
+    "href": {
+      "type": "string"
+    }
+  }
+}

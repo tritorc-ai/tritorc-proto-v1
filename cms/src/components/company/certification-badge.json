@@ -1,0 +1,29 @@
+{
+  "collectionName": "components_company_certification-badges",
+  "info": {
+    "displayName": "Certification badge"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "note": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "alt": {
+      "type": "string"
+    }
+  }
+}

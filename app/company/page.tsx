@@ -1,50 +1,21 @@
 import { jakarta } from "@/lib/fonts";
-import { getCatalogueUrl, getGlobalOffices } from "@/lib/strapi";
+import { getCatalogueUrl, getCompanyPage, getGlobalOffices } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { SectionHead } from "@/components/app/ui";
-import { PhotoSlideshow, type Slide } from "@/components/company/PhotoSlideshow";
+import { PhotoSlideshow } from "@/components/company/PhotoSlideshow";
 import { RotatingLines } from "@/components/company/RotatingLines";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 import { GlobalOfficesSection } from "@/components/company/GlobalOfficesSection";
 import { CertificationsBento } from "@/components/company/CertificationsBento";
 
+// The overview text, rotating lines, slideshow photos, stat tiles, certification badges
+// and the company-profile card are edited in Strapi (Company Page); the built-in
+// defaults live in lib/mock/siteContent.ts.
 
-// Photos from tritorc.com (saved in public/company) that fade into one another
-// behind the overview text.
-const OVERVIEW_SLIDES: Slide[] = [
-  { src: "/company/slide-1-tube-bundle.jpg", position: "30% 50%" },
-  { src: "/company/slide-2-onsite-machining.jpg", position: "25% 40%" },
-  { src: "/company/slide-3-offshore.webp", position: "45% 50%" },
-  { src: "/company/slide-4-sharjah.jpg", position: "50% 45%" },
-  { src: "/company/slide-5-wellhead.jpg", position: "72% 50%" },
-];
-
-// Short facts shown one at a time over the overview photo. Every line comes from
-// content already in the app (journey, stats, certifications, case studies).
-const OVERVIEW_LINES = [
-  "Founded in 1989, with more than 35 years of experience.",
-  "Offices across India, the UAE, the USA, Algeria, Oman, Canada and Germany.",
-  "In-house manufacturing of bolting and machining tools since 2013.",
-  "ISO 9001:2015 certified quality management.",
-  "500+ projects delivered by 100+ expert engineers.",
-  "Live pipelines hot-tapped with zero downtime.",
-];
-const OVERVIEW_TEXT =
-  "Tritorc is a trusted authority in controlled bolting, on-site machining, and pipeline integrity solutions — delivering turnkey expertise to industrial teams across 11 countries.";
-
-// Local flag images (public/flags) keyed by the country names used in the office data.
-const FLAG_CODE: Record<string, string> = {
-  India: "in",
-  USA: "us",
-  UAE: "ae",
-  Algeria: "dz",
-  Oman: "om",
-  Canada: "ca",
-  Germany: "de",
-};
 
 export default async function CompanyPage() {
-  const [globalOffices, companyProfileUrl] = await Promise.all([
+  const [company, globalOffices, companyProfileUrl] = await Promise.all([
+    getCompanyPage(),
     getGlobalOffices(),
     getCatalogueUrl("Company Profile (Final)"),
   ]);
@@ -57,23 +28,21 @@ export default async function CompanyPage() {
         <section>
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
             <div className="aspect-[4/5] w-full" />
-            <PhotoSlideshow slides={OVERVIEW_SLIDES} sizes="(max-width: 448px) 100vw, 408px" />
+            <PhotoSlideshow slides={company.slides} sizes="(max-width: 448px) 100vw, 408px" />
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
             <RotatingLines
               className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90"
-              lines={OVERVIEW_LINES}
-              fullText={OVERVIEW_TEXT}
+              lines={company.overviewLines}
+              fullText={company.overviewText}
             />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3">
-            <div className="rounded-[20px] bg-brand-dark px-4 py-3.5">
-              <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white">54+</div>
-              <div className="mt-1.5 text-[11.5px] leading-snug text-white/60">Oil &amp; gas projects</div>
-            </div>
-            <div className="rounded-[20px] bg-brand-dark px-4 py-3.5">
-              <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white">300+</div>
-              <div className="mt-1.5 text-[11.5px] leading-snug text-white/60">Turbines installed</div>
-            </div>
+            {company.stats.map((s) => (
+              <div key={s.label} className="rounded-[20px] bg-brand-dark px-4 py-3.5">
+                <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white">{s.value}</div>
+                <div className="mt-1.5 text-[11.5px] leading-snug text-white/60">{s.label}</div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -86,30 +55,15 @@ export default async function CompanyPage() {
         {/* 03 — Certifications: one bento box, badges cropped from tritorc.com */}
         <section id="certifications" className="scroll-mt-24">
           <SectionHead title="Certifications" />
-          <CertificationsBento
-            items={[
-              {
-                title: "ISO 9001:2015",
-                note: "Certified company",
-                image: "/images/certs/iso-9001-2015.webp",
-                alt: "ISO 9001:2015 certified company",
-              },
-              {
-                title: "ECITB",
-                note: "Approved provider",
-                image: "/images/certs/ecitb-approved-provider.webp",
-                alt: "ECITB approved provider",
-              },
-            ]}
-          />
+          <CertificationsBento items={company.certifications} />
         </section>
 
         {/* 04 — Company profile */}
         <section>
           <SectionHead title="Company profile" />
           <ProductCatalogueCard
-            title="Company Profile"
-            meta="6.4 MB · Updated Jul 2026"
+            title={company.profileTitle}
+            meta={company.profileMeta}
             url={companyProfileUrl ?? "#"}
           />
         </section>

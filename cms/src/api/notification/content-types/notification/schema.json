@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "notifications",
+  "info": {
+    "singularName": "notification",
+    "pluralName": "notifications",
+    "displayName": "Notification",
+    "description": "Shown in the app's inbox. Tick Send Push before saving to also send it to subscribed phones."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "title": { "type": "string", "required": true, "maxLength": 120 },
+    "body": { "type": "text", "required": true, "maxLength": 300 },
+    "url": { "type": "string", "maxLength": 300 },
+    "image": { "type": "string", "maxLength": 500 },
+    "type": {
+      "type": "enumeration",
+      "enum": ["manual", "event", "product", "service", "library", "linkedin"],
+      "default": "manual"
+    },
+    "topic": {
+      "type": "enumeration",
+      "enum": ["general", "events", "products", "services", "library", "linkedin"],
+      "default": "general"
+    },
+    "sendPush": { "type": "boolean", "default": false },
+    "pushedAt": { "type": "datetime" },
+    "pushSent": { "type": "integer" }
+  }
+}

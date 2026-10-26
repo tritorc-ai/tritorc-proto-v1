@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "push_subscriptions",
+  "info": {
+    "singularName": "push-subscription",
+    "pluralName": "push-subscriptions",
+    "displayName": "Push Subscription",
+    "description": "One row per phone or browser that allowed notifications. Created by the app, not edited by hand."
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "endpoint": { "type": "text", "required": true, "unique": true },
+    "p256dh": { "type": "string", "required": true },
+    "auth": { "type": "string", "required": true },
+    "deviceId": { "type": "string", "maxLength": 64 },
+    "topics": { "type": "json" },
+    "userAgent": { "type": "string" },
+    "active": { "type": "boolean", "default": true },
+    "lastError": { "type": "string" }
+  }
+}

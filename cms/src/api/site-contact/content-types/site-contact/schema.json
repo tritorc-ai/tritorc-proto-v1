@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "site_contacts",
+  "info": {
+    "singularName": "site-contact",
+    "pluralName": "site-contacts",
+    "displayName": "Site Contact"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "email": {
+      "type": "string"
+    },
+    "phoneIndia": {
+      "type": "string"
+    },
+    "phoneIndiaHref": {
+      "type": "string"
+    },
+    "phoneUsa": {
+      "type": "string"
+    },
+    "phoneUsaHref": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "contactPage": {
+      "type": "string"
+    },
+    "social": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    }
+  }
+}

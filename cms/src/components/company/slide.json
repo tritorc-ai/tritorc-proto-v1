@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_company_slides",
+  "info": {
+    "displayName": "Overview slide"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "position": {
+      "type": "string"
+    }
+  }
+}

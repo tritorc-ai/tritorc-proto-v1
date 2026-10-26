@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { jakarta } from "@/lib/fonts";
-import { pastEvents, upcomingEvents } from "@/lib/mock/events";
+import { getEvents } from "@/lib/strapi";
 import { PageHeader } from "@/components/app/PageHeader";
 import { OverlayCard, Photo, SectionHead } from "@/components/app/ui";
 
 export const metadata = { title: "Events & Exhibitions | Tritorc" };
 
-export default function EventsPage() {
-  const upcoming = upcomingEvents();
-  const past = pastEvents();
+export default async function EventsPage() {
+  const events = await getEvents();
+  const upcoming = events.filter((e) => e.status === "upcoming");
+  const past = events.filter((e) => e.status === "past").sort((a, b) => b.start.localeCompare(a.start));
 
   return (
     <div className={jakarta.className}>

@@ -24,11 +24,13 @@ import {
   JOURNEY,
   LIBRARY_MEDIA_ASSETS,
   PRODUCTS,
+  PRODUCT_LIST,
   SERVICES,
   SERVICE_CATEGORIES,
   SERVICE_SECTIONS,
   TESTIMONIALS,
   BRAND,
+  type ProductListSection,
   type CaseStudy,
   type Certification,
   type CoreValue,
@@ -42,6 +44,16 @@ import {
   type ServiceSection,
   type Testimonial,
 } from "./mock/content";
+import { CONTACT } from "./mock/appContent";
+import { EVENTS, type TritorcEvent } from "./mock/events";
+import {
+  COMPANY_PAGE,
+  FOUNDER,
+  HOME_PAGE,
+  type CompanyPageContent,
+  type FounderContent,
+  type HomePageContent,
+} from "./mock/siteContent";
 
 export interface StrapiMediaFile {
   id: number;
@@ -283,60 +295,418 @@ export async function getVideoUrls(): Promise<Partial<Record<VideoKey, string>>>
   return result;
 }
 
+// ---------------------------------------------------------------------------
+// Everything below reads the Tritorc Strapi and falls back to the built-in
+// content (lib/mock/*) when Strapi is unreachable, errors, or has no entries.
+// ---------------------------------------------------------------------------
+
+type StrapiMedia = { url: string } | null | undefined;
+
+/** Absolute URL of an uploaded Strapi image, if there is one. */
+function mediaUrl(m: StrapiMedia): string | undefined {
+  return m?.url ? resolveMediaUrl(m.url) : undefined;
+}
+
+/** A Strapi collection in `order` order, or null on failure/empty so callers fall back. */
+async function strapiRows<T>(path: string, params: Record<string, string> = {}): Promise<T[] | null> {
+  const res = await strapiFetch<{ data: T[] }>(path, { sort: "order:asc", "pagination[pageSize]": "200", ...params });
+  return res && Array.isArray(res.data) && res.data.length > 0 ? res.data : null;
+}
+
+/** A Strapi single type, or null on failure / not created yet. */
+async function strapiSingle<T>(path: string, params: Record<string, string> = {}): Promise<T | null> {
+  const res = await strapiFetch<{ data: T | null }>(path, params);
+  return res?.data ?? null;
+}
+
 export async function getImpactStats(): Promise<ImpactStat[]> {
-  return IMPACT_STATS;
+  const rows = await strapiRows<ImpactStat>("/api/impact-stats");
+  return rows ? rows.map((r) => ({ value: r.value, label: r.label })) : IMPACT_STATS;
 }
 
 export async function getCaseStudies(): Promise<CaseStudy[]> {
-  return CASE_STUDIES;
+  const rows = await strapiRows<CaseStudy & { directImageUrl?: string | null }>("/api/case-studies");
+  if (!rows) return CASE_STUDIES;
+  return rows.map((r) => ({
+    slug: r.slug,
+    name: r.name,
+    stat: r.stat,
+    statLabel: r.statLabel,
+    meta: r.meta,
+    imageKey: CASE_STUDIES.find((c) => c.slug === r.slug)?.imageKey,
+    directImageUrl: r.directImageUrl ?? CASE_STUDIES.find((c) => c.slug === r.slug)?.directImageUrl,
+  }));
 }
 
 export async function getCertifications(): Promise<Certification[]> {
-  return CERTIFICATIONS;
+  const rows = await strapiRows<Certification>("/api/certifications");
+  return rows ? rows.map((r) => ({ code: r.code, name: r.name, description: r.description })) : CERTIFICATIONS;
 }
 
 export async function getCoreValues(): Promise<CoreValue[]> {
-  return CORE_VALUES;
+  const rows = await strapiRows<CoreValue>("/api/core-values");
+  return rows ? rows.map((r) => ({ name: r.name, description: r.description })) : CORE_VALUES;
 }
 
 export async function getGlobalOffices(): Promise<GlobalOffice[]> {
-  return GLOBAL_OFFICES;
+  const rows = await strapiRows<GlobalOffice>("/api/global-offices");
+  return rows ? rows.map((r) => ({ city: r.city, country: r.country })) : GLOBAL_OFFICES;
 }
 
 export async function getJourney(): Promise<JourneyMilestone[]> {
-  return JOURNEY;
+  const rows = await strapiRows<JourneyMilestone>("/api/journey-milestones");
+  return rows ? rows.map((r) => ({ year: r.year, label: r.label })) : JOURNEY;
+}
+
+// ---- Home page, founder message, company page, contact ----------------------
+
+interface StrapiHomePage {
+  heroSlides?: {
+    image?: StrapiMedia; imageUrl?: string | null; imagePosition?: string | null; eyebrow?: string | null;
+    lines?: unknown; side?: "left" | "right" | null; href?: string | null;
+  }[] | null;
+  primaryCtaLabel?: string | null; primaryCtaHref?: string | null;
+  secondaryCtaLabel?: string | null; secondaryCtaHref?: string | null;
+  caseTiles?: {
+    title: string; note?: string | null; image?: StrapiMedia; imageUrl?: string | null;
+    imagePosition?: string | null; alt?: string | null; href?: string | null;
+  }[] | null;
+  quotes?: { quote: string; author: string }[] | null;
+}
+
+export async function getHomePage(): Promise<HomePageContent> {
+  const d = await strapiSingle<StrapiHomePage>("/api/home-page", {
+    "populate[heroSlides][populate][0]": "image",
+    "populate[caseTiles][populate][0]": "image",
+    "populate[quotes]": "true",
+  });
+  if (!d) return HOME_PAGE;
+  return {
+    heroSlides: d.heroSlides?.length
+      ? d.heroSlides.map((s, i) => ({
+          image: mediaUrl(s.image) ?? s.imageUrl ?? HOME_PAGE.heroSlides[i]?.image ?? "",
+          imagePosition: s.imagePosition ?? undefined,
+          eyebrow: s.eyebrow ?? undefined,
+          lines: Array.isArray(s.lines) ? s.lines.map(String) : (HOME_PAGE.heroSlides[i]?.lines ?? []),
+          side: s.side ?? "right",
+          href: s.href ?? undefined,
+        }))
+      : HOME_PAGE.heroSlides,
+    primary: {
+      label: d.primaryCtaLabel ?? HOME_PAGE.primary.label,
+      href: d.primaryCtaHref ?? HOME_PAGE.primary.href,
+    },
+    secondary: {
+      label: d.secondaryCtaLabel ?? HOME_PAGE.secondary.label,
+      href: d.secondaryCtaHref ?? HOME_PAGE.secondary.href,
+    },
+    caseTiles: d.caseTiles?.length
+      ? d.caseTiles.map((t, i) => ({
+          title: t.title,
+          note: t.note ?? "",
+          image: mediaUrl(t.image) ?? t.imageUrl ?? HOME_PAGE.caseTiles[i]?.image ?? "",
+          pos: t.imagePosition ?? "50% 50%",
+          alt: t.alt ?? "",
+          href: t.href ?? "/notifications",
+        }))
+      : HOME_PAGE.caseTiles,
+    quotes: d.quotes?.length ? d.quotes.map((q) => ({ quote: q.quote, author: q.author })) : HOME_PAGE.quotes,
+  };
+}
+
+export async function getFounderMessage(): Promise<FounderContent> {
+  const d = await strapiSingle<{
+    name: string; role?: string | null; message: string; photo?: StrapiMedia; photoUrl?: string | null;
+  }>("/api/founder-message", { "populate[photo]": "true" });
+  if (!d) return FOUNDER;
+  return {
+    name: d.name,
+    role: d.role ?? "",
+    message: d.message,
+    photo: mediaUrl(d.photo) ?? d.photoUrl ?? undefined,
+  };
+}
+
+export async function getCompanyPage(): Promise<CompanyPageContent> {
+  const d = await strapiSingle<{
+    overviewText?: string | null; overviewLines?: unknown;
+    slides?: { image?: StrapiMedia; imageUrl?: string | null; position?: string | null }[] | null;
+    stats?: { value: string; label: string }[] | null;
+    certificationBadges?: { title: string; note?: string | null; image?: StrapiMedia; imageUrl?: string | null; alt?: string | null }[] | null;
+    profileTitle?: string | null; profileMeta?: string | null;
+  }>("/api/company-page", {
+    "populate[slides][populate][0]": "image",
+    "populate[stats]": "true",
+    "populate[certificationBadges][populate][0]": "image",
+  });
+  if (!d) return COMPANY_PAGE;
+  return {
+    overviewText: d.overviewText ?? COMPANY_PAGE.overviewText,
+    overviewLines:
+      Array.isArray(d.overviewLines) && d.overviewLines.length ? d.overviewLines.map(String) : COMPANY_PAGE.overviewLines,
+    slides: d.slides?.length
+      ? d.slides.map((s, i) => ({
+          src: mediaUrl(s.image) ?? s.imageUrl ?? COMPANY_PAGE.slides[i]?.src ?? "",
+          position: s.position ?? "50% 50%",
+        }))
+      : COMPANY_PAGE.slides,
+    stats: d.stats?.length ? d.stats.map((s) => ({ value: s.value, label: s.label })) : COMPANY_PAGE.stats,
+    certifications: d.certificationBadges?.length
+      ? d.certificationBadges.map((c, i) => ({
+          title: c.title,
+          note: c.note ?? "",
+          image: mediaUrl(c.image) ?? c.imageUrl ?? COMPANY_PAGE.certifications[i]?.image ?? "",
+          alt: c.alt ?? c.title,
+        }))
+      : COMPANY_PAGE.certifications,
+    profileTitle: d.profileTitle ?? COMPANY_PAGE.profileTitle,
+    profileMeta: d.profileMeta ?? COMPANY_PAGE.profileMeta,
+  };
+}
+
+export interface SiteContact {
+  email: string;
+  phoneIndia: string;
+  phoneIndiaHref: string;
+  phoneUsa: string;
+  phoneUsaHref: string;
+  website: string;
+  contactPage: string;
+  social: { label: string; href: string }[];
+}
+
+export async function getSiteContact(): Promise<SiteContact> {
+  const fallback: SiteContact = { ...CONTACT, social: CONTACT.social.map((s) => ({ ...s })) };
+  const d = await strapiSingle<Partial<SiteContact>>("/api/site-contact", { "populate[social]": "true" });
+  if (!d) return fallback;
+  return {
+    email: d.email ?? fallback.email,
+    phoneIndia: d.phoneIndia ?? fallback.phoneIndia,
+    phoneIndiaHref: d.phoneIndiaHref ?? fallback.phoneIndiaHref,
+    phoneUsa: d.phoneUsa ?? fallback.phoneUsa,
+    phoneUsaHref: d.phoneUsaHref ?? fallback.phoneUsaHref,
+    website: d.website ?? fallback.website,
+    contactPage: d.contactPage ?? fallback.contactPage,
+    social: d.social?.length ? d.social.map((s) => ({ label: s.label, href: s.href })) : fallback.social,
+  };
+}
+
+// ---- Events ---------------------------------------------------------------------
+
+interface StrapiEvent {
+  slug: string; title: string; eventStatus?: "upcoming" | "past" | null; category?: string | null;
+  featured?: boolean | null; dateLabel?: string | null; start?: string | null; schedule?: string | null;
+  venue?: string | null; city?: string | null; hall?: string | null; booth?: string | null;
+  image?: StrapiMedia; imageUrl?: string | null; intro?: string | null; about?: unknown; sourceUrl?: string | null;
+  stats?: { value: string; label: string }[] | null;
+  highlights?: { title: string; body?: string | null }[] | null;
+  hours?: { day: string; hours: string }[] | null;
+}
+
+/** All events, newest first (same order as the built-in list). */
+export async function getEvents(): Promise<TritorcEvent[]> {
+  const res = await strapiFetch<{ data: StrapiEvent[] }>("/api/events", {
+    "populate[image]": "true",
+    "populate[stats]": "true",
+    "populate[highlights]": "true",
+    "populate[hours]": "true",
+    sort: "start:desc",
+    "pagination[pageSize]": "100",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.length === 0) return EVENTS;
+  return res.data.map((e) => ({
+    slug: e.slug,
+    title: e.title,
+    category: (e.category ?? "Exhibition") as TritorcEvent["category"],
+    status: e.eventStatus ?? "upcoming",
+    featured: e.featured ?? undefined,
+    dateLabel: e.dateLabel ?? "",
+    start: e.start ?? "",
+    schedule: e.schedule ?? "",
+    venue: e.venue ?? "",
+    city: e.city ?? "",
+    hall: e.hall ?? undefined,
+    booth: e.booth ?? undefined,
+    image: mediaUrl(e.image) ?? e.imageUrl ?? "",
+    intro: e.intro ?? "",
+    about: Array.isArray(e.about) ? e.about.map(String) : [],
+    stats: (e.stats ?? []).map((s) => ({ value: s.value, label: s.label })),
+    highlights: (e.highlights ?? []).map((h) => ({ title: h.title, body: h.body ?? "" })),
+    hours: e.hours?.length ? e.hours.map((h) => ({ day: h.day, hours: h.hours })) : undefined,
+    sourceUrl: e.sourceUrl ?? "",
+  }));
+}
+
+export async function getEvent(slug: string): Promise<TritorcEvent | undefined> {
+  return (await getEvents()).find((e) => e.slug === slug);
+}
+
+// ---------------------------------------------------------------------------
+// Products and services come from the Tritorc Strapi (collection types
+// "product", "service", "product-section", "service-section"). Every getter
+// falls back to the built-in sample content in lib/mock/content.ts when Strapi
+// is unreachable, errors, or has no entries yet, so the app never renders empty.
+// Photos are still resolved separately (captions / file names, see above); the
+// mock `imageKey`s are kept as a fallback so existing photos keep working.
+// ---------------------------------------------------------------------------
+
+interface StrapiProduct {
+  slug: string;
+  name: string;
+  series?: string | null;
+  tagline?: string | null;
+  specs?: { label: string; value: string }[] | null;
+  directImageUrl?: string | null;
+  catalogueTitle?: string | null;
+  category?: { name: string } | null;
+}
+
+interface StrapiService {
+  slug: string;
+  name: string;
+  category?: string | null;
+  tagline?: string | null;
+  description?: string | null;
+  directImageUrl?: string | null;
+  catalogueTitle?: string | null;
+}
+
+const MOCK_PRODUCTS_BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
+const MOCK_SERVICES_BY_SLUG = new Map(SERVICES.map((s) => [s.slug, s]));
+
+type Catalogue = { title: string; meta: string; url: string };
+
+/**
+ * Strapi only stores the catalogue's title. When it matches the sample entry,
+ * keep that entry's subtitle ("10.9 MB · Updated ...") and link, so cards look
+ * the same whether the data came from Strapi or the built-in sample content.
+ */
+function toCatalogue(title?: string | null, mock?: Catalogue | null): Catalogue | null {
+  if (!title) return null;
+  const same = mock && mock.title === title;
+  return { title, meta: same ? mock.meta : "", url: same ? mock.url : "#" };
+}
+
+export async function getProducts(): Promise<Product[]> {
+  const res = await strapiFetch<{ data: StrapiProduct[] }>("/api/products", {
+    "populate[specs]": "true",
+    "populate[category]": "true",
+    sort: "order:asc",
+    "pagination[pageSize]": "200",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.length === 0) return PRODUCTS;
+  return res.data.map((p) => {
+    const mock = MOCK_PRODUCTS_BY_SLUG.get(p.slug);
+    return {
+      slug: p.slug,
+      name: p.name,
+      series: p.series ?? mock?.series ?? "",
+      category: p.category?.name ?? mock?.category ?? "",
+      tagline: p.tagline ?? mock?.tagline ?? "",
+      specs: (p.specs ?? []).map((s) => ({ label: s.label, value: s.value })),
+      media: [],
+      catalogue: toCatalogue(p.catalogueTitle, mock?.catalogue) ?? mock?.catalogue ?? null,
+      heroImageKey: mock?.heroImageKey,
+      directImageUrl: p.directImageUrl ?? mock?.directImageUrl,
+    };
+  });
+}
+
+export async function getProduct(slug: string): Promise<Product | undefined> {
+  return (await getProducts()).find((p) => p.slug === slug);
+}
+
+/** The sections and cards shown on the Products page, in order. */
+export async function getProductList(): Promise<ProductListSection[]> {
+  const res = await strapiFetch<{
+    data: { name: string; products?: { slug: string; name: string; listingTitle?: string | null; listingSeries?: string | null; series?: string | null }[] }[];
+  }>("/api/product-sections", {
+    sort: "order:asc",
+    "populate[products][sort]": "order:asc",
+    "populate[products][fields][0]": "slug",
+    "populate[products][fields][1]": "name",
+    "populate[products][fields][2]": "listingTitle",
+    "populate[products][fields][3]": "listingSeries",
+    "populate[products][fields][4]": "series",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.every((s) => !s.products?.length)) return PRODUCT_LIST;
+  return res.data
+    .filter((s) => s.products && s.products.length > 0)
+    .map((s) => ({
+      name: s.name,
+      items: (s.products ?? []).map((p) => ({
+        slug: p.slug,
+        title: p.listingTitle ?? p.name,
+        series: p.listingSeries ?? p.series ?? "",
+      })),
+    }));
+}
+
+function mapService(s: StrapiService): Service {
+  const mock = MOCK_SERVICES_BY_SLUG.get(s.slug);
+  return {
+    slug: s.slug,
+    name: s.name,
+    category: s.category ?? mock?.category ?? s.name,
+    tagline: s.tagline ?? mock?.tagline ?? "",
+    description: s.description ?? mock?.description ?? "",
+    imageKey: mock?.imageKey,
+    directImageUrl: s.directImageUrl ?? mock?.directImageUrl,
+    media: [],
+    catalogue: toCatalogue(s.catalogueTitle, mock?.catalogue) ?? mock?.catalogue ?? null,
+  };
 }
 
 export async function getServices(): Promise<Service[]> {
-  return SERVICES;
+  const res = await strapiFetch<{ data: StrapiService[] }>("/api/services", {
+    sort: "order:asc",
+    "pagination[pageSize]": "200",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.length === 0) return SERVICES;
+  return res.data.map(mapService);
 }
 
 export async function getService(slug: string): Promise<Service | undefined> {
-  return SERVICES.find((s) => s.slug === slug);
+  return (await getServices()).find((s) => s.slug === slug);
 }
 
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   return SERVICE_CATEGORIES;
 }
 
+/** The six service groups. Each group's `categories` are its services' category names, in order. */
 export async function getServiceSections(): Promise<ServiceSection[]> {
-  return SERVICE_SECTIONS;
-}
-
-export async function getProducts(): Promise<Product[]> {
-  return PRODUCTS;
-}
-
-export async function getProduct(slug: string): Promise<Product | undefined> {
-  return PRODUCTS.find((p) => p.slug === slug);
+  const res = await strapiFetch<{
+    data: { name: string; color?: string | null; services?: { category?: string | null; name: string }[] }[];
+  }>("/api/service-sections", {
+    sort: "order:asc",
+    "populate[services][sort]": "order:asc",
+    "populate[services][fields][0]": "category",
+    "populate[services][fields][1]": "name",
+  });
+  if (!res || !Array.isArray(res.data) || res.data.every((s) => !s.services?.length)) return SERVICE_SECTIONS;
+  return res.data
+    .filter((s) => s.services && s.services.length > 0)
+    .map((s) => ({
+      name: s.name,
+      color: s.color ?? "#171717",
+      categories: (s.services ?? []).map((sv) => sv.category ?? sv.name),
+    }));
 }
 
 export async function getTestimonials(): Promise<Testimonial[]> {
-  return TESTIMONIALS;
+  const rows = await strapiRows<{ quote: string; author: string }>("/api/testimonials");
+  if (!rows) return TESTIMONIALS;
+  return rows.map((r, i) => ({
+    quote: r.quote,
+    author: r.author,
+    imageKey: (TESTIMONIALS.find((t) => t.author === r.author) ?? TESTIMONIALS[i] ?? TESTIMONIALS[0]).imageKey,
+  }));
 }
 
 export async function getBrand() {
-  return BRAND;
+  const d = await strapiSingle<{ quote?: string | null; since?: string | null }>("/api/brand");
+  return d ? { quote: d.quote ?? BRAND.quote, since: d.since ?? BRAND.since } : BRAND;
 }
 
 function stripExtension(filename: string): string {

@@ -1,0 +1,93 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "eventStatus": {
+      "type": "enumeration",
+      "enum": [
+        "upcoming",
+        "past"
+      ],
+      "default": "upcoming"
+    },
+    "category": {
+      "type": "string"
+    },
+    "sourceUrl": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "dateLabel": {
+      "type": "string"
+    },
+    "start": {
+      "type": "date"
+    },
+    "schedule": {
+      "type": "text"
+    },
+    "venue": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "hall": {
+      "type": "string"
+    },
+    "booth": {
+      "type": "string"
+    },
+    "imageUrl": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "intro": {
+      "type": "text"
+    },
+    "about": {
+      "type": "json"
+    },
+    "stats": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.stat"
+    },
+    "highlights": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.highlight"
+    },
+    "hours": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.hour"
+    }
+  }
+}

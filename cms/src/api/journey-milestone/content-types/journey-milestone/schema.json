@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "journey_milestones",
+  "info": {
+    "singularName": "journey-milestone",
+    "pluralName": "journey-milestones",
+    "displayName": "Journey Milestone"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "year": {
+      "type": "string",
+      "required": true
+    },
+    "label": {
+      "type": "string",
+      "required": true
+    },
+    "order": {
+      "type": "integer"
+    }
+  }
+}
