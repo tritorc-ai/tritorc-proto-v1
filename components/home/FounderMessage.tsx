@@ -20,7 +20,7 @@ export interface FounderMessageProps {
  */
 export function FounderMessage({ name, role, message, photo }: FounderMessageProps) {
   return (
-    <div className="overflow-hidden rounded-[32px] border border-black/5 bg-[#f7f6f4] p-4 shadow-xs">
+    <div className="overflow-hidden rounded-[32px] border border-black/5 bg-[#f7f6f4] p-4 shadow-xs md:p-6">
       <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.24em] text-neutral-500">
         Founder&apos;s message
         <span className="h-[1px] flex-1 bg-neutral-300/70" />
@@ -50,7 +50,7 @@ export function FounderMessage({ name, role, message, photo }: FounderMessagePro
             <br />
             <span className="text-[#6b6b70]">our founder.</span>
           </h2>
-          <p className="mt-2 text-[13.5px] font-medium leading-[1.42] text-[#2a2a2c]">
+          <p className="mt-2 text-[13.5px] font-medium leading-[1.42] text-[#2a2a2c] md:text-[15px]">
             <Quote size={13} fill="currentColor" strokeWidth={0} className="mb-0.5 mr-1 inline rotate-180 text-neutral-400" />
             {message}
           </p>

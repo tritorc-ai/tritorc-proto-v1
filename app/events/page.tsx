@@ -19,10 +19,10 @@ export default async function EventsPage() {
         subtitle="Where to meet the Tritorc team."
         back={{ href: "/notifications", label: "Back to notifications" }}
       />
-      <div className="space-y-9 px-5 pb-6">
+      <div className="space-y-9 px-5 pb-6 md:space-y-12 md:px-8 lg:px-10">
         <section>
           <SectionHead title="Upcoming" />
-          <div className="space-y-4">
+          <div className="space-y-4 md:grid md:grid-cols-2 md:gap-5 md:space-y-0">
             {upcoming.map((e) => (
               <OverlayCard
                 key={e.slug}
@@ -40,7 +40,7 @@ export default async function EventsPage() {
 
         <section>
           <SectionHead title="Past events" subtitle="Where we showed our tools." />
-          <ul className="space-y-3">
+          <ul className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
             {past.map((e) => (
               <li key={e.slug}>
                 <Link href={`/events/${e.slug}`} className="press flex gap-3.5 rounded-[24px] bg-[#e4e5e7] p-3">

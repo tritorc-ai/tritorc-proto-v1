@@ -52,7 +52,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: SPLASH_GUARD_SCRIPT }} />
         <Splash />
         <InboxProvider>
-          <div className="mx-auto min-h-dvh max-w-md bg-(--app-bg) pb-nav sm:shadow-[0_0_60px_rgba(0,0,0,0.08)]">
+          {/* Phone: one 448px column. Tablet (md): the full width up to 860px. Landscape / desktop (lg): up to 1180px.
+              Screens switch to multi-column layouts at those widths. */}
+          <div className="mx-auto min-h-dvh max-w-md bg-(--app-bg) pb-nav sm:shadow-[0_0_60px_rgba(0,0,0,0.08)] md:max-w-[860px] lg:max-w-[1180px]">
             {children}
           </div>
           <BottomNav />

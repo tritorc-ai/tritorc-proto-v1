@@ -93,6 +93,15 @@ export function DetailSheetView({
       const inner = heroInnerRef.current;
       const sheet = sheetRef.current;
       if (!hero || !sheet) return;
+      // Tablet and up: image and details sit side by side, so there is nothing to slide over.
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        if (inner) {
+          inner.style.transform = "";
+          inner.style.opacity = "";
+        }
+        setExpanded(false);
+        return;
+      }
       const p = Math.min(1, Math.max(0, 1 - sheet.getBoundingClientRect().top / (hero.offsetHeight * 0.75)));
       if (inner && !reduce) {
         inner.style.transform = `translateY(${p * -28}px) scale(${1 - p * 0.06})`;
@@ -148,7 +157,7 @@ export function DetailSheetView({
     <div className={cn("relative", jakarta.className)}>
       {/* Floating header: stays above the sheet while it scrolls. */}
       <div className="sticky top-0 z-30 h-0">
-        <div className="pointer-events-none flex items-center gap-3 px-5 pt-safe-header">
+        <div className="pointer-events-none flex items-center gap-3 px-5 pt-safe-header md:px-8 lg:px-10">
           <Link
             href={backHref}
             aria-label="Back"
@@ -168,10 +177,13 @@ export function DetailSheetView({
         </div>
       </div>
 
+      {/* Phone: hero pinned behind a sheet that slides up over it. Tablet and up: two columns, the
+          hero stays in view on the left while the details scroll on the right. */}
+      <div className="md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] md:items-start md:gap-8 md:px-8 lg:grid-cols-2 lg:gap-12 lg:px-10">
       {/* Hero: pinned behind the sheet. */}
-      <div ref={heroRef} className="sticky top-0 z-0 h-[calc(100dvh-136px)] min-h-[440px] overflow-hidden bg-(--app-bg)">
+      <div ref={heroRef} className="sticky top-0 z-0 h-[calc(100dvh-136px)] min-h-[440px] overflow-hidden bg-(--app-bg) md:h-dvh md:min-h-0">
         <div ref={heroInnerRef} className="flex h-full flex-col will-change-transform">
-          <div className="px-5 pt-safe-header">
+          <div className="px-5 pt-safe-header md:px-0">
             <div className="h-10" aria-hidden />
             <div className="mt-4">
               <div className="flex items-baseline justify-between gap-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em]">
@@ -180,14 +192,14 @@ export function DetailSheetView({
                   {eyebrowRight}
                 </span>
               </div>
-              <h1 className="mt-1.5 text-[26px] font-bold leading-[1.1] tracking-[-0.025em] text-brand-dark">
+              <h1 className="mt-1.5 text-[26px] font-bold leading-[1.1] tracking-[-0.025em] text-brand-dark md:text-[32px]">
                 {name}
               </h1>
             </div>
           </div>
           <div className="relative mt-1 flex-1">
             {heroImage ? (
-              <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)]">
+              <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)] md:inset-x-0 md:bottom-28">
                 {heroVideo ? (
                   <HeroVideo src={heroVideo.src} poster={heroVideo.poster ?? heroImage} label={name} />
                 ) : (
@@ -196,7 +208,7 @@ export function DetailSheetView({
                     alt={name}
                     fill
                     priority
-                    sizes="(max-width: 448px) 90vw, 408px"
+                    sizes="(max-width: 448px) 90vw, (max-width: 1024px) 45vw, 560px"
                     className={cn(
                       "animate-in fade-in duration-700 ease-(--ease-premium) motion-reduce:animate-none",
                       "object-cover",
@@ -216,14 +228,14 @@ export function DetailSheetView({
       {/* Information sheet: overlaps the hero; scrolls naturally, tap the handle to expand/collapse. */}
       <div
         ref={sheetRef}
-        className="relative z-10 -mt-12 min-h-[calc(100dvh-72px)] rounded-t-[34px] bg-(--app-bg) px-5 pb-10 shadow-[0_-18px_40px_-18px_rgba(0,0,0,0.18)]"
+        className="relative z-10 -mt-12 min-h-[calc(100dvh-72px)] rounded-t-[34px] bg-(--app-bg) px-5 pb-10 shadow-[0_-18px_40px_-18px_rgba(0,0,0,0.18)] md:mt-0 md:min-h-0 md:rounded-none md:px-0 md:pb-16 md:pt-24 md:shadow-none"
       >
         <button
           type="button"
           onClick={toggleSheet}
           aria-expanded={expanded}
           aria-label={expanded ? "Collapse product details" : "Expand product details"}
-          className="group mx-auto flex h-9 w-24 items-center justify-center outline-none"
+          className="group mx-auto flex h-9 w-24 items-center justify-center outline-none md:hidden"
         >
           <span className="h-1 w-10 rounded-full bg-black/20 transition-all duration-300 group-hover:w-12 group-hover:bg-brand-dark group-focus-visible:bg-brand-dark" />
         </button>
@@ -341,6 +353,7 @@ export function DetailSheetView({
             </div>
           </section>
         )}
+      </div>
       </div>
 
       {viewer && <MediaPreviewModal items={viewer.items} initialIndex={viewer.index} onClose={() => setViewer(null)} />}

@@ -31,20 +31,20 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
   return (
     <div className={jakarta.className}>
       <PageHeader title={event.title} back={{ href: "/events", label: "Back to events" }} />
-      <div className="space-y-9 px-5 pb-6">
+      <div className="space-y-9 px-5 pb-6 md:space-y-10 md:px-8 lg:px-10">
         <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
-          <Photo src={event.image} sizes="(max-width: 448px) 100vw, 408px" className="aspect-[4/3] w-full" priority />
+          <Photo src={event.image} sizes="(max-width: 448px) 100vw, (max-width: 1024px) 92vw, 1100px" className="aspect-[4/3] w-full md:aspect-[2/1] lg:aspect-[5/2]" priority />
           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent" />
           <span className="absolute left-4 top-4 rounded-full bg-white px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-brand-dark">
             {event.status === "upcoming" ? "Upcoming" : "Completed"} · {event.category}
           </span>
-          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <div className="text-[22px] font-bold leading-tight">{event.dateLabel}</div>
-            <div className="mt-0.5 text-[13px] text-white/75">{event.city}</div>
+          <div className="absolute inset-x-0 bottom-0 p-5 text-white md:p-8">
+            <div className="text-[22px] font-bold leading-tight md:text-[32px]">{event.dateLabel}</div>
+            <div className="mt-0.5 text-[13px] text-white/75 md:text-[16px]">{event.city}</div>
           </div>
         </div>
 
-        <ul className="space-y-2.5">
+        <ul className="space-y-2.5 md:grid md:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] md:gap-3 md:space-y-0">
           {facts.map(({ icon: Icon, label, value }) => (
             <li key={label} className="flex items-start gap-3.5 rounded-[22px] bg-[#e4e5e7] p-4">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark">
@@ -61,7 +61,7 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
         </ul>
 
         {event.stats.length > 0 && (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-[repeat(auto-fit,minmax(170px,1fr))] md:gap-4">
             {event.stats.map((s) => (
               <div key={s.label} className="rounded-[20px] bg-brand-dark px-4 py-3.5">
                 <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white">{s.value}</div>
@@ -91,7 +91,7 @@ export default async function EventDetailPage(props: PageProps<"/events/[slug]">
           </section>
         )}
 
-        <div className="grid gap-3">
+        <div className="grid gap-3 md:mx-auto md:max-w-md">
           <a
             href={`mailto:${contact.email}?subject=${encodeURIComponent(event.title)}`}
             className="press flex items-center justify-center rounded-2xl bg-brand-dark py-3.5 text-[15px] font-semibold text-white"
