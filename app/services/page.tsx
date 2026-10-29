@@ -51,10 +51,10 @@ export default async function ServicesPage() {
       <PageHeader title="Services" hideLogo titleClassName="text-[36px] font-bold" />
 
       {/* One padded wrapper for the bar and the sections so the bar stays sticky across the whole list */}
-      <div className="px-5 md:px-8 lg:px-10">
+      <div className="px-5 tablet:px-8 tablet-lg:px-10">
         <SectionNav variant="minimal" items={groups.map((g) => ({ id: slugify(g.name), label: g.name }))} />
 
-        <div className="space-y-8 pt-4 md:space-y-12 md:pt-6">
+        <div className="space-y-8 pt-4 tablet:space-y-12 tablet:pt-6">
           {groups.map((group) => (
             <Reveal as="section" key={group.name} id={slugify(group.name)} className="scroll-mt-20">
               <SectionHead title={group.name} size="sm" />

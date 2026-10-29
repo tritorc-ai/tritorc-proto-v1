@@ -19,7 +19,7 @@ export function PageHeader({
   titleClassName?: string;
 }) {
   return (
-    <div className="px-5 pb-4 pt-safe md:px-8 lg:px-10">
+    <div className="px-5 pb-4 pt-safe tablet:px-8 tablet-lg:px-10">
       {!back && !hideLogo && (
         <Link href="/" aria-label="Tritorc home" className="press mb-4 inline-block">
           <Image src="/brand/tritorc-logo.png" alt="Tritorc" width={104} height={14} className="h-3.5 w-auto" />

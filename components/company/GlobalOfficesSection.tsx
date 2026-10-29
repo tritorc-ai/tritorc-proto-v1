@@ -36,7 +36,7 @@ export function GlobalOfficesSection({ offices }: { offices: Office[] }) {
   return (
     <>
       {/* Country chips grid */}
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 md:gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 tablet:grid-cols-3 tablet:gap-3 tablet-lg:grid-cols-4">
         {displayOffices.map((o) => {
           const baseCity = o.city.split(",")[0].trim();
           const isActive = focusCity === baseCity;
@@ -46,7 +46,7 @@ export function GlobalOfficesSection({ offices }: { offices: Office[] }) {
               type="button"
               onClick={() => handleChipClick(o.city)}
               className={[
-                "flex min-w-0 items-center gap-1.5 rounded-[18px] px-2.5 py-2 text-[11.5px] font-medium leading-tight text-left transition-all duration-200 active:scale-95 md:gap-2 md:px-4 md:py-3 md:text-[14px]",
+                "flex min-w-0 items-center gap-1.5 rounded-[18px] px-2.5 py-2 text-[11.5px] font-medium leading-tight text-left transition-all duration-200 active:scale-95 tablet:gap-2 tablet:px-4 tablet:py-3 tablet:text-[14px]",
                 isActive
                   ? "bg-[#e11d24] text-white shadow-sm"
                   : "bg-[#e4e5e7] text-brand-dark hover:bg-[#d8d9db]",

@@ -141,7 +141,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
         {i === 0 ? (
           <div key="stats" className="grid grid-cols-2 gap-3 items-stretch animate-in fade-in slide-in-from-bottom-2 duration-500">
             {/* Stat 1: 100+ Happy Customers */}
-            <div className="flex h-[185px] md:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
+            <div className="flex h-[185px] tablet:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
               <div className="flex items-center justify-between">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#111112] shadow-[0_4px_12px_-4px_rgba(255,255,255,0.5)]">
                   <Users size={13} />
@@ -165,7 +165,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
             </div>
 
             {/* Stat 2: 120+ Services Provided */}
-            <div className="flex h-[185px] md:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
+            <div className="flex h-[185px] tablet:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
               <div className="flex items-center justify-between">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#111112] shadow-[0_4px_12px_-4px_rgba(255,255,255,0.5)]">
                   <Wrench size={13} />
@@ -194,7 +194,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
             {quoteSlides[i - 1].map((t, idx) => (
               <figure
                 key={`${i}-${idx}`}
-                className="flex h-[185px] md:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]"
+                className="flex h-[185px] tablet:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]"
               >
                 <div>
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#111112] shadow-[0_4px_12px_-4px_rgba(255,255,255,0.5)]">

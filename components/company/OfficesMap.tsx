@@ -195,7 +195,7 @@ export function OfficesMap({ focusCity }: Props) {
         <span className="text-[13px] font-semibold text-white">Find us near you</span>
         <span className="ml-auto text-[10.5px] text-white/40">10 locations worldwide</span>
       </div>
-      <div ref={mapRef} className="h-[260px] w-full bg-[#f0f0f0] md:h-[380px] lg:h-[440px]">
+      <div ref={mapRef} className="h-[260px] w-full bg-[#f0f0f0] tablet:h-[380px] tablet-lg:h-[440px]">
         <div className="flex h-full items-center justify-center text-[12px] text-neutral-400">
           Loading map…
         </div>

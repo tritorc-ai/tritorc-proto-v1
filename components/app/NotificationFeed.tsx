@@ -37,7 +37,7 @@ export function NotificationFeed({ items }: { items: AppNotification[] }) {
 
   return (
     <div>
-      <div role="tablist" aria-label="Filter notifications" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0">
+      <div role="tablist" aria-label="Filter notifications" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] tablet:mx-0 tablet:flex-wrap tablet:px-0">
         {FILTERS.map((f, i) => (
           <button
             key={f.label}
@@ -65,7 +65,7 @@ export function NotificationFeed({ items }: { items: AppNotification[] }) {
         </button>
       )}
 
-      <ul className="mt-4 space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+      <ul className="mt-4 space-y-3 tablet:grid tablet:grid-cols-2 tablet:gap-3 tablet:space-y-0">
         {shown.map((n) => {
           const external = n.href.startsWith("http");
           const Icon = TAG_ICON[n.tag];

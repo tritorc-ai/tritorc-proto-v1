@@ -97,7 +97,7 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                 }}
                 style={{ gridArea: "1 / 1", ...POSITIONS[position] }}
                 className={cn(
-                  "flex h-[83px] items-center gap-2 rounded-[20px] bg-[#e4e5e7] py-[3.5px] pl-3.5 pr-[7px] ring-1 ring-white/70 md:h-[112px] md:gap-4 md:rounded-[26px] md:py-2 md:pl-6 md:pr-3",
+                  "flex h-[83px] items-center gap-2 rounded-[20px] bg-[#e4e5e7] py-[3.5px] pl-3.5 pr-[7px] ring-1 ring-white/70 tablet:h-[112px] tablet:gap-4 tablet:rounded-[26px] tablet:py-2 tablet:pl-6 tablet:pr-3",
                   "transition-[transform,opacity,box-shadow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
                   front ? "shadow-[0_10px_24px_-8px_rgba(0,0,0,0.22)]" : "shadow-sm",
                   position === "hidden" && "pointer-events-none",
@@ -109,22 +109,22 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                     !front && "opacity-50 blur-[6px]",
                   )}
                 >
-                  <span className="flex items-center gap-1.5 text-[9.5px] text-brand-text-secondary md:text-[12px]">
+                  <span className="flex items-center gap-1.5 text-[9.5px] text-brand-text-secondary tablet:text-[12px]">
                     <Icon size={11} />
                     {e.label}
                   </span>
-                  <span className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-[1.25] text-brand-dark md:text-[17px]">
+                  <span className="mt-0.5 line-clamp-2 text-[12px] font-semibold leading-[1.25] text-brand-dark tablet:text-[17px]">
                     {e.title}
                   </span>
                   {e.meta && (
-                    <span className="mt-1 block truncate text-[7.5px] font-medium uppercase tracking-[0.12em] text-neutral-500 md:text-[10px]">
+                    <span className="mt-1 block truncate text-[7.5px] font-medium uppercase tracking-[0.12em] text-neutral-500 tablet:text-[10px]">
                       {e.meta}
                     </span>
                   )}
                 </span>
                 <span
                   className={cn(
-                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark transition-opacity duration-500 md:h-9 md:w-9",
+                    "flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-brand-dark transition-opacity duration-500 tablet:h-9 tablet:w-9",
                     !front && "opacity-0",
                   )}
                 >
@@ -132,10 +132,10 @@ export function EventTicker({ events }: { events: TickerItem[] }) {
                 </span>
                 {e.image && (
                   <>
-                    <span aria-hidden className="h-[58px] w-px shrink-0 bg-black/10 md:h-[76px]" />
+                    <span aria-hidden className="h-[58px] w-px shrink-0 bg-black/10 tablet:h-[76px]" />
                     <span
                       className={cn(
-                        "relative h-[76px] w-[117px] shrink-0 overflow-hidden rounded-[14px] bg-[#d5d9dd] transition-[opacity,filter] duration-500 md:h-[96px] md:w-[150px] md:rounded-[18px]",
+                        "relative h-[76px] w-[117px] shrink-0 overflow-hidden rounded-[14px] bg-[#d5d9dd] transition-[opacity,filter] duration-500 tablet:h-[96px] tablet:w-[150px] tablet:rounded-[18px]",
                         !front && "opacity-50 blur-[6px]",
                       )}
                     >

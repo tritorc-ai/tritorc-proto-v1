@@ -4,6 +4,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Tablet layouts apply only on an actual tablet: a touch screen (pointer: coarse) at least 768px
+ * wide and 600px tall. A laptop or desktop browser, however wide its window, keeps the phone
+ * layout, and so does a phone turned sideways (its height is well under 600px).
+ * Use `tablet:` for a portrait iPad (768px+) and `tablet-lg:` for landscape (1024px+).
+ * Keep these two queries in sync with TABLET_QUERY in components/app/DetailSheetView.tsx.
+ * `tablet-lg` is defined second so it wins over `tablet`. */
+@custom-variant tablet (@media (min-width: 768px) and (min-height: 600px) and (pointer: coarse));
+@custom-variant tablet-lg (@media (min-width: 1024px) and (min-height: 600px) and (pointer: coarse));
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

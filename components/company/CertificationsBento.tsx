@@ -18,11 +18,11 @@ export interface Certification {
  */
 export function CertificationsBento({ items }: { items: Certification[] }) {
   return (
-    <div className="rounded-[28px] bg-[#e4e5e7] p-4 md:p-7">
+    <div className="rounded-[28px] bg-[#e4e5e7] p-4 tablet:p-7">
       <div className="grid grid-cols-2 divide-x divide-black/10">
         {items.map((c) => (
-          <div key={c.title} className="flex flex-col items-center px-3 text-center md:px-6">
-            <div className="relative h-[96px] w-full md:h-[130px]">
+          <div key={c.title} className="flex flex-col items-center px-3 text-center tablet:px-6">
+            <div className="relative h-[96px] w-full tablet:h-[130px]">
               <Image src={c.image} alt={c.alt} fill sizes="160px" className="object-contain" />
             </div>
             <div className="mt-3 text-[14px] font-bold leading-tight tracking-[-0.01em] text-brand-dark">{c.title}</div>

@@ -19,7 +19,7 @@ export default async function HomePage() {
   const [home, founder] = await Promise.all([getHomePage(), getFounderMessage()]);
 
   return (
-    <div className={`relative min-h-screen bg-[#f3f3f2] px-3.5 pt-safe pb-0 space-y-3 md:space-y-4 md:px-8 lg:px-10 ${jakarta.className}`}>
+    <div className={`relative min-h-screen bg-[#f3f3f2] px-3.5 pt-safe pb-0 space-y-3 tablet:space-y-4 tablet:px-8 tablet-lg:px-10 ${jakarta.className}`}>
       {/* Top floating header: wordmark, links, search, menu */}
       <HomeHeader />
 
@@ -34,13 +34,13 @@ export default async function HomePage() {
       </section>
 
       {/* 2-Column Bento: Flange Fastening & Products */}
-      <section aria-label="Case studies" className="grid grid-cols-[1.52fr_1fr] gap-3 sm:gap-3.5 md:grid-cols-2 md:gap-4">
+      <section aria-label="Case studies" className="grid grid-cols-[1.52fr_1fr] gap-3 sm:gap-3.5 tablet:grid-cols-2 tablet:gap-4">
         {home.caseTiles.map((t, i) => (
           <Link
             key={`${t.title}-${i}`}
             href={t.href}
             {...(t.href.startsWith("http") && { target: "_blank", rel: "noopener noreferrer" })}
-            className="group relative flex h-[190px] sm:h-[200px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#f7f6f4] border border-black/5 p-4 shadow-xs transition-all hover:shadow-sm md:h-[260px] md:p-6 lg:h-[300px]"
+            className="group relative flex h-[190px] sm:h-[200px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#f7f6f4] border border-black/5 p-4 shadow-xs transition-all hover:shadow-sm tablet:h-[260px] tablet:p-6 tablet-lg:h-[300px]"
           >
             <Image
               src={t.image}
@@ -54,12 +54,12 @@ export default async function HomePage() {
 
             {/* Live text in the app's own typeface (the lettering was removed from the pictures) */}
             <div className="relative z-10">
-              <div className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#4b4b4e] md:text-[10px]">CASE STUDY</div>
-              <h3 className="mt-1.5 text-[20px] font-bold leading-[1.05] tracking-[-0.02em] text-[#0a0a0b] [text-shadow:0_0_10px_rgba(247,246,244,0.85)] md:text-[28px]">
+              <div className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#4b4b4e] tablet:text-[10px]">CASE STUDY</div>
+              <h3 className="mt-1.5 text-[20px] font-bold leading-[1.05] tracking-[-0.02em] text-[#0a0a0b] [text-shadow:0_0_10px_rgba(247,246,244,0.85)] tablet:text-[28px]">
                 {t.title}
               </h3>
-              <span aria-hidden className="mt-2 block h-px w-7 bg-neutral-500/70 md:w-10" />
-              <p className="mt-2 text-[11.5px] font-semibold leading-snug text-[#1c1c1e] [text-shadow:0_0_6px_rgba(247,246,244,0.95),0_0_12px_rgba(247,246,244,0.8)] md:text-[15px]">
+              <span aria-hidden className="mt-2 block h-px w-7 bg-neutral-500/70 tablet:w-10" />
+              <p className="mt-2 text-[11.5px] font-semibold leading-snug text-[#1c1c1e] [text-shadow:0_0_6px_rgba(247,246,244,0.95),0_0_12px_rgba(247,246,244,0.8)] tablet:text-[15px]">
                 {t.note}
               </p>
             </div>
@@ -78,14 +78,14 @@ export default async function HomePage() {
       </section>
 
       {/* Founder's message and testimonials: stacked on a phone, side by side on a tablet */}
-      <div className="space-y-3 md:grid md:grid-cols-2 md:items-stretch md:gap-4 md:space-y-0">
+      <div className="space-y-3 tablet:grid tablet:grid-cols-2 tablet:items-stretch tablet:gap-4 tablet:space-y-0">
         {/* Founder's message (edited in Strapi: Founder Message) */}
-        <section aria-label="Founder's message" className="pt-0.5 md:pt-0 md:[&>div]:h-full">
+        <section aria-label="Founder's message" className="pt-0.5 tablet:pt-0 tablet:[&>div]:h-full">
           <FounderMessage name={founder.name} role={founder.role} message={founder.message} photo={founder.photo} />
         </section>
 
         {/* Testimonials Bento */}
-        <section aria-label="Client Testimonials" className="pt-0.5 md:pt-0 md:[&>section]:h-full">
+        <section aria-label="Client Testimonials" className="pt-0.5 tablet:pt-0 tablet:[&>section]:h-full">
           <BentoTestimonials items={home.quotes} />
         </section>
       </div>
