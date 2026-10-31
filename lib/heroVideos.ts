@@ -20,8 +20,9 @@ export const HERO_VIDEOS: Record<string, HeroVideoSource> = {
     poster: "/services/hot-tapping-hero-poster.jpg",
   },
   // "Pipe Freezing Line Isolation Explained | TRITORC Cryogenic Freezing Technology", 0:22 to 0:29 only
-  // (nitrogen tank, hose and freeze jacket on a pipe). 7s, silent, H.264, 720x900: the 16:9 picture sits
-  // whole in the middle of a 4:5 frame with a blurred copy of itself above and below.
+  // (nitrogen tank, hose and freeze jacket on a pipe). 7s, silent, H.264, 720x900 (4:5, fills the card).
+  // The 16:9 picture is cropped to a 4:5 window that pans with the action: tank and hose first, then
+  // across to the freeze jacket, then back as the camera moves.
   "nitrogen-purging-preservation": {
     src: "/services/nitrogen-purging-hero.mp4",
     poster: "/services/nitrogen-purging-poster.jpg",
