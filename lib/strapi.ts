@@ -305,7 +305,7 @@ export async function getVideoUrls(): Promise<Partial<Record<VideoKey, string>>>
 // content (lib/mock/*) when Strapi is unreachable, errors, or has no entries.
 // ---------------------------------------------------------------------------
 
-type StrapiMedia = { url: string } | null | undefined;
+type StrapiMedia = { url: string; caption?: string | null } | null | undefined;
 
 /** Absolute URL of an uploaded Strapi image, if there is one. */
 function mediaUrl(m: StrapiMedia): string | undefined {
@@ -459,10 +459,16 @@ export async function getCompanyPage(): Promise<CompanyPageContent> {
   });
   if (!d) return COMPANY_PAGE;
   const slides = (d.slides ?? [])
-    .map((s, i) => ({
-      src: mediaUrl(s.image) ?? s.imageUrl ?? COMPANY_PAGE.slides[i]?.src ?? "",
-      position: s.position ?? "50% 50%",
-    }))
+    .map((s, i) => {
+      const src = mediaUrl(s.image) ?? s.imageUrl ?? COMPANY_PAGE.slides[i]?.src ?? "";
+      return {
+        src,
+        position: s.position ?? "50% 50%",
+        // The caption of an uploaded photo (Strapi Media Library > the photo > Caption) is shown over it
+        // while it is on screen; a built-in photo keeps the caption written for it in siteContent.ts.
+        caption: s.image?.caption?.trim() || COMPANY_PAGE.slides.find((b) => b.src === src)?.caption,
+      };
+    })
     .filter((s) => s.src && !OLD_COMPANY_SLIDES.has(s.src));
   return {
     overviewText: d.overviewText ?? COMPANY_PAGE.overviewText,
@@ -783,13 +789,15 @@ function stripExtension(filename: string): string {
  * particular project/subject; they read as noise in the default grid. Logos
  * and certification badges aren't project photography either. Real photos
  * (case studies, category heroes, named products) keep readable words in
- * their title and pass through fine.
+ * their title and pass through fine. The photos of the Company page slideshow
+ * are uploaded as "company-slide-<n>-<subject>" and stay out of the Library.
  */
 function isProjectPhoto(title: string): boolean {
   const t = title.toLowerCase();
   const withoutHash = t.replace(/-[a-f0-9]{8,}$/i, "");
   if (/^product(-[a-f0-9]+)+$/.test(withoutHash)) return false;
   if (/(logo|badge|-cert-|footer-)/i.test(t)) return false;
+  if (t.startsWith("company-slide-")) return false;
   return true;
 }
 

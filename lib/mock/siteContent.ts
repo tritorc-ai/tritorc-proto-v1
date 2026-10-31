@@ -47,7 +47,8 @@ export interface FounderContent {
 export interface CompanyPageContent {
   overviewText: string;
   overviewLines: string[];
-  slides: { src: string; position: string }[];
+  /** `caption` is a short line shown over that photo while it is on screen. */
+  slides: { src: string; position: string; caption?: string }[];
   stats: { value: string; label: string }[];
   certifications: { title: string; note: string; image: string; alt: string }[];
   vision: string;
@@ -144,7 +145,7 @@ export const COMPANY_PAGE: CompanyPageContent = {
   // that fade into one another behind the text. The vertical position only matters on a tablet, where the frame
   // is a wide 2:1 or 5:2 band: it keeps the sign, the machine or the crew inside it.
   slides: [
-    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%" },
+    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%", caption: "New bolting systems division coming online soon" },
     { src: "/company/slide-2-heat-exchanger-crew.webp", position: "50% 25%" },
     { src: "/company/slide-3-red-machine-crew.webp", position: "50% 3%" },
     { src: "/company/slide-4-refinery-flange-lift.webp", position: "50% 47%" },
@@ -169,7 +170,7 @@ export const COMPANY_PAGE: CompanyPageContent = {
       alt: "ECITB approved provider",
     },
   ],
-  vision: "Growth for all, Limits on none.",
+  vision: "Powered by People",
   mission: "50X",
   profileTitle: "Company Profile",
   profileMeta: "6.4 MB · Updated Jul 2026",
