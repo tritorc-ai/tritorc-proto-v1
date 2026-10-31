@@ -1,0 +1,23 @@
+name: CMS CI
+
+on:
+  pull_request:
+    paths: ["cms/**", "deploy/**", ".github/workflows/cms-*.yml"]
+
+concurrency:
+  group: cms-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      # Builds the production image (this also runs `strapi build`) without pushing it.
+      - uses: docker/build-push-action@v6
+        with:
+          context: cms
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

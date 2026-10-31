@@ -1,16 +1,7 @@
 "use client";
 
 import { Download, ExternalLink, X } from "lucide-react";
-
-// Embedding a raw PDF in an <iframe> only renders if the browser has a
-// built-in PDF viewer plugin — many mobile browsers and in-app webviews
-// (this app is PWA-bound) don't, and just show a blank frame. Google's
-// viewer renders the pages as images instead, so it works everywhere
-// without bundling a PDF.js viewer. These are public marketing PDFs with
-// no user data, so routing the URL through it is not a privacy concern.
-function viewerSrc(url: string): string {
-  return `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`;
-}
+import { PdfPages } from "./PdfPages";
 
 export function PdfPreviewModal({
   title,
@@ -50,7 +41,7 @@ export function PdfPreviewModal({
           <X size={16} />
         </button>
       </div>
-      <iframe src={viewerSrc(url)} title={title} className="flex-1 bg-white" />
+      <PdfPages url={url} />
     </div>
   );
 }

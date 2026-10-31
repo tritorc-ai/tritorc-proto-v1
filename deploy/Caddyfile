@@ -1,0 +1,8 @@
+# HTTPS certificates are fetched and renewed automatically for {$CMS_DOMAIN}.
+{$CMS_DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size 200MB
+	}
+	reverse_proxy cms:1338
+}
