@@ -282,8 +282,13 @@
   to { transform: translateX(220%); }
 }
 
+/* `backwards`, not `both`: with `both` the finished animation keeps `transform: translateY(0)` on the page for
+   good, and any element with a transform becomes the reference box for `position: fixed` inside it. Full-screen
+   popups (the catalogue/photo viewers) then covered the whole page, thousands of px tall, instead of the
+   screen. After the animation the page now has no transform; the look is identical (the end state is the
+   page's natural state). */
 .page-in {
-  animation: page-in 380ms var(--ease-premium) both;
+  animation: page-in 380ms var(--ease-premium) backwards;
 }
 
 .press {
