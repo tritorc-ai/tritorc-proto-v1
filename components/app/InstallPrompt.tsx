@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Share } from "lucide-react";
+import { PlusSquare, Share } from "lucide-react";
 import { jakarta } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 /**
- * "Add Tritorc to your home screen" card, for phones and tablets only.
+ * "Install the Tritorc app" popup for phones and tablets only: a centred card over a blurred, dimmed
+ * app, shown once the startup splash is over.
  *
  * - Android (Chrome, Edge, Samsung Internet): shown once the browser says the app is installable
  *   (`beforeinstallprompt`), with an Install button that opens the browser's own install dialog.
- * - iPhone / iPad (Safari): there is no install API, so the card shows the two taps instead.
- * - A few seconds after launch (the splash is over), as a small floating card above the tab bar;
- *   it never covers content for good and is not a modal.
+ * - iPhone / iPad (Safari): there is no install API, so the popup shows the taps to make instead.
  * - Never when the app is already installed (opened from the home screen, or the browser reported
  *   an install), and never nags: see `Stored` for how often it comes back.
  */
@@ -26,7 +25,7 @@ interface BeforeInstallPromptEvent extends Event {
 type Mode = "android" | "ios";
 
 const STORE_KEY = "tritorc-install-v1";
-const SHOW_AFTER_MS = 6000; // the 3.6 s splash plus a short settle
+const SHOW_AFTER_MS = 4400; // the 3.6 s splash plus a moment to look at the app
 const DAY = 86_400_000;
 const FOREVER = Number.MAX_SAFE_INTEGER;
 const MAX_IMPRESSIONS = 5;
@@ -34,7 +33,7 @@ const MAX_IMPRESSIONS = 5;
 /** What is remembered between visits (per browser). */
 interface Stored {
   installed?: boolean;
-  /** how many times the card was shown */
+  /** how many times the popup was shown */
   shown?: number;
   /** how many times it was dismissed */
   dismissed?: number;
@@ -54,8 +53,14 @@ function write(patch: Stored) {
   try {
     localStorage.setItem(STORE_KEY, JSON.stringify({ ...read(), ...patch }));
   } catch {
-    // private mode or storage blocked: the card just may show again next visit
+    // private mode or storage blocked: the popup just may show again next visit
   }
+}
+
+/** "Not now": back after 2 weeks, then 6 weeks, then never. */
+function recordDismissal() {
+  const dismissed = (read().dismissed ?? 0) + 1;
+  write({ dismissed, until: dismissed >= 3 ? FOREVER : Date.now() + (dismissed === 1 ? 14 : 45) * DAY });
 }
 
 function isStandalone(): boolean {
@@ -110,7 +115,7 @@ export function InstallPrompt() {
     const reveal = (m: Mode) => {
       if (shown) return;
       shown = true;
-      // Count the showing now, so a user who ignores the card still does not see it on every launch.
+      // Count the showing now, so a user who ignores the popup still does not see it on every launch.
       write({ shown: (read().shown ?? 0) + 1, until: Date.now() + 2 * DAY });
       setMode(m);
     };
@@ -126,7 +131,7 @@ export function InstallPrompt() {
     }, SHOW_AFTER_MS);
 
     const onPrompt = (e: Event) => {
-      e.preventDefault(); // keep the browser's own mini-bar away; we show our card instead
+      e.preventDefault(); // keep the browser's own mini-bar away; we show our popup instead
       deferred.current = e as BeforeInstallPromptEvent;
       maybeReveal();
     };
@@ -145,22 +150,33 @@ export function InstallPrompt() {
     };
   }, []);
 
-  if (!mode) return null;
-
-  const close = () => {
+  const close = useCallback(() => {
     setLeaving(true);
     setTimeout(() => {
       setMode(null);
       setLeaving(false);
     }, 260);
-  };
+  }, []);
 
-  /** "Not now": back after 2 weeks, then 6 weeks, then never. */
-  const dismiss = () => {
-    const dismissed = (read().dismissed ?? 0) + 1;
-    write({ dismissed, until: dismissed >= 3 ? FOREVER : Date.now() + (dismissed === 1 ? 14 : 45) * DAY });
+  const dismiss = useCallback(() => {
+    recordDismissal();
     close();
-  };
+  }, [close]);
+
+  // While the popup is open: the page behind does not scroll, and Escape closes it.
+  useEffect(() => {
+    if (!mode) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && dismiss();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mode, dismiss]);
+
+  if (!mode) return null;
 
   const install = async () => {
     const evt = deferred.current;
@@ -179,52 +195,87 @@ export function InstallPrompt() {
   return (
     <div
       role="dialog"
-      aria-label="Install the Tritorc app"
-      className={cn("pointer-events-none fixed inset-x-0 z-[45] mx-auto max-w-md px-4", jakarta.className)}
-      // above the floating tab bar (about 56 px tall, 12 px off the bottom) plus a small gap
-      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 84px)" }}
+      aria-modal="true"
+      aria-labelledby="install-title"
+      className={cn("fixed inset-0 z-[90] flex items-center justify-center px-6", jakarta.className)}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
+      {/* Dims and blurs the app; a tap outside the card counts as "not now". */}
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-label="Close"
+        onClick={dismiss}
+        className={cn(
+          "absolute inset-0 cursor-default bg-black/30 backdrop-blur-md",
+          leaving ? "install-fade-out" : "install-fade-in"
+        )}
+      />
+
       <div
         className={cn(
-          "pointer-events-auto flex items-center gap-3 rounded-[22px] border border-white/70 bg-white/80 p-3 shadow-[0_10px_36px_rgba(0,0,0,0.16)] backdrop-blur-2xl backdrop-saturate-[1.8]",
+          "relative w-full max-w-[340px] rounded-[32px] border border-white/70 bg-white/90 px-6 pb-5 pt-7 text-center shadow-[0_24px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl",
           leaving ? "install-card-out" : "install-card-in"
         )}
       >
-        <Image src="/icon-192.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0 rounded-[12px]" />
-        <div className="min-w-0 flex-1">
-          <div className="text-[13.5px] font-bold leading-tight text-brand-dark">Install the Tritorc app</div>
-          <div className="mt-0.5 text-[11.5px] leading-snug text-brand-text-secondary">
-            {mode === "android" ? (
-              "One tap from your home screen, full screen."
-            ) : (
-              <>
-                Tap <Share aria-label="Share" size={12} strokeWidth={2.2} className="-mt-0.5 inline text-brand-dark" />{" "}
-                then <span className="font-semibold text-brand-dark">Add to Home Screen</span>
-              </>
-            )}
-          </div>
-        </div>
-        <div className="flex shrink-0 flex-col items-stretch gap-1">
-          {mode === "android" && (
+        <Image
+          src="/icon-192.png"
+          alt=""
+          width={76}
+          height={76}
+          className="mx-auto h-[76px] w-[76px] rounded-[20px] shadow-[0_10px_26px_rgba(0,0,0,0.25)]"
+        />
+        <h2 id="install-title" className="mt-4 text-[21px] font-bold leading-tight tracking-[-0.02em] text-brand-dark">
+          Install the Tritorc app
+        </h2>
+        <p className="mt-1.5 text-[13.5px] leading-snug text-brand-text-secondary">
+          Open products, services and catalogues straight from your home screen, full screen.
+        </p>
+
+        {mode === "android" ? (
+          <>
             <button
               type="button"
+              autoFocus
               onClick={install}
-              className="press rounded-full bg-[#0f0f10] px-4 py-1.5 text-[12px] font-semibold text-white"
+              className="press mt-5 h-12 w-full rounded-full bg-[#0f0f10] text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(0,0,0,0.6)]"
             >
               Install
             </button>
-          )}
-          <button
-            type="button"
-            onClick={dismiss}
-            className={cn(
-              "press rounded-full px-3 text-[11.5px] font-medium text-brand-text-tertiary",
-              mode === "android" ? "py-0.5" : "bg-black/5 py-1.5 font-semibold text-brand-dark"
-            )}
-          >
-            {mode === "android" ? "Not now" : "Got it"}
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={dismiss}
+              className="press mt-1 w-full py-2.5 text-[13px] font-medium text-brand-text-tertiary"
+            >
+              Not now
+            </button>
+          </>
+        ) : (
+          <>
+            <ol className="mt-5 space-y-2 text-left text-[13.5px] text-brand-dark">
+              <li className="flex items-center gap-3 rounded-2xl bg-black/[0.04] px-3.5 py-2.5">
+                <Share aria-hidden size={19} strokeWidth={2} className="shrink-0" />
+                <span>
+                  Tap <span className="font-semibold">Share</span> in the browser bar
+                </span>
+              </li>
+              <li className="flex items-center gap-3 rounded-2xl bg-black/[0.04] px-3.5 py-2.5">
+                <PlusSquare aria-hidden size={19} strokeWidth={2} className="shrink-0" />
+                <span>
+                  Choose <span className="font-semibold">Add to Home Screen</span>
+                </span>
+              </li>
+            </ol>
+            <button
+              type="button"
+              autoFocus
+              onClick={dismiss}
+              className="press mt-4 h-12 w-full rounded-full bg-[#0f0f10] text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(0,0,0,0.6)]"
+            >
+              Got it
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
