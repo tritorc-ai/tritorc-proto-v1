@@ -534,7 +534,13 @@ export async function getEvents(): Promise<TritorcEvent[]> {
     city: e.city ?? "",
     hall: e.hall ?? undefined,
     booth: e.booth ?? undefined,
-    image: mediaUrl(e.image) ?? e.imageUrl ?? "",
+    // tritorc.com took its /exhibition pictures down, and a Strapi filled from the older seed data still points at
+    // them: those links are ignored and the app's own picture for that event (if any) is used instead.
+    image:
+      mediaUrl(e.image) ??
+      (e.imageUrl && !/^https?:\/\/(www\.)?tritorc\.com\/exhibition\//i.test(e.imageUrl) ? e.imageUrl : undefined) ??
+      EVENTS.find((b) => b.slug === e.slug)?.image ??
+      "",
     intro: e.intro ?? "",
     about: Array.isArray(e.about) ? e.about.map(String) : [],
     stats: (e.stats ?? []).map((s) => ({ value: s.value, label: s.label })),
@@ -664,13 +670,34 @@ function mapService(s: StrapiService): Service {
   };
 }
 
+// Services taken out of the app on 2026-10-31 (manager's list: only services with a photo stay). A Strapi that was
+// filled from the older seed data still holds them (the seed script only adds and updates, it never deletes), so
+// they are skipped here until someone deletes them in the Strapi admin. A service added in Strapi later still shows.
+const REMOVED_SERVICE_SLUGS = new Set([
+  "dewatering-dry-air-flushing",
+  "hydro-testing-services",
+  "nitrogen-helium-leak-testing",
+  "pneumatic-testing",
+  "calibration-services",
+  "dry-rental",
+]);
+const REMOVED_SERVICE_CATEGORIES = new Set([
+  "Dewatering & Dry Air Flushing Services",
+  "Hydro Testing Services",
+  "Nitrogen Helium Leak Testing Services",
+  "Pneumatic Testing",
+  "Calibration Services",
+  "Dry Rental",
+]);
+
 export async function getServices(): Promise<Service[]> {
   const res = await strapiFetch<{ data: StrapiService[] }>("/api/services", {
     sort: "order:asc",
     "pagination[pageSize]": "200",
   });
   if (!res || !Array.isArray(res.data) || res.data.length === 0) return SERVICES;
-  return res.data.map(mapService);
+  const kept = res.data.filter((s) => !REMOVED_SERVICE_SLUGS.has(s.slug));
+  return (kept.length > 0 ? kept : res.data).map(mapService);
 }
 
 export async function getService(slug: string): Promise<Service | undefined> {
@@ -692,13 +719,28 @@ export async function getServiceSections(): Promise<ServiceSection[]> {
     "populate[services][fields][1]": "name",
   });
   if (!res || !Array.isArray(res.data) || res.data.every((s) => !s.services?.length)) return SERVICE_SECTIONS;
-  return res.data
-    .filter((s) => s.services && s.services.length > 0)
+  const sections: ServiceSection[] = res.data
     .map((s) => ({
       name: s.name,
       color: s.color ?? "#171717",
-      categories: (s.services ?? []).map((sv) => sv.category ?? sv.name),
-    }));
+      // drop the services that were removed from the app (see REMOVED_SERVICE_CATEGORIES)
+      categories: (s.services ?? []).map((sv) => sv.category ?? sv.name).filter((c) => !REMOVED_SERVICE_CATEGORIES.has(c)),
+    }))
+    .filter((s) => s.categories.length > 0); // a group left empty (e.g. "Tool Calibration Services") disappears
+
+  // A service the app lists in a group that the Strapi does not have it in yet (Onsite Controlled Bolting took
+  // Calibration's place in a new "Controlled Bolting Services" group) is added to that group, creating it if needed.
+  const placed = new Set(sections.flatMap((s) => s.categories));
+  for (const builtIn of SERVICE_SECTIONS) {
+    for (const category of builtIn.categories) {
+      if (placed.has(category)) continue;
+      const home = sections.find((s) => s.name === builtIn.name);
+      if (home) home.categories.push(category);
+      else sections.push({ name: builtIn.name, color: builtIn.color, categories: [category] });
+      placed.add(category);
+    }
+  }
+  return sections;
 }
 
 export async function getTestimonials(): Promise<Testimonial[]> {
