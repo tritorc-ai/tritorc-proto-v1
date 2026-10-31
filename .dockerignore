@@ -7,5 +7,5 @@ node_modules
 !.env.example
 cms
 deploy
-public/Catalogues For TRITORC
+catalogues
 *.md

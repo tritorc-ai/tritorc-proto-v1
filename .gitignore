@@ -43,5 +43,3 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Source PDFs (too large for git; they live in Strapi media)
-/public/Catalogues For TRITORC/
