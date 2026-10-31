@@ -89,15 +89,21 @@ export function DetailSheetView({
   // appears once the sheet is (nearly) fully expanded.
   useEffect(() => {
     const reduce = prefersReducedMotion();
+    // Measured once (and again on resize) instead of on every scroll frame: asking the browser for a
+    // size or a media-query result mid-scroll forces it to recompute layout while it is trying to paint.
+    const tablet = window.matchMedia(TABLET_QUERY);
+    let heroHeight = 0;
     let frame = 0;
+    const measure = () => {
+      heroHeight = heroRef.current?.offsetHeight ?? 0;
+    };
     const update = () => {
       frame = 0;
-      const hero = heroRef.current;
       const inner = heroInnerRef.current;
       const sheet = sheetRef.current;
-      if (!hero || !sheet) return;
+      if (!heroHeight || !sheet) return;
       // Tablet and up: image and details sit side by side, so there is nothing to slide over.
-      if (window.matchMedia(TABLET_QUERY).matches) {
+      if (tablet.matches) {
         if (inner) {
           inner.style.transform = "";
           inner.style.opacity = "";
@@ -105,7 +111,7 @@ export function DetailSheetView({
         setExpanded(false);
         return;
       }
-      const p = Math.min(1, Math.max(0, 1 - sheet.getBoundingClientRect().top / (hero.offsetHeight * 0.75)));
+      const p = Math.min(1, Math.max(0, 1 - sheet.getBoundingClientRect().top / (heroHeight * 0.75)));
       if (inner && !reduce) {
         inner.style.transform = `translateY(${p * -28}px) scale(${1 - p * 0.06})`;
         inner.style.opacity = String(1 - p * 0.9);
@@ -115,12 +121,17 @@ export function DetailSheetView({
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+    measure();
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    window.addEventListener("resize", onResize);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
@@ -164,14 +175,14 @@ export function DetailSheetView({
           <Link
             href={backHref}
             aria-label="Back"
-            className="press pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/80 text-brand-dark shadow-[0_2px_10px_rgba(0,0,0,0.08)] backdrop-blur"
+            className="press pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/90 text-brand-dark shadow-[0_2px_10px_rgba(0,0,0,0.08)]"
           >
             <ArrowLeft size={20} />
           </Link>
           <div
             aria-hidden={!expanded}
             className={cn(
-              "min-w-0 truncate rounded-full bg-white/80 px-4 py-2 text-[14px] font-semibold text-brand-dark shadow-[0_2px_10px_rgba(0,0,0,0.08)] backdrop-blur transition-all duration-500 ease-(--ease-premium)",
+              "min-w-0 truncate rounded-full bg-white/90 px-4 py-2 text-[14px] font-semibold text-brand-dark shadow-[0_2px_10px_rgba(0,0,0,0.08)] transition-all duration-500 ease-(--ease-premium)",
               expanded ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0",
             )}
           >
@@ -184,7 +195,9 @@ export function DetailSheetView({
           hero stays in view on the left while the details scroll on the right. */}
       <div className="tablet:grid tablet:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] tablet:items-start tablet:gap-8 tablet:px-8 tablet-lg:grid-cols-2 tablet-lg:gap-12 tablet-lg:px-10">
       {/* Hero: pinned behind the sheet. */}
-      <div ref={heroRef} className="sticky top-0 z-0 h-[calc(100dvh-136px)] min-h-[440px] overflow-hidden bg-(--app-bg) tablet:h-dvh tablet:min-h-0">
+      {/* svh, not dvh: dvh changes every time the phone's address bar slides away, which resized the hero
+          (and re-fitted its picture) in the middle of a scroll. svh stays put. */}
+      <div ref={heroRef} className="sticky top-0 z-0 h-[calc(100svh-136px)] min-h-[440px] overflow-hidden bg-(--app-bg) tablet:h-svh tablet:min-h-0">
         <div ref={heroInnerRef} className="flex h-full flex-col will-change-transform">
           <div className="px-5 pt-safe-header tablet:px-0">
             <div className="h-10" aria-hidden />
@@ -233,7 +246,7 @@ export function DetailSheetView({
       {/* Information sheet: overlaps the hero; scrolls naturally, tap the handle to expand/collapse. */}
       <div
         ref={sheetRef}
-        className="relative z-10 -mt-12 min-h-[calc(100dvh-72px)] rounded-t-[34px] bg-(--app-bg) px-5 pb-10 shadow-[0_-18px_40px_-18px_rgba(0,0,0,0.18)] tablet:mt-0 tablet:min-h-0 tablet:rounded-none tablet:px-0 tablet:pb-16 tablet:pt-24 tablet:shadow-none"
+        className="relative z-10 -mt-12 min-h-[calc(100svh-72px)] rounded-t-[34px] bg-(--app-bg) px-5 pb-10 shadow-[0_-18px_40px_-18px_rgba(0,0,0,0.18)] tablet:mt-0 tablet:min-h-0 tablet:rounded-none tablet:px-0 tablet:pb-16 tablet:pt-24 tablet:shadow-none"
       >
         <button
           type="button"

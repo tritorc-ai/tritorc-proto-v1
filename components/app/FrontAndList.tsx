@@ -130,7 +130,7 @@ export function FrontAndList({
           className="press mt-3 flex w-full items-center gap-3 rounded-full bg-[#e4e5e7] py-2 pl-3 pr-2 text-left tablet:hidden"
         >
           {onList ? (
-            <span className="ml-1 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-brand-text-secondary">Swipe</span>
+            <span className="ml-1 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-brand-text-secondary">Tap</span>
           ) : (
             <span className="flex shrink-0 items-center">
               {items.slice(1, 4).map((it, i) => (

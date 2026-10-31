@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCatalogueUrl, getImageUrls, getMediaByCaption, getProduct, getVideoUrls } from "@/lib/strapi";
+import { getCatalogueUrl, getImageUrls, getMediaByCaption, getProduct, getProducts, getVideoUrls } from "@/lib/strapi";
 import { ProductDetailView } from "@/components/app/ProductDetailView";
 import type { ImageKey } from "@/lib/mock/images";
 import type { VideoKey } from "@/lib/mock/videos";
@@ -25,6 +25,15 @@ const EXTRA_VIDEO_KEYS: Record<string, VideoKey[]> = {
   "tube-pipe-beveling-machine": ["prodTubeBeveling"],
   "tube-removal-tools": ["prodTubeRemoval"],
 };
+
+// Built ahead and kept in the edge cache, refreshed in the background at most once a minute. Rendered on
+// demand, every tap waited for Strapi (up to 16 s when it was slow); now a tap is served from cache and the
+// link is prefetched while it is on screen. A slug that is not listed yet is built on first visit.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getProducts()).map((p) => ({ slug: p.slug }));
+}
 
 export default async function ProductDetailPage(props: PageProps<"/products/[slug]">) {
   const { slug } = await props.params;
