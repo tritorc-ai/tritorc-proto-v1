@@ -15,8 +15,8 @@ import { cn } from "@/lib/utils";
 /** Header + sheet-handle offset used when expanding the sheet / jumping to a section. */
 const HEADER_OFFSET = 72;
 
-/** Same rule as the `tablet:` variant in app/globals.css: a touch screen at least 768px wide and 600px tall. */
-const TABLET_QUERY = "(min-width: 768px) and (min-height: 600px) and (pointer: coarse)";
+/** Same rule as the `tablet:` variant in app/globals.css: a touch screen at least 700px wide and 600px tall. */
+const TABLET_QUERY = "(min-width: 700px) and (min-height: 600px) and (pointer: coarse)";
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -200,9 +200,11 @@ export function DetailSheetView({
               </h1>
             </div>
           </div>
-          <div className="relative mt-1 flex-1">
+          {/* Phone: the picture fills the pinned hero. Tablet: a fixed 4:5 box (the shape of the product and
+              service photos) so every page shows the picture at the same ratio, whatever the screen height. */}
+          <div className="relative mt-1 flex-1 tablet:mt-5 tablet:flex-none">
             {heroImage ? (
-              <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)] tablet:inset-x-0 tablet:bottom-28">
+              <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)] tablet:relative tablet:inset-auto tablet:aspect-[4/5] tablet:w-full tablet:max-w-[460px]">
                 {heroVideo ? (
                   <HeroVideo src={heroVideo.src} poster={heroVideo.poster ?? heroImage} label={name} />
                 ) : (

@@ -77,13 +77,15 @@ export function FrontAndList({
 
         {/* Page 2: the rest of the section as a list */}
         {hasList && (
-          <div className={cn("w-[88%] shrink-0 snap-start tablet:w-auto", rest.length > 4 ? "tablet:relative" : "tablet:self-start")}>
-            {/* Long lists fill the same height as the front card and scroll; short ones just wrap their rows.
-                On a tablet the long list is pinned to the card's height so the two always line up. */}
+          <div className="w-[88%] shrink-0 snap-start tablet:w-auto tablet:self-start">
+            {/* Phone: a long list fills the same height as the front card and scrolls inside it; short ones
+                just wrap their rows. Tablet: the list always shows every row at its natural height and the
+                page itself scrolls. A list that scrolls on its own inside the page traps a touch swipe (it
+                will not hand the scroll back to the page), so on an iPad the page seemed to stop short. */}
             <div
               className={cn(
                 "flex flex-col overflow-hidden rounded-[28px] bg-[#e4e5e7]",
-                rest.length > 4 && "aspect-[4/5] tablet:absolute tablet:inset-0 tablet:aspect-auto",
+                rest.length > 4 && "aspect-[4/5] tablet:aspect-auto",
               )}
             >
               <div className="px-4 pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-text-secondary tablet:px-5 tablet:pt-5 tablet:text-[11px]">
@@ -92,7 +94,8 @@ export function FrontAndList({
               <ul
                 className={cn(
                   "space-y-2 px-2.5 pb-2.5 pt-1.5 tablet:px-3 tablet:pb-3",
-                  rest.length > 4 && "flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none]",
+                  rest.length > 4 &&
+                    "flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none] tablet:flex-none tablet:overflow-visible",
                 )}
               >
                 {rest.map((it) => (
