@@ -45,7 +45,7 @@ export function RotatingLines({
     <div className={className}>
       <p className="sr-only">{fullText}</p>
       <div aria-hidden className="min-h-[2.7em]">
-        <p key={index} className="animate-[line-in_900ms_ease-out_both] text-[14px] font-medium leading-snug text-white/80">
+        <p key={index} className="animate-[line-in_900ms_ease-out_both] text-[14px] font-medium leading-snug text-white/80 tablet:text-[20px]">
           {lines[index]}
         </p>
       </div>

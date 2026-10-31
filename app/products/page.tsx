@@ -37,10 +37,10 @@ export default async function ProductsPage() {
 
       {/* Quick jump between the vertical sections: sticky, with scroll-spy */}
       {/* One padded wrapper for the bar and the sections so the bar stays sticky across the whole list */}
-      <div className="px-5">
+      <div className="px-5 tablet:px-8 tablet-lg:px-10">
         <SectionNav variant="minimal" items={sections.map((s) => ({ id: slugify(s.name), label: s.name }))} />
 
-        <div className="space-y-8 pt-4">
+        <div className="space-y-8 pt-4 tablet:space-y-12 tablet:pt-6">
           {sections.map((section) => (
             <Reveal as="section" key={section.name} id={slugify(section.name)} className="scroll-mt-20">
               <SectionHead title={section.name} size="sm" />

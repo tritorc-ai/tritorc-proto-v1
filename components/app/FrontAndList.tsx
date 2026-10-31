@@ -56,10 +56,14 @@ export function FrontAndList({
         className={cn(
           "flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           hasList && "gap-3",
+          // Tablet and up: no swiping. The front card and the list sit side by side.
+          hasList
+            ? "tablet:grid tablet:grid-cols-[minmax(0,420px)_minmax(0,1fr)] tablet:gap-5 tablet:overflow-visible tablet:snap-none tablet-lg:grid-cols-[minmax(0,460px)_minmax(0,1fr)] tablet-lg:gap-6"
+            : "tablet:max-w-[420px]",
         )}
       >
         {/* Page 1: the front card (narrower than the screen so the list peeks in) */}
-        <div className={cn("shrink-0 snap-start", hasList ? "w-[88%]" : "w-full")}>
+        <div className={cn("shrink-0 snap-start tablet:w-auto", hasList ? "w-[88%]" : "w-full")}>
           <OverlayCard
             href={front.href}
             title={front.title}
@@ -73,15 +77,21 @@ export function FrontAndList({
 
         {/* Page 2: the rest of the section as a list */}
         {hasList && (
-          <div className="w-[88%] shrink-0 snap-start">
-            {/* Long lists fill the same height as the front card and scroll; short ones just wrap their rows */}
-            <div className={cn("flex flex-col overflow-hidden rounded-[28px] bg-[#e4e5e7]", rest.length > 4 && "aspect-[4/5]")}>
-              <div className="px-4 pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-text-secondary">
+          <div className={cn("w-[88%] shrink-0 snap-start tablet:w-auto", rest.length > 4 ? "tablet:relative" : "tablet:self-start")}>
+            {/* Long lists fill the same height as the front card and scroll; short ones just wrap their rows.
+                On a tablet the long list is pinned to the card's height so the two always line up. */}
+            <div
+              className={cn(
+                "flex flex-col overflow-hidden rounded-[28px] bg-[#e4e5e7]",
+                rest.length > 4 && "aspect-[4/5] tablet:absolute tablet:inset-0 tablet:aspect-auto",
+              )}
+            >
+              <div className="px-4 pb-1 pt-4 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-text-secondary tablet:px-5 tablet:pt-5 tablet:text-[11px]">
                 {listTitle}
               </div>
               <ul
                 className={cn(
-                  "space-y-2 px-2.5 pb-2.5 pt-1.5",
+                  "space-y-2 px-2.5 pb-2.5 pt-1.5 tablet:px-3 tablet:pb-3",
                   rest.length > 4 && "flex-1 overflow-y-auto overscroll-contain [scrollbar-width:none]",
                 )}
               >
@@ -112,7 +122,7 @@ export function FrontAndList({
           type="button"
           onClick={() => show(!onList)}
           aria-label={onList ? "Back to the featured card" : `See all ${items.length} in ${label}`}
-          className="press mt-3 flex w-full items-center gap-3 rounded-full bg-[#e4e5e7] py-2 pl-3 pr-2 text-left"
+          className="press mt-3 flex w-full items-center gap-3 rounded-full bg-[#e4e5e7] py-2 pl-3 pr-2 text-left tablet:hidden"
         >
           {onList ? (
             <span className="ml-1 shrink-0 text-[11px] font-semibold uppercase tracking-wider text-brand-text-secondary">Swipe</span>

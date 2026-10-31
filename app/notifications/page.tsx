@@ -17,7 +17,7 @@ export default async function NotificationsPage() {
         subtitle="Events, case studies and articles from Tritorc."
         back={{ href: "/" }}
       />
-      <div className="px-5 pb-6">
+      <div className="px-5 pb-6 tablet:px-8 tablet-lg:px-10">
         <NotificationPrompt />
         <Link
           href="/events"

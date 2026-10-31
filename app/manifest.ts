@@ -12,7 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     scope: "/",
     display: "standalone",
-    orientation: "portrait",
+    // "any": tablets are used in landscape too, so the installed app must be allowed to rotate.
+    orientation: "any",
     categories: ["business", "productivity"],
     // Same colours as the app itself (see viewport.themeColor in layout.tsx), so the splash
     // screen and the status bar match the first screen instead of flashing grey or black.

@@ -23,24 +23,24 @@ export default async function CompanyPage() {
   return (
     <div className={jakarta.className}>
       <PageHeader title="Company" hideLogo />
-      <div className="space-y-10 px-5">
+      <div className="space-y-10 px-5 tablet:space-y-12 tablet:px-8 tablet-lg:px-10">
         {/* 01 — Overview photo + stats (the page heading above is just "Company") */}
         <section>
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
-            <div className="aspect-[4/5] w-full" />
-            <PhotoSlideshow slides={company.slides} sizes="(max-width: 448px) 100vw, 408px" />
+            <div className="aspect-[4/5] w-full tablet:aspect-[2/1] tablet-lg:aspect-[5/2]" />
+            <PhotoSlideshow slides={company.slides} sizes="(max-width: 448px) 100vw, (max-width: 1024px) 92vw, 1100px" />
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
             <RotatingLines
-              className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90"
+              className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90 tablet:p-8 tablet:text-[22px]"
               lines={company.overviewLines}
               fullText={company.overviewText}
             />
           </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="mt-3 grid grid-cols-2 gap-3 tablet:mt-4 tablet:gap-4">
             {company.stats.map((s) => (
-              <div key={s.label} className="rounded-[20px] bg-brand-dark px-4 py-3.5">
-                <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white">{s.value}</div>
-                <div className="mt-1.5 text-[11.5px] leading-snug text-white/60">{s.label}</div>
+              <div key={s.label} className="rounded-[20px] bg-brand-dark px-4 py-3.5 tablet:rounded-[26px] tablet:px-7 tablet:py-6">
+                <div className="text-[26px] font-extrabold leading-none tracking-[-0.02em] text-white tablet:text-[40px]">{s.value}</div>
+                <div className="mt-1.5 text-[11.5px] leading-snug text-white/60 tablet:mt-2 tablet:text-[15px]">{s.label}</div>
               </div>
             ))}
           </div>
@@ -49,8 +49,8 @@ export default async function CompanyPage() {
         {/* Vision and mission (edited in Strapi, Company Page). Two compact tiles side by side in the
             home page's grey/black style: a dark vision tile with a two-tone headline (like the hero)
             and a light mission tile with a big figure over a rising-bars motif. Art is decorative. */}
-        <section aria-label="Vision and mission" className="grid grid-cols-2 gap-3">
-          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-gradient-to-br from-[#222225] to-[#0a0a0b] p-4">
+        <section aria-label="Vision and mission" className="grid grid-cols-2 gap-3 tablet:gap-4">
+          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-gradient-to-br from-[#222225] to-[#0a0a0b] p-4 tablet:min-h-[210px] tablet:rounded-[28px] tablet:p-7">
             <svg
               aria-hidden
               viewBox="0 0 200 200"
@@ -63,10 +63,10 @@ export default async function CompanyPage() {
               <circle cx="100" cy="100" r="55" />
               <circle cx="100" cy="100" r="82" />
             </svg>
-            <span className="relative w-fit rounded-full bg-white/10 px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-white/80">
+            <span className="relative w-fit rounded-full bg-white/10 px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-white/80 tablet:px-3.5 tablet:py-1 tablet:text-[11px]">
               Vision
             </span>
-            <p className="relative text-[19px] font-extrabold leading-[1.1] tracking-[-0.025em] text-white">
+            <p className="relative text-[19px] font-extrabold leading-[1.1] tracking-[-0.025em] text-white tablet:text-[30px]">
               {company.vision.includes(",") ? (
                 <>
                   {company.vision.slice(0, company.vision.indexOf(",") + 1)}
@@ -79,16 +79,16 @@ export default async function CompanyPage() {
             </p>
           </div>
 
-          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-[#e4e5e7] p-4">
-            <div aria-hidden className="pointer-events-none absolute bottom-0 right-3 flex h-16 items-end gap-1">
+          <div className="relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-[22px] bg-[#e4e5e7] p-4 tablet:min-h-[210px] tablet:rounded-[28px] tablet:p-7">
+            <div aria-hidden className="pointer-events-none absolute bottom-0 right-3 flex h-16 items-end gap-1 tablet:right-6 tablet:h-24 tablet:gap-1.5">
               {[16, 26, 38, 52, 66].map((h) => (
-                <span key={h} className="w-2.5 rounded-t-[5px] bg-black/[0.08]" style={{ height: h }} />
+                <span key={h} className="w-2.5 rounded-t-[5px] bg-black/[0.08] tablet:w-4 tablet:scale-y-[1.45] tablet:origin-bottom" style={{ height: h }} />
               ))}
             </div>
-            <span className="relative w-fit rounded-full bg-black/[0.07] px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-brand-text-secondary">
+            <span className="relative w-fit rounded-full bg-black/[0.07] px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-brand-text-secondary tablet:px-3.5 tablet:py-1 tablet:text-[11px]">
               Mission
             </span>
-            <p className="relative text-[52px] font-extrabold leading-[0.9] tracking-[-0.045em] text-brand-dark">
+            <p className="relative text-[52px] font-extrabold leading-[0.9] tracking-[-0.045em] text-brand-dark tablet:text-[84px]">
               {company.mission}
             </p>
           </div>

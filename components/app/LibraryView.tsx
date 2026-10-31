@@ -49,7 +49,7 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
   const previewableResults = useMemo(() => results.filter(canPreviewAsset), [results]);
 
   return (
-    <div className="px-5 pb-6">
+    <div className="px-5 pb-6 tablet:px-8 tablet-lg:px-10">
       {/* Search */}
       <label className="relative block">
         <span className="sr-only">Search the library</span>
@@ -63,7 +63,7 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
       </label>
 
       {/* Type chips */}
-      <div role="group" aria-label="Filter by type" className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5">
+      <div role="group" aria-label="Filter by type" className="no-scrollbar -mx-5 mt-3 flex gap-2 overflow-x-auto px-5 tablet:mx-0 tablet:flex-wrap tablet:px-0">
         {TYPES.map((t) => {
           const active = t === typeFilter;
           return (
@@ -108,7 +108,7 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
       </div>
 
       {/* Results */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 tablet:grid-cols-3 tablet:gap-4 tablet-lg:grid-cols-4">
         {results.map((a) => {
           const canPreview = canPreviewAsset(a);
           return (
@@ -124,7 +124,7 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 {a.imageUrl ? (
-                  <Image src={a.imageUrl} alt="" fill sizes="(max-width: 448px) 45vw, 200px" className="object-cover" />
+                  <Image src={a.imageUrl} alt="" fill sizes="(max-width: 448px) 45vw, (max-width: 1024px) 30vw, 260px" className="object-cover" />
                 ) : a.type === "Catalogue" ? (
                   <PdfThumbnail title={a.title} />
                 ) : (

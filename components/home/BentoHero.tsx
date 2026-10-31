@@ -30,7 +30,7 @@ interface HeroLink {
 }
 
 /** Every slide shares this 16:9 frame, so the card never changes height. */
-const FRAME_RATIO = "aspect-[165/100]";
+const FRAME_RATIO = "aspect-[165/100] tablet:aspect-[2/1] tablet-lg:aspect-[5/2]";
 
 /**
  * Hero card: one 16:9 frame. The buttons and dots sit on the photo in a fixed
@@ -71,7 +71,7 @@ export function BentoHero({
                 alt=""
                 fill
                 priority={i === 0}
-                sizes="(max-width: 448px) 100vw, 448px"
+                sizes="(max-width: 448px) 100vw, (max-width: 1024px) 92vw, 1100px"
                 className="object-cover"
                 style={{ objectPosition: s.imagePosition ?? "center" }}
               />
@@ -86,7 +86,7 @@ export function BentoHero({
               )}
               <div
                 className={cn(
-                  "pointer-events-none relative z-10 flex h-full flex-col p-4 sm:p-4.5",
+                  "pointer-events-none relative z-10 flex h-full flex-col p-4 sm:p-4.5 tablet:p-8",
                   s.side === "right" ? "items-end text-right" : "items-start text-left",
                 )}
               >
@@ -102,7 +102,7 @@ export function BentoHero({
                     {s.side === "left" && <span className="h-[1px] w-12 bg-neutral-400" />}
                   </div>
                 )}
-                <h1 className="mt-1.5 text-[27px] font-bold leading-[1.05] tracking-[-0.025em] text-[#0f0f10] sm:text-[29px]">
+                <h1 className="mt-1.5 text-[27px] font-bold leading-[1.05] tracking-[-0.025em] text-[#0f0f10] sm:text-[29px] tablet:text-[44px] tablet-lg:text-[52px]">
                   {s.lines.map((line, li) => (
                     <span key={li} className={cn("block", li === s.lines.length - 1 && "text-[#6b6b70]")}>
                       {line}
@@ -115,18 +115,18 @@ export function BentoHero({
         })}
 
         {/* Fixed controls on top of the photo: same buttons and dots on every slide, bottom-left */}
-        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-start gap-2 p-3">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-start gap-2 p-3 tablet:gap-3 tablet:p-6">
           <div className="flex items-center gap-2">
             <Link
               href={primary.href}
-              className="press inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#1a1a1c]/90 px-3.5 text-[12px] font-semibold text-white shadow-[0_8px_22px_-10px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md"
+              className="press inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#1a1a1c]/90 px-3.5 text-[12px] font-semibold text-white tablet:h-11 tablet:px-5 tablet:text-[14px] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-md"
             >
               {primary.label}
               <ArrowRight size={12} />
             </Link>
             <Link
               href={secondary.href}
-              className="press inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-white/60 px-3.5 text-[12px] font-semibold text-[#0f0f10] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-md"
+              className="press inline-flex h-9 items-center justify-center whitespace-nowrap rounded-full bg-white/60 px-3.5 text-[12px] font-semibold text-[#0f0f10] tablet:h-11 tablet:px-5 tablet:text-[14px] shadow-[0_8px_22px_-10px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.85)] backdrop-blur-md"
             >
               {secondary.label}
             </Link>
