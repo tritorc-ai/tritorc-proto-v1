@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export interface Slide {
   src: string;
@@ -20,9 +21,10 @@ const getReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduc
 
 /**
  * Full-bleed photo slideshow: each photo dims out while the next one fades in
- * over it, at an unhurried pace. The photos are decorative (aria-hidden); a
- * photo's caption fades in and out with it. Pauses while the tab is hidden, and
- * shows only the first photo (and its caption) with reduced motion.
+ * over it, at an unhurried pace. The photos are decorative (aria-hidden); the
+ * caption of the photo on screen is shown at the bottom and changes with it.
+ * Pauses while the tab is hidden, and shows only the first photo (and its
+ * caption) with reduced motion.
  */
 export function PhotoSlideshow({
   slides,
@@ -66,19 +68,27 @@ export function PhotoSlideshow({
           />
         ))}
       </div>
-      {slides.map((s, i) =>
-        s.caption ? (
+      {/* The caption of the photo on screen, at the bottom; it slides up as the next photo starts to fade in. */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 tablet:p-8">
+        <div className="min-h-[2.7em]">
           <p
-            key={s.src}
-            aria-hidden={i !== index}
-            className="pointer-events-none absolute left-4 top-4 z-10 flex max-w-[15.5rem] items-start gap-2 rounded-2xl bg-black/55 px-3 py-2 text-[12.5px] font-semibold leading-snug text-white ring-1 ring-white/15 tablet:left-6 tablet:top-6 tablet:max-w-[calc(100%-3rem)] tablet:gap-2.5 tablet:px-4 tablet:py-2.5 tablet:text-[15px]"
-            style={{ opacity: i === index ? 1 : 0, transition: `opacity ${fadeMs}ms ease-in-out` }}
+            key={index}
+            className="animate-[line-in_900ms_ease-out_both] text-[14px] font-medium leading-snug text-white/80 tablet:text-[20px]"
           >
-            <span aria-hidden className="mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full bg-brand-red-bright tablet:mt-[7px] tablet:h-2 tablet:w-2" />
-            {s.caption}
+            {slides[index]?.caption}
           </p>
-        ) : null,
-      )}
+        </div>
+        {slides.length > 1 && !reduced && (
+          <div aria-hidden className="mt-2.5 flex gap-1">
+            {slides.map((s, i) => (
+              <span
+                key={s.src}
+                className={cn("h-[3px] rounded-full transition-all duration-700", i === index ? "w-4 bg-white/80" : "w-1 bg-white/25")}
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </>
   );
 }

@@ -486,6 +486,7 @@ export async function getCompanyPage(): Promise<CompanyPageContent> {
       : COMPANY_PAGE.certifications,
     vision: d.vision ?? COMPANY_PAGE.vision,
     mission: d.mission ?? COMPANY_PAGE.mission,
+    missionNote: COMPANY_PAGE.missionNote,
     profileTitle: d.profileTitle ?? COMPANY_PAGE.profileTitle,
     profileMeta: d.profileMeta ?? COMPANY_PAGE.profileMeta,
   };
