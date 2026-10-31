@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Play, Search } from "lucide-react";
+import { ChevronDown, Grid2x2, Grid3x3, Play, Search } from "lucide-react";
 import type { LibraryAsset } from "@/lib/mock/content";
 import { cn } from "@/lib/utils";
 import { MediaPreviewModal } from "./MediaPreviewModal";
@@ -21,6 +21,8 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
   );
   const [category, setCategory] = useState("All categories");
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+  // Photos are shown like a phone gallery; on a phone the user can switch between 3 and 2 per row.
+  const [photoCols, setPhotoCols] = useState<2 | 3>(3);
 
   const categories = useMemo(
     () => ["All categories", ...Array.from(new Set(assets.map((a) => a.categoryLabel)))],
@@ -46,10 +48,16 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
     return a.type === "Catalogue" ? !!a.fileUrl && a.fileUrl !== "#" : !!(a.fileUrl || a.imageUrl);
   }
 
+  // Catalogues and videos stay as named cards; photos are a gallery of bare pictures (no file names) below them.
+  // `ordered` is the order on screen, so swiping through the viewer follows what the user sees.
+  const cards = useMemo(() => results.filter((a) => a.type !== "Photo"), [results]);
+  const photos = useMemo(() => results.filter((a) => a.type === "Photo"), [results]);
+  const ordered = useMemo(() => [...cards, ...photos], [cards, photos]);
+
   // Swiping/arrow-keying through the preview modal moves within this same
   // filtered, previewable subset — not the full `results` list, so it never
   // lands on a disabled tile with nothing to show.
-  const previewableResults = useMemo(() => results.filter(canPreviewAsset), [results]);
+  const previewableResults = useMemo(() => ordered.filter(canPreviewAsset), [ordered]);
 
   return (
     <div className="px-5 pb-6 tablet:px-8 tablet-lg:px-10">
@@ -110,9 +118,9 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
         {results.length} {results.length === 1 ? "item" : "items"}
       </div>
 
-      {/* Results */}
+      {/* Results: catalogues and videos as named cards */}
       <div className="grid grid-cols-2 gap-3 tablet:grid-cols-3 tablet:gap-4 tablet-lg:grid-cols-4">
-        {results.map((a) => {
+        {cards.map((a) => {
           const canPreview = canPreviewAsset(a);
           return (
             <button
@@ -162,6 +170,72 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
           );
         })}
       </div>
+
+      {/* Photos: a gallery like the phone's own. Square tiles, hairline gaps, edge to edge on a phone, and no
+          file names (they stay in the screen-reader label and in the viewer's header). */}
+      {photos.length > 0 && (
+        <section aria-label="Photos" className={cn(cards.length > 0 && "mt-7")}>
+          <div className="mb-2.5 flex items-center justify-between">
+            {cards.length > 0 ? (
+              <h2 className="text-[15px] font-semibold text-brand-dark">Photos</h2>
+            ) : (
+              <span />
+            )}
+            <div role="group" aria-label="Photos per row" className="flex rounded-full bg-black/[0.06] p-0.5 tablet:hidden">
+              {([3, 2] as const).map((n) => {
+                const Icon = n === 3 ? Grid3x3 : Grid2x2;
+                return (
+                  <button
+                    key={n}
+                    type="button"
+                    aria-pressed={photoCols === n}
+                    aria-label={`${n} photos per row`}
+                    onClick={() => setPhotoCols(n)}
+                    className={cn(
+                      "flex h-7 w-9 items-center justify-center rounded-full transition-colors",
+                      photoCols === n ? "bg-white text-brand-dark shadow-sm" : "text-black/45",
+                    )}
+                  >
+                    <Icon size={15} strokeWidth={2} />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div
+            className={cn(
+              "-mx-5 grid gap-[2px] tablet:mx-0 tablet:grid-cols-5 tablet-lg:grid-cols-7",
+              photoCols === 3 ? "grid-cols-3" : "grid-cols-2",
+            )}
+          >
+            {photos.map((a) => {
+              const canPreview = canPreviewAsset(a);
+              return (
+                <button
+                  key={a.id}
+                  type="button"
+                  aria-label={a.title}
+                  onClick={() => canPreview && setPreviewIndex(previewableResults.indexOf(a))}
+                  disabled={!canPreview}
+                  className="press relative block aspect-square overflow-hidden bg-[#e4e4e4] active:opacity-80"
+                >
+                  {a.imageUrl ? (
+                    <Image
+                      src={a.imageUrl}
+                      alt=""
+                      fill
+                      sizes={photoCols === 3 ? "(max-width: 448px) 34vw, 200px" : "(max-width: 448px) 51vw, 200px"}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="h-full w-full bg-[repeating-linear-gradient(135deg,#efefef_0px,#efefef_9px,#e4e4e4_9px,#e4e4e4_18px)]" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {previewIndex !== null && (
         <MediaPreviewModal
