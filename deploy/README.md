@@ -22,6 +22,9 @@ docker compose -f deploy/docker-compose.local.yml up --build
 ```
 Open http://localhost:1339/admin (health: http://localhost:1339/_health, expect 204). Stop with `down -v`.
 
+## Fast path: one script
+`deploy/aws-setup.sh` creates everything in the list below (S3 + CloudFront, RDS, ECR, EC2 + Elastic IP, IAM roles, security groups, SSM secrets) from AWS CloudShell, after you confirm. Usage is at the top of the script. The manual list below is the same thing by hand.
+
 ## One-time AWS setup (region ap-south-1 assumed)
 
 1. **S3 bucket** (private, block public access) + **CloudFront** distribution with the bucket as origin
@@ -100,3 +103,11 @@ Variables (not secrets): `AWS_REGION`, `AWS_DEPLOY_ROLE_ARN`, `ECR_REPO`, `EC2_I
 - Failed deploy: `deploy.sh` restores the previous image by itself and the workflow turns red.
 - Logs: Session Manager, then `cd /opt/tritorc && docker compose logs -f cms`.
 - Run exactly one `cms` container: push and enquiry email jobs run inside Strapi.
+
+## Change the domain later (temporary sslip.io -> cms.tritorc.com)
+1. IT adds an A record `cms.tritorc.com` -> the Elastic IP (printed by the script, also in EC2 > Elastic IPs).
+2. SSM Parameter Store: set `/tritorc/cms/PUBLIC_URL` to `https://cms.tritorc.com`.
+3. On the server (Session Manager): edit `/opt/tritorc/deploy.env`, set `CMS_DOMAIN=cms.tritorc.com`.
+4. GitHub variable `CMS_PUBLIC_URL` = `https://cms.tritorc.com`.
+5. Run the "CMS deploy" workflow with the current tag (Caddy fetches the new certificate by itself).
+6. Update `STRAPI_API_URL` / `NOTIF_API_URL` in the frontend, and note that the Strapi admin address and any tokens stay valid, only the URL changes.
