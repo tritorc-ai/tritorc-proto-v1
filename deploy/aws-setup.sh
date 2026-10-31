@@ -23,7 +23,10 @@ GITHUB_REPO="${GITHUB_REPO:?set GITHUB_REPO, e.g. tritorc-ai/tritorc-proto-v1}"
 VAPID_SUBJECT="${VAPID_SUBJECT:-https://www.tritorc.com}"
 NAME="tritorc-cms"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export AWS_DEFAULT_REGION="$REGION" AWS_PAGER=""
+# CloudShell sets its own AWS_REGION (e.g. us-east-1) and that wins over AWS_DEFAULT_REGION, so set both.
+export AWS_DEFAULT_REGION="$REGION" AWS_REGION="$REGION" AWS_PAGER=""
+ACTUAL_REGION="$(aws ec2 describe-availability-zones --query 'AvailabilityZones[0].RegionName' --output text)"
+[ "$ACTUAL_REGION" = "$REGION" ] || { echo "ABORT: the AWS CLI is using region $ACTUAL_REGION, not $REGION"; exit 1; }
 
 ACCOUNT="$(aws sts get-caller-identity --query Account --output text)"
 BUCKET="${NAME}-media-${ACCOUNT}"
