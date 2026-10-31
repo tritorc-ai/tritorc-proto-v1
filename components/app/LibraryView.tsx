@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { ChevronDown, Grid2x2, Grid3x3, Play, Search } from "lucide-react";
+import { Grid2x2, Grid3x3, Play, Search } from "lucide-react";
 import type { LibraryAsset } from "@/lib/mock/content";
 import { cn } from "@/lib/utils";
 import { MediaPreviewModal } from "./MediaPreviewModal";
@@ -19,24 +19,17 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>(() =>
     assets.some((a) => a.type === "Catalogue") ? "Catalogue" : "All",
   );
-  const [category, setCategory] = useState("All categories");
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
   // Photos are shown like a phone gallery; on a phone the user can switch between 3 and 2 per row.
   const [photoCols, setPhotoCols] = useState<2 | 3>(3);
 
-  const categories = useMemo(
-    () => ["All categories", ...Array.from(new Set(assets.map((a) => a.categoryLabel)))],
-    [assets]
-  );
-
   const results = useMemo(() => {
     return assets.filter((a) => {
       if (typeFilter !== "All" && a.type !== typeFilter) return false;
-      if (category !== "All categories" && a.categoryLabel !== category) return false;
       if (search && !a.title.toLowerCase().includes(search.toLowerCase())) return false;
       return true;
     });
-  }, [assets, search, typeFilter, category]);
+  }, [assets, search, typeFilter]);
 
   const typeCounts = useMemo(() => {
     const counts: Record<TypeFilter, number> = { All: assets.length, Catalogue: 0, Video: 0, Photo: 0 };
@@ -96,23 +89,6 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
           );
         })}
       </div>
-
-      {/* Category */}
-      <label className="relative mt-3 block">
-        <span className="sr-only">Category</span>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full appearance-none rounded-full border border-black/8 bg-white py-3 pl-5 pr-11 text-[13.5px] font-semibold text-brand-dark outline-none focus:border-black/40"
-        >
-          {categories.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-        <ChevronDown size={17} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-black/50" />
-      </label>
 
       <div className="mb-3 mt-5 text-[12.5px] text-black/50" aria-live="polite">
         {results.length} {results.length === 1 ? "item" : "items"}
