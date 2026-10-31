@@ -11,8 +11,7 @@ import { UpcomingEvents } from "@/components/home/sections";
 
 // Hero slides, case tiles, quotes and the founder's message are edited in Strapi
 // (Home Page and Founder Message); lib/mock/siteContent.ts holds the built-in defaults.
-// The case-tile pictures have their original lettering erased; the label, title and
-// line are drawn live in the app font so every home-page word uses one typeface
+// The case-tile label, title and line are drawn live in the app font over the photo
 // (`pos` keeps the subject in view).
 
 export default async function HomePage() {
@@ -51,15 +50,17 @@ export default async function HomePage() {
               style={{ objectPosition: t.pos }}
             />
             <span className="sr-only">{t.alt}</span>
+            {/* The photos are bright sea and sky: darken from the top (where the text sits) so white type reads */}
+            <div aria-hidden className="absolute inset-0 bg-linear-to-b from-black/60 via-black/30 to-black/35" />
 
-            {/* Live text in the app's own typeface (the lettering was removed from the pictures) */}
+            {/* Live text in the app's own typeface */}
             <div className="relative z-10">
-              <div className="text-[8px] font-semibold uppercase tracking-[0.2em] text-[#4b4b4e] tablet:text-[10px]">CASE STUDY</div>
-              <h3 className="mt-1.5 text-[20px] font-bold leading-[1.05] tracking-[-0.02em] text-[#0a0a0b] [text-shadow:0_0_10px_rgba(247,246,244,0.85)] tablet:text-[28px]">
+              <div className="text-[8px] font-semibold uppercase tracking-[0.2em] text-white/75 tablet:text-[10px]">CASE STUDY</div>
+              <h3 className="mt-1.5 text-[20px] font-bold leading-[1.05] tracking-[-0.02em] text-white tablet:text-[28px]">
                 {t.title}
               </h3>
-              <span aria-hidden className="mt-2 block h-px w-7 bg-neutral-500/70 tablet:w-10" />
-              <p className="mt-2 text-[11.5px] font-semibold leading-snug text-[#1c1c1e] [text-shadow:0_0_6px_rgba(247,246,244,0.95),0_0_12px_rgba(247,246,244,0.8)] tablet:text-[15px]">
+              <span aria-hidden className="mt-2 block h-px w-7 bg-white/60 tablet:w-10" />
+              <p className="mt-2 text-[11.5px] font-semibold leading-snug text-white/90 tablet:text-[15px]">
                 {t.note}
               </p>
             </div>
