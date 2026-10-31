@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Send } from "lucide-react";
 import { CONTACT } from "@/lib/mock/appContent";
 
-const INTERESTS = ["Products", "Services", "Calibration / rental", "Technical support", "Other"] as const;
+const INTERESTS = ["Products", "Services", "Controlled bolting", "Technical support", "Other"] as const;
 
 const field =
   "w-full rounded-2xl bg-white px-4 py-3.5 text-[15px] text-brand-dark outline-none ring-0 transition-shadow placeholder:text-brand-text-tertiary focus:shadow-[0_0_0_2px_var(--brand-red)]";

@@ -942,18 +942,14 @@
       "name": "Process & Pipeline Services",
       "color": "#0d9488",
       "categories": [
-        "Dewatering & Dry Air Flushing Services",
-        "Hydro Testing Services",
-        "Nitrogen Helium Leak Testing Services",
-        "Nitrogen Purging Preservation Services",
-        "Pneumatic Testing"
+        "Nitrogen Purging Preservation Services"
       ]
     },
     {
-      "name": "Tool Calibration Services",
+      "name": "Controlled Bolting Services",
       "color": "#db2777",
       "categories": [
-        "Calibration Services"
+        "Onsite Controlled Bolting"
       ]
     }
   ],
@@ -989,48 +985,6 @@
       "directImageUrl": "/services/flange-facing-photo.webp"
     },
     {
-      "slug": "dewatering-dry-air-flushing",
-      "name": "Dewatering & Dry Air Flushing Services",
-      "category": "Dewatering & Dry Air Flushing Services",
-      "tagline": "Pipeline commissioning support",
-      "description": "Complete dewatering and dry air flushing solutions for pipeline commissioning.",
-      "imageKey": "svcDewatering",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
-      "slug": "hydro-testing-services",
-      "name": "Hydro Testing Services",
-      "category": "Hydro Testing Services",
-      "tagline": "Verifying pipeline integrity and safety",
-      "description": "Comprehensive hydrostatic testing services to verify pipeline integrity and safety, up to 6,400 bar. Air-driven — no electricity required. MRS testing per ISO 9080/ASTM D2837, with ISO/ASTM/ASME-compliant reporting.",
-      "imageKey": "svcHydroTesting",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
-      "slug": "nitrogen-helium-leak-testing",
-      "name": "Nitrogen Helium Leak Testing Services",
-      "category": "Nitrogen Helium Leak Testing Services",
-      "tagline": "Advanced leak detection",
-      "description": "Advanced leak detection services using nitrogen and helium testing methods.",
-      "imageKey": "svcNitrogenHeliumLeak",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
       "slug": "nitrogen-purging-preservation",
       "name": "Nitrogen Purging Preservation Services",
       "category": "Nitrogen Purging Preservation Services",
@@ -1044,20 +998,6 @@
         "url": "#"
       },
       "directImageUrl": "/services/nitrogen-purging-preservation-photo.webp"
-    },
-    {
-      "slug": "pneumatic-testing",
-      "name": "Pneumatic Testing",
-      "category": "Pneumatic Testing",
-      "tagline": "Pressure vessel and pipeline validation",
-      "description": "Reliable pneumatic testing services for pressure vessel and pipeline validation.",
-      "imageKey": "svcPneumaticTesting",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
     },
     {
       "slug": "retubing-services",
@@ -1082,24 +1022,6 @@
         "url": "#"
       },
       "directImageUrl": "/services/hot-tapping-line-stopping-photo.webp"
-    },
-    {
-      "slug": "calibration-services",
-      "name": "Calibration Services",
-      "category": "Calibration Services",
-      "tagline": "Accuracy and compliance, verified",
-      "description": "Precision tool calibration services to ensure accuracy and compliance.",
-      "imageKey": "svcCalibration",
-      "media": []
-    },
-    {
-      "slug": "dry-rental",
-      "name": "Dry Rental",
-      "category": "Dry Rental",
-      "tagline": "Equipment, when and where you need it",
-      "description": "Equipment rental services with comprehensive dry rental solutions.",
-      "imageKey": "svcDryRental",
-      "media": []
     }
   ],
   "caseStudies": [
@@ -1363,16 +1285,16 @@
         "title": "Hot tapping at ONGC NQP",
         "note": "Live 16\" pipeline, zero downtime.",
         "image": "/images/home/case-hot-tapping-clean.webp",
-        "pos": "8% 50%",
-        "alt": "Technician operating a hot tapping machine on a live pipeline at sunset",
+        "pos": "40% 50%",
+        "alt": "Offshore oil and gas platform complex standing in a calm blue sea",
         "href": "https://www.tritorc.com/blog/hot-tapping-operation-completed-in-3-days-at-nqc"
       },
       {
         "title": "SARB leak testing",
         "note": "Nitrogen-helium, 1\"–6\" piping.",
         "image": "/images/home/case-leak-testing-clean.webp",
-        "pos": "12% 50%",
-        "alt": "Technician leak testing a flanged pipeline with a pressure gauge at sunset",
+        "pos": "60% 50%",
+        "alt": "Aerial view of the SARB artificial island in the sea off Abu Dhabi",
         "href": "https://www.tritorc.com/blog/nitrogen-helium-leak-testing-sarb-project-uae"
       }
     ],
@@ -1493,7 +1415,7 @@
       "city": "Abu Dhabi, UAE",
       "hall": "12",
       "booth": "12200",
-      "image": "https://www.tritorc.com/exhibition/adipec-2025-1.jpg",
+      "image": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
       "intro": "Meet TRITORC at ADIPEC 2026 – where precision engineering meets real-world energy challenges.",
       "about": [
         "ADIPEC 2026 is one of the world's leading energy exhibitions and conferences, bringing the global oil, gas and energy industry together in Abu Dhabi.",
@@ -1558,7 +1480,7 @@
       "city": "Abu Dhabi, UAE",
       "hall": "12",
       "booth": "12323",
-      "image": "https://www.tritorc.com/exhibition/adipec-2025-1.jpg",
+      "image": "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
       "intro": "Experience ADIPEC like never before with TRITORC – where precision engineering meets real-world energy challenges.",
       "about": [
         "ADIPEC 2025 was the world's most influential energy exhibition and conference, with 205,000+ attendees, 2,250+ exhibiting companies, 54 NOCs, IOCs, NECs & IECs, and 12 conference programmes.",
@@ -1622,7 +1544,7 @@
       "city": "Chennai, India",
       "hall": "H3",
       "booth": "G711",
-      "image": "https://www.tritorc.com/exhibition/windergy-india-1.jpeg",
+      "image": "",
       "intro": "Engage with TRITORC and experience how we turn critical challenges into confident solutions in the wind energy sector.",
       "about": [
         "Windergy India 2025 is India's premier international trade fair and conference for wind energy, with 350+ exhibiting companies from 20+ countries and participation from leading wind power nations including Denmark, Germany and Spain."
@@ -1681,7 +1603,7 @@
       "city": "Kuala Lumpur, Malaysia",
       "hall": "5",
       "booth": "5811",
-      "image": "https://www.tritorc.com/exhibition/oga-malaysia-2025.jpg",
+      "image": "",
       "intro": "Engage with TRITORC and experience how we turn critical challenges into confident solutions.",
       "about": [
         "OGA – Oil & Gas Asia 2025 is Southeast Asia's leading oil, gas, energy and petrochemicals event, with 2,000+ exhibiting companies, 36,000 attendees from 70+ countries and 60+ thought leaders."

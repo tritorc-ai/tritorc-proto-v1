@@ -56,7 +56,7 @@ export const NOTIFICATIONS: AppNotification[] = [
     body: "Abu Dhabi, Hall 12, booth 12200 — 2–5 November 2026.",
     when: "2–5 Nov 2026",
     href: "/events/adipec-2026",
-    image: "https://www.tritorc.com/exhibition/adipec-2025-1.jpg",
+    image: "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
   },
   {
     id: "case-ongc-nqp",
@@ -146,7 +146,7 @@ export const TICKER_ITEMS: TickerItem[] = [
     label: "Upcoming event",
     title: "ADIPEC 2026 in Abu Dhabi, Hall 12, booth 12200",
     href: "/events/adipec-2026",
-    image: "https://www.tritorc.com/exhibition/adipec-2025-1.jpg",
+    image: "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
     meta: "2–5 Nov 2026 · Abu Dhabi",
   },
   // Case studies other than the two already featured as tiles on Home.

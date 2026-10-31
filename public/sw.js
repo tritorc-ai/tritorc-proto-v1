@@ -5,7 +5,8 @@
 // latest from Strapi" requirement. Only static, rarely-changing shell assets
 // are cached so the app can be added to the home screen.
 
-const CACHE_NAME = "tritorc-shell-v3";
+// Bump this whenever a cached file below changes (the icons are served from this cache first).
+const CACHE_NAME = "tritorc-shell-v5";
 // /offline.html (self-contained, inline styles) and the logo it shows are cached so a page
 // request made without a network gets a friendly screen instead of the browser's error page.
 const OFFLINE_URL = "/offline.html";

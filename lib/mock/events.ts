@@ -49,7 +49,7 @@ export const EVENTS: TritorcEvent[] = [
     city: "Abu Dhabi, UAE",
     hall: "12",
     booth: "12200",
-    image: `${SITE}/exhibition/adipec-2025-1.jpg`,
+    image: "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
     intro: "Meet TRITORC at ADIPEC 2026 – where precision engineering meets real-world energy challenges.",
     about: [
       "ADIPEC 2026 is one of the world's leading energy exhibitions and conferences, bringing the global oil, gas and energy industry together in Abu Dhabi.",
@@ -102,7 +102,7 @@ export const EVENTS: TritorcEvent[] = [
     city: "Abu Dhabi, UAE",
     hall: "12",
     booth: "12323",
-    image: `${SITE}/exhibition/adipec-2025-1.jpg`,
+    image: "https://tritorc-strapi-media-prod-140732842400-ap-south-1.s3.ap-south-1.amazonaws.com/uploads/adipec_2026_bbfcfdbf03003c8dc191_f13f53e214.jpg",
     intro: "Experience ADIPEC like never before with TRITORC – where precision engineering meets real-world energy challenges.",
     about: [
       "ADIPEC 2025 was the world's most influential energy exhibition and conference, with 205,000+ attendees, 2,250+ exhibiting companies, 54 NOCs, IOCs, NECs & IECs, and 12 conference programmes.",
@@ -154,7 +154,9 @@ export const EVENTS: TritorcEvent[] = [
     city: "Chennai, India",
     hall: "H3",
     booth: "G711",
-    image: `${SITE}/exhibition/windergy-india-1.jpeg`,
+    // The picture that used to be here was removed from tritorc.com; an empty string shows the placeholder.
+    // Add the real photo in Strapi (Event, Image) or here.
+    image: "",
     intro:
       "Engage with TRITORC and experience how we turn critical challenges into confident solutions in the wind energy sector.",
     about: [
@@ -202,7 +204,8 @@ export const EVENTS: TritorcEvent[] = [
     city: "Kuala Lumpur, Malaysia",
     hall: "5",
     booth: "5811",
-    image: `${SITE}/exhibition/oga-malaysia-2025.jpg`,
+    // Removed from tritorc.com, see Windergy above.
+    image: "",
     intro: "Engage with TRITORC and experience how we turn critical challenges into confident solutions.",
     about: [
       "OGA – Oil & Gas Asia 2025 is Southeast Asia's leading oil, gas, energy and petrochemicals event, with 2,000+ exhibiting companies, 36,000 attendees from 70+ countries and 60+ thought leaders.",

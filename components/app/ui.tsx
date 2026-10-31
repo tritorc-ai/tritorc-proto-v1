@@ -129,7 +129,7 @@ export function OverlayCard({
         className={cn("absolute inset-0", contain === "white" ? "bg-white" : contain && "bg-linear-to-b from-[#f7f8f9] to-[#d5d9dd]")}
         imgClassName={cn("group-active:scale-105", contain && (cta ? "object-contain px-4 pt-6 pb-44" : "object-contain px-5 pt-8 pb-28"))}
       />
-      {video && <HeroVideo src={video.src} poster={video.poster ?? image} />}
+      {video && <HeroVideo src={video.src} youtubeId={video.youtubeId} poster={video.poster ?? image} />}
       <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/25 to-transparent" />
       {frame === "ring" && (
         <span
