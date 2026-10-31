@@ -15,7 +15,10 @@ type LibraryAssetWithImage = LibraryAsset & { imageUrl?: string };
 
 export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
   const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState<TypeFilter>("All");
+  // Opens on Catalogue (the thing people come here for); on All if there are no catalogues, so it is never empty.
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>(() =>
+    assets.some((a) => a.type === "Catalogue") ? "Catalogue" : "All",
+  );
   const [category, setCategory] = useState("All categories");
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
 
