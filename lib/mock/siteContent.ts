@@ -53,6 +53,8 @@ export interface CompanyPageContent {
   certifications: { title: string; note: string; image: string; alt: string }[];
   vision: string;
   mission: string;
+  /** Small line above the mission figure (kept in code, not a Strapi field). */
+  missionNote: string;
   profileTitle: string;
   profileMeta: string;
 }
@@ -145,16 +147,16 @@ export const COMPANY_PAGE: CompanyPageContent = {
   // that fade into one another behind the text. The vertical position only matters on a tablet, where the frame
   // is a wide 2:1 or 5:2 band: it keeps the sign, the machine or the crew inside it.
   slides: [
-    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%", caption: "New bolting systems division coming online soon" },
-    { src: "/company/slide-2-heat-exchanger-crew.webp", position: "50% 25%" },
-    { src: "/company/slide-3-red-machine-crew.webp", position: "50% 3%" },
-    { src: "/company/slide-4-refinery-flange-lift.webp", position: "50% 47%" },
-    { src: "/company/slide-5-desert-pipeline.webp", position: "50% 50%" },
-    { src: "/company/slide-6-team-workshop.webp", position: "50% 57%" },
+    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%", caption: "New 30,000 sq ft facility in Pune, bolting systems division coming online soon" },
+    { src: "/company/slide-2-heat-exchanger-crew.webp", position: "50% 25%", caption: "In-house manufacturing of bolting and machining tools since 2013." },
+    { src: "/company/slide-3-red-machine-crew.webp", position: "50% 3%", caption: "Live pipelines hot-tapped with zero downtime." },
+    { src: "/company/slide-4-refinery-flange-lift.webp", position: "50% 47%", caption: "500+ projects delivered by 100+ expert engineers." },
+    { src: "/company/slide-5-desert-pipeline.webp", position: "50% 50%", caption: "Pipeline integrity solutions across 11 countries." },
+    { src: "/company/slide-6-team-workshop.webp", position: "50% 57%", caption: "Founded in 1989, with more than 35 years of experience." },
   ],
   stats: [
-    { value: "54+", label: "Oil & gas projects" },
-    { value: "300+", label: "Turbines installed" },
+    { value: "500+", label: "Oil & gas projects" },
+    { value: "1000+", label: "Turbines installed" },
   ],
   certifications: [
     {
@@ -172,6 +174,7 @@ export const COMPANY_PAGE: CompanyPageContent = {
   ],
   vision: "Powered by People",
   mission: "50X",
+  missionNote: "Growth for all, Limits on none.",
   profileTitle: "Company Profile",
   profileMeta: "6.4 MB · Updated Jul 2026",
 };

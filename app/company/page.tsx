@@ -3,7 +3,6 @@ import { getCatalogueUrl, getCompanyPage, getGlobalOffices } from "@/lib/strapi"
 import { PageHeader } from "@/components/app/PageHeader";
 import { SectionHead } from "@/components/app/ui";
 import { PhotoSlideshow } from "@/components/company/PhotoSlideshow";
-import { RotatingLines } from "@/components/company/RotatingLines";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
 import { InstallAppCard } from "@/components/app/InstallAppCard";
 import { GlobalOfficesSection } from "@/components/company/GlobalOfficesSection";
@@ -29,13 +28,13 @@ export default async function CompanyPage() {
         <section>
           <div className="relative overflow-hidden rounded-[28px] bg-brand-dark">
             <div className="aspect-[4/5] w-full tablet:aspect-[2/1] tablet-lg:aspect-[5/2]" />
-            <PhotoSlideshow slides={company.slides} sizes="(max-width: 448px) 100vw, (max-width: 1024px) 92vw, 1100px" />
-            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
-            <RotatingLines
-              className="absolute inset-x-0 bottom-0 p-5 text-[16px] leading-snug text-white/90 tablet:p-8 tablet:text-[22px]"
-              lines={company.overviewLines}
-              fullText={company.overviewText}
+            <PhotoSlideshow
+              // each photo shows its own caption; a photo without one borrows an overview line
+              slides={company.slides.map((s, i) => ({ ...s, caption: s.caption ?? company.overviewLines[i % company.overviewLines.length] }))}
+              sizes="(max-width: 448px) 100vw, (max-width: 1024px) 92vw, 1100px"
             />
+            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
+            <p className="sr-only">{company.overviewText}</p>
           </div>
           <div className="mt-3 grid grid-cols-2 gap-3 tablet:mt-4 tablet:gap-4">
             {company.stats.map((s) => (
@@ -89,9 +88,22 @@ export default async function CompanyPage() {
             <span className="relative w-fit rounded-full bg-black/[0.07] px-2.5 py-[3px] text-[9px] font-semibold uppercase tracking-[0.2em] text-brand-text-secondary tablet:px-3.5 tablet:py-1 tablet:text-[11px]">
               Mission
             </span>
-            <p className="relative text-[52px] font-extrabold leading-[0.9] tracking-[-0.045em] text-brand-dark tablet:text-[84px]">
-              {company.mission}
-            </p>
+            <div className="relative">
+              <p className="mb-1.5 text-[13px] font-semibold leading-tight text-brand-text-secondary tablet:mb-2.5 tablet:text-[18px]">
+                {company.missionNote.includes(",") ? (
+                  <>
+                    {company.missionNote.slice(0, company.missionNote.indexOf(",") + 1)}
+                    <br />
+                    {company.missionNote.slice(company.missionNote.indexOf(",") + 1).trim()}
+                  </>
+                ) : (
+                  company.missionNote
+                )}
+              </p>
+              <p className="text-[52px] font-extrabold leading-[0.9] tracking-[-0.045em] text-brand-dark tablet:text-[84px]">
+                {company.mission}
+              </p>
+            </div>
           </div>
         </section>
 
