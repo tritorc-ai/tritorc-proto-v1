@@ -5,6 +5,7 @@ import { SectionHead } from "@/components/app/ui";
 import { PhotoSlideshow } from "@/components/company/PhotoSlideshow";
 import { RotatingLines } from "@/components/company/RotatingLines";
 import { ProductCatalogueCard } from "@/components/app/ProductCatalogueCard";
+import { InstallAppCard } from "@/components/app/InstallAppCard";
 import { GlobalOfficesSection } from "@/components/company/GlobalOfficesSection";
 import { CertificationsBento } from "@/components/company/CertificationsBento";
 
@@ -92,6 +93,11 @@ export default async function CompanyPage() {
               {company.mission}
             </p>
           </div>
+        </section>
+
+        {/* Install the app: adapts to the phone (Android install dialog, iPhone steps, already installed) */}
+        <section aria-label="Get the app">
+          <InstallAppCard />
         </section>
 
         {/* 02 — Global offices */}
