@@ -7,10 +7,35 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 // phone/tablet/browser (no built-in PDF plugin or external viewer needed) and each page is
 // only rendered once it scrolls near the screen, which keeps big catalogues light.
 
+/**
+ * A file on another domain (the CloudFront/S3 media host) is read through our own `/pdf-src/<host>/<path>`
+ * route (see next.config.ts): the browser blocks pdf.js from fetching it directly because that host sends
+ * no CORS headers. The original address stays the fallback, and is what the Open / Download buttons use.
+ */
+function sameOriginUrl(url: string): string {
+  try {
+    const u = new URL(url, window.location.href);
+    if (u.origin === window.location.origin || u.protocol !== "https:") return url;
+    return `/pdf-src/${u.host}${u.pathname}${u.search}`;
+  } catch {
+    return url;
+  }
+}
+
 async function openDocument(url: string) {
   const pdfjs = await import("pdfjs-dist");
   pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
-  return pdfjs.getDocument({ url });
+  const proxied = sameOriginUrl(url);
+  const first = pdfjs.getDocument({ url: proxied });
+  if (proxied === url) return first;
+  try {
+    await first.promise;
+    return first;
+  } catch {
+    // the route is not available for this host: try the file directly (works where the host allows it)
+    await first.destroy().catch(() => {});
+    return pdfjs.getDocument({ url });
+  }
 }
 
 function Page({ doc, number, width }: { doc: PDFDocumentProxy; number: number; width: number }) {
@@ -91,9 +116,17 @@ export function PdfPages({ url }: { url: string }) {
   return (
     <div ref={box} className="flex-1 overflow-y-auto bg-[#e7e7e6] p-2">
       {failed ? (
-        <p className="p-6 text-center text-[13px] text-neutral-600">
-          This file could not be shown here. Use the download button above.
-        </p>
+        <div className="p-6 text-center text-[13px] text-neutral-600">
+          <p>This file could not be shown here.</p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex rounded-full bg-brand-dark px-5 py-2.5 text-[13px] font-semibold text-white"
+          >
+            Open the PDF
+          </a>
+        </div>
       ) : !doc ? (
         <p className="p-6 text-center text-[13px] text-neutral-600">Loading…</p>
       ) : (
