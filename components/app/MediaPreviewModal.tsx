@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type TouchEvent } from "react";
 import { ChevronLeft, ChevronRight, Download, ExternalLink, X } from "lucide-react";
 import { PdfPreviewModal } from "./PdfPreviewModal";
+import { PhotoViewer } from "./PhotoViewer";
 import { cn } from "@/lib/utils";
 
 export interface PreviewableAsset {
@@ -10,6 +11,8 @@ export interface PreviewableAsset {
   title: string;
   fileUrl?: string;
   imageUrl?: string;
+  // A YouTube video plays in an embedded YouTube player (iframe) with its normal controls.
+  youtubeId?: string;
 }
 
 const SWIPE_THRESHOLD_PX = 50;
@@ -28,18 +31,38 @@ export function MediaPreviewModal({
   onClose: () => void;
 }) {
   const [index, setIndex] = useState(initialIndex);
+  const [playing, setPlaying] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const asset = items[index];
-  const canGoPrev = index > 0;
-  const canGoNext = index < items.length - 1;
+  // Photos move among themselves (Next never jumps from a photo to a catalogue); everything else walks the list.
+  const photoIndices = items.flatMap((a, i) => (a.type === "Photo" ? [i] : []));
+  const photoPos = photoIndices.indexOf(index); // -1 when this is not a photo
+  const isPhoto = photoPos >= 0;
+  const canGoPrev = isPhoto ? photoPos > 0 : index > 0;
+  const canGoNext = isPhoto ? photoPos < photoIndices.length - 1 : index < items.length - 1;
 
-  function goPrev() {
-    setIndex((i) => Math.max(0, i - 1));
+  function step(dir: 1 | -1, wrap = false) {
+    setIndex((i) => {
+      const pos = photoIndices.indexOf(i);
+      if (pos >= 0) {
+        const next = pos + dir;
+        if (next >= 0 && next < photoIndices.length) return photoIndices[next];
+        return wrap ? photoIndices[(next + photoIndices.length) % photoIndices.length] : i;
+      }
+      return Math.min(items.length - 1, Math.max(0, i + dir));
+    });
   }
-  function goNext() {
-    setIndex((i) => Math.min(items.length - 1, i + 1));
-  }
+  const goPrev = () => step(-1);
+  const goNext = () => step(1);
+
+  // Slideshow: while playing on a photo, move to the next one every few seconds (and start over after the last).
+  useEffect(() => {
+    if (!playing || !isPhoto) return;
+    const t = setTimeout(() => step(1, true), 3500);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, index, isPhoto]);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -106,11 +129,74 @@ export function MediaPreviewModal({
     );
   }
 
+  // YouTube: one embedded player at a time (the key makes a new player, and stops the old one, when swiping to
+  // another video). No title in the header, just the buttons.
+  if (asset.youtubeId) {
+    return (
+      <div
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        className="fixed inset-0 z-50 flex flex-col bg-black/95"
+      >
+        <div className="flex items-center justify-end gap-2.5 px-4 py-3">
+          <a
+            href={`https://www.youtube.com/watch?v=${asset.youtubeId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white"
+            aria-label="Open video on YouTube"
+          >
+            <ExternalLink size={15} />
+          </a>
+          <button
+            onClick={onClose}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white"
+            aria-label="Close video"
+          >
+            <X size={16} />
+          </button>
+        </div>
+        <div className="flex flex-1 items-center justify-center px-3 pb-6">
+          <div className="aspect-video w-full max-w-[960px] overflow-hidden rounded-2xl bg-black shadow-[0_10px_40px_rgba(0,0,0,.5)]">
+            <iframe
+              key={asset.youtubeId}
+              src={`https://www.youtube-nocookie.com/embed/${asset.youtubeId}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+              title={asset.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+              allowFullScreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              className="h-full w-full border-0"
+            />
+          </div>
+        </div>
+        {navArrows}
+      </div>
+    );
+  }
+
   // Real Strapi photos carry a full-resolution fileUrl separate from the
   // grid's thumbnail; mock/fallback assets only ever have the one imageUrl
   // (already full-size for those), so fall back to it.
   const mediaUrl = asset.fileUrl ?? asset.imageUrl;
   if (!mediaUrl) return null;
+
+  // Photos get their own viewer (navigation, slideshow, zoom, full screen). The key starts each photo at 100%.
+  if (asset.type === "Photo") {
+    return (
+      <PhotoViewer
+        key={mediaUrl}
+        title={asset.title}
+        url={mediaUrl}
+        position={photoPos + 1}
+        total={photoIndices.length}
+        playing={playing}
+        onTogglePlay={() => setPlaying((p) => !p)}
+        onPrev={goPrev}
+        onNext={goNext}
+        onClose={onClose}
+      />
+    );
+  }
 
   return (
     <div
@@ -146,23 +232,13 @@ export function MediaPreviewModal({
         </button>
       </div>
       <div className="flex flex-1 items-center justify-center overflow-auto p-4">
-        {asset.type === "Video" ? (
-          <video
-            key={mediaUrl}
-            src={mediaUrl}
-            controls
-            autoPlay
-            className="max-h-full max-w-full rounded-lg shadow-[0_10px_40px_rgba(0,0,0,.4)]"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            key={mediaUrl}
-            src={mediaUrl}
-            alt={asset.title}
-            className="max-h-full max-w-full rounded-lg object-contain shadow-[0_10px_40px_rgba(0,0,0,.4)]"
-          />
-        )}
+        <video
+          key={mediaUrl}
+          src={mediaUrl}
+          controls
+          autoPlay
+          className="max-h-full max-w-full rounded-lg shadow-[0_10px_40px_rgba(0,0,0,.4)]"
+        />
       </div>
       {navArrows}
     </div>

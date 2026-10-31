@@ -41,6 +41,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cms.tritorc.com" },
       { protocol: "https", hostname: "www.tritorc.com" },
       { protocol: "https", hostname: "tritorc.com" },
+      // YouTube's own thumbnails for the videos in the Library.
+      { protocol: "https", hostname: "i.ytimg.com" },
       ...(strapiUrl
         ? [
             {

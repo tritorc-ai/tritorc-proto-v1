@@ -15,6 +15,7 @@ import { strapiFetch } from "./strapiClient";
 import { IMAGE_NAMES, type ImageKey } from "./mock/images";
 import { IMAGE_FALLBACK_URLS } from "./mock/imageFallbacks";
 import { VIDEO_NAMES, type VideoKey } from "./mock/videos";
+import { getYoutubeLibraryAssets } from "./youtubeVideos";
 import {
   CASE_STUDIES,
   CERTIFICATIONS,
@@ -758,7 +759,7 @@ export async function getLibraryAssets(): Promise<LibraryAsset[]> {
       categoryLabel: "Catalogues",
       fileUrl: c.url,
     }));
-    return [...catalogueAssets, ...LIBRARY_MEDIA_ASSETS];
+    return [...catalogueAssets, ...getYoutubeLibraryAssets(), ...LIBRARY_MEDIA_ASSETS];
   }
 
   // Cover pictures of the catalogues ("<pdf name>.thumb.webp", caption "catalogue-thumb")
@@ -812,7 +813,7 @@ export async function getLibraryAssets(): Promise<LibraryAsset[]> {
   // default view shows only distinct assets; files is sorted updatedAt:desc,
   // so the kept copy is always the most recently uploaded one.
   const seen = new Set<string>();
-  return assets.filter((a) => {
+  return [...assets, ...getYoutubeLibraryAssets()].filter((a) => {
     const key = `${a.type}:${a.title.trim().toLowerCase()}`;
     if (seen.has(key)) return false;
     seen.add(key);

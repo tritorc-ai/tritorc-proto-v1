@@ -987,6 +987,8 @@ export interface LibraryAsset {
   // no curated ImageKey needed, same directImageUrl pattern used elsewhere.
   directImageUrl?: string;
   fileUrl?: string;
+  // A YouTube video: opens in an in-app YouTube player instead of a file.
+  youtubeId?: string;
 }
 
 export const LIBRARY_MEDIA_ASSETS: LibraryAsset[] = [
