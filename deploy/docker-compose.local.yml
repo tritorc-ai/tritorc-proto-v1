@@ -1,0 +1,33 @@
+# Try the production image on this PC with a real Postgres (no AWS):
+#   docker compose -f deploy/docker-compose.local.yml up --build
+# Strapi: http://localhost:1339/admin   Health: http://localhost:1339/_health
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: strapi
+      POSTGRES_PASSWORD: strapi
+      POSTGRES_DB: strapi
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U strapi"]
+      interval: 5s
+      retries: 10
+  cms:
+    build: ../cms
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "1339:1338"
+    environment:
+      DATABASE_CLIENT: postgres
+      DATABASE_HOST: db
+      DATABASE_NAME: strapi
+      DATABASE_USERNAME: strapi
+      DATABASE_PASSWORD: strapi
+      APP_KEYS: a1,b2,c3,d4
+      API_TOKEN_SALT: localtest
+      ADMIN_JWT_SECRET: localtest
+      TRANSFER_TOKEN_SALT: localtest
+      JWT_SECRET: localtest
+      ENCRYPTION_KEY: localtest

@@ -146,8 +146,12 @@ export async function getCatalogues(): Promise<StrapiMediaFile[]> {
 // Company page) to their real Strapi Media Library filename, where the two
 // diverge — most already match verbatim.
 const CATALOGUE_REAL_NAMES: Record<string, string> = {
-  "Bolting & Machining Solutions Catalogue": "Bolting & Machining Solutions Cata (IND) APAC",
-  "Wind Power Catalogue": "Wind Power Cata",
+  "Bolting & Machining Solutions Catalogue": "Bolting Solutions Cata - USA (July 2026)",
+  "Wind Power Catalogue": "Wind Power Cata for Europe (Modified)",
+  "Hot Tapping Cata": "Hot Tapping Cata 2025 (Both)",
+  "In Situ Machining Catalogue": "In Situ Machining Catalogue - 2026 (A4)",
+  "Tube Tool Catalogue Final": "A5 - Tube Tools (Madhav T) Extracted",
+  "Company Profile (Final)": "Company Profile 2026 New Layout (FZC)",
 };
 
 /**
@@ -757,8 +761,17 @@ export async function getLibraryAssets(): Promise<LibraryAsset[]> {
     return [...catalogueAssets, ...LIBRARY_MEDIA_ASSETS];
   }
 
+  // Cover pictures of the catalogues ("<pdf name>.thumb.webp", caption "catalogue-thumb")
+  // belong on the PDF's card, not in the Photos list.
+  const isThumb = (f: StrapiMediaFile) => f.caption?.trim() === "catalogue-thumb";
+  const thumbs = new Map<string, string>();
+  for (const f of files) {
+    if (isThumb(f)) thumbs.set(f.name.replace(/\.thumb\.webp$/i, "").toLowerCase(), resolveMediaUrl(f.url));
+  }
+
   const assets: LibraryAsset[] = [];
   for (const f of files) {
+    if (isThumb(f)) continue;
     const caption = f.caption?.trim();
     if (f.mime === "application/pdf") {
       assets.push({
@@ -766,6 +779,7 @@ export async function getLibraryAssets(): Promise<LibraryAsset[]> {
         type: "Catalogue",
         title: stripExtension(f.name),
         categoryLabel: caption || "Catalogues",
+        directImageUrl: thumbs.get(stripExtension(f.name).toLowerCase()),
         fileUrl: resolveMediaUrl(f.url),
       });
     } else if (f.mime.startsWith("video/")) {

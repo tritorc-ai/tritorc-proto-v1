@@ -1,0 +1,11 @@
+# Build context for the Next.js app (root Dockerfile, only if the app is self-hosted).
+node_modules
+.next
+.git
+.github
+.env*
+!.env.example
+cms
+deploy
+public/Catalogues For TRITORC
+*.md

@@ -1,0 +1,84 @@
+name: CMS deploy
+
+# Push to main (cms/ changed) -> build image -> ECR -> EC2 (through SSM) -> health check, auto rollback.
+# Manual run with "tag" = redeploy an older image (rollback) without building.
+on:
+  push:
+    branches: [main]
+    paths: ["cms/**", "deploy/**"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing image tag to deploy (leave empty to build the current commit)"
+        required: false
+
+concurrency:
+  group: cms-deploy
+  cancel-in-progress: false
+
+permissions:
+  id-token: write   # GitHub -> AWS sign-in without stored keys
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REPO: ${{ vars.ECR_REPO }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production   # add required reviewers on this environment to gate deploys
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - id: tag
+        run: echo "value=${{ inputs.tag || github.sha }}" >> "$GITHUB_OUTPUT"
+
+      - if: ${{ !inputs.tag }}
+        uses: docker/setup-buildx-action@v3
+
+      - if: ${{ !inputs.tag }}
+        uses: docker/build-push-action@v6
+        with:
+          context: cms
+          push: true
+          build-args: PUBLIC_URL=${{ vars.CMS_PUBLIC_URL }}
+          tags: |
+            ${{ steps.ecr.outputs.registry }}/${{ vars.ECR_REPO }}:${{ github.sha }}
+            ${{ steps.ecr.outputs.registry }}/${{ vars.ECR_REPO }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy on the server
+        run: |
+          set -euo pipefail
+          CMD_ID=$(aws ssm send-command \
+            --instance-ids "${{ vars.EC2_INSTANCE_ID }}" \
+            --document-name AWS-RunShellScript \
+            --comment "cms deploy ${{ steps.tag.outputs.value }}" \
+            --parameters 'commands=["/opt/tritorc/deploy.sh ${{ steps.tag.outputs.value }}"]' \
+            --timeout-seconds 600 \
+            --query Command.CommandId --output text)
+          # `wait` exits non-zero when the command fails; show the log either way.
+          aws ssm wait command-executed --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" || true
+          aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" \
+            --query '[Status,StandardOutputContent,StandardErrorContent]' --output text
+          STATUS=$(aws ssm get-command-invocation --command-id "$CMD_ID" --instance-id "${{ vars.EC2_INSTANCE_ID }}" --query Status --output text)
+          [ "$STATUS" = "Success" ]
+
+      - name: Public health check
+        run: |
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "${{ vars.CMS_PUBLIC_URL }}/_health" || true)
+            [ "$code" = "204" ] && { echo "healthy"; exit 0; }
+            sleep 5
+          done
+          echo "health check failed (last code: $code)"; exit 1

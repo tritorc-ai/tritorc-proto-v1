@@ -1,0 +1,30 @@
+# Runs on the EC2 server in /opt/tritorc. deploy.sh writes .env and sets IMAGE_TAG.
+services:
+  cms:
+    image: ${ECR_REGISTRY}/${ECR_REPO}:${IMAGE_TAG}
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - "1338"
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - cms
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      CMS_DOMAIN: ${CMS_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
