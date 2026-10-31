@@ -1,105 +1,282 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Download, Share, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { PlusSquare, Share } from "lucide-react";
+import { jakarta } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 
-// Chrome/Edge/Android only — Safari and Firefox never fire this event, so
-// the button simply never appears there (installing is manual via each
-// browser's own share/menu UI, same as before this component existed).
+/**
+ * "Install the Tritorc app" popup for phones and tablets only: a centred card over a blurred, dimmed
+ * app, shown once the startup splash is over.
+ *
+ * - Android (Chrome, Edge, Samsung Internet): shown once the browser says the app is installable
+ *   (`beforeinstallprompt`), with an Install button that opens the browser's own install dialog.
+ * - iPhone / iPad (Safari): there is no install API, so the popup shows the taps to make instead.
+ * - Never when the app is already installed (opened from the home screen, or the browser reported
+ *   an install), and never nags: see `Stored` for how often it comes back.
+ */
+
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-const DISMISSED_KEY = "tritorc-install-dismissed";
+type Mode = "android" | "ios";
 
-// iOS never fires beforeinstallprompt — there's no programmatic install API,
-// only the user manually tapping Share -> Add to Home Screen. Detected via
-// UA (including iPadOS 13+, which reports as a touch-capable "MacIntel"),
-// excluding other iOS browser shells (Chrome/Firefox/Edge/Opera) that share
-// Safari's engine but don't expose the same Share-sheet instructions.
+const STORE_KEY = "tritorc-install-v1";
+const SHOW_AFTER_MS = 4400; // the 3.6 s splash plus a moment to look at the app
+const DAY = 86_400_000;
+const FOREVER = Number.MAX_SAFE_INTEGER;
+const MAX_IMPRESSIONS = 5;
+
+/** What is remembered between visits (per browser). */
+interface Stored {
+  installed?: boolean;
+  /** how many times the popup was shown */
+  shown?: number;
+  /** how many times it was dismissed */
+  dismissed?: number;
+  /** not before this time (ms since epoch) */
+  until?: number;
+}
+
+function read(): Stored {
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY) ?? "{}") as Stored;
+  } catch {
+    return {};
+  }
+}
+
+function write(patch: Stored) {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ ...read(), ...patch }));
+  } catch {
+    // private mode or storage blocked: the popup just may show again next visit
+  }
+}
+
+/** "Not now": back after 2 weeks, then 6 weeks, then never. */
+function recordDismissal() {
+  const dismissed = (read().dismissed ?? 0) + 1;
+  write({ dismissed, until: dismissed >= 3 ? FOREVER : Date.now() + (dismissed === 1 ? 14 : 45) * DAY });
+}
+
+function isStandalone(): boolean {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  );
+}
+
+/** A phone or tablet (a touch laptop is not one: its pointer is fine, not coarse). */
+function isMobileDevice(): boolean {
+  const ua = navigator.userAgent;
+  return (
+    /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ||
+    (navigator.maxTouchPoints > 1 && window.matchMedia("(pointer: coarse)").matches)
+  );
+}
+
+/**
+ * Safari on iPhone/iPad (iPadOS 13+ reports itself as a touch "MacIntel"). Other iOS browsers and the
+ * in-app browsers of Instagram, Facebook, Line and the like are left out: their share sheet differs
+ * or cannot add to the home screen at all, so the instructions would be wrong.
+ */
 function isIosSafari(): boolean {
   const ua = navigator.userAgent;
-  const isIos = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const isOtherBrowser = /CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
-  return isIos && !isOtherBrowser;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const other = /CriOS|FxiOS|EdgiOS|OPiOS|GSA|FBAN|FBAV|Instagram|Line\/|MicroMessenger|Snapchat/.test(ua);
+  return ios && /Safari\//.test(ua) && !other;
 }
 
 export function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showIosHint, setShowIosHint] = useState(false);
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [leaving, setLeaving] = useState(false);
+  const deferred = useRef<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const dismissed = sessionStorage.getItem(DISMISSED_KEY) === "1";
-    if (isStandalone || dismissed) return;
-
-    // Deliberately deferred to an effect rather than computed during render:
-    // navigator/matchMedia/sessionStorage aren't available during SSR, and
-    // computing this synchronously on the client's first render would mismatch
-    // the server-rendered (null) output and trigger a hydration error.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (isIosSafari()) setShowIosHint(true);
-
-    function handler(e: Event) {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    if (!isMobileDevice()) return;
+    if (isStandalone()) {
+      // Opened from the home screen: it is installed, so remember that for good.
+      write({ installed: true });
+      return;
     }
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    const saved = read();
+    if (saved.installed) return;
+    if ((saved.shown ?? 0) >= MAX_IMPRESSIONS) return;
+    if (Date.now() < (saved.until ?? 0)) return;
+
+    const ios = isIosSafari();
+    let ready = false;
+    let shown = false;
+
+    const reveal = (m: Mode) => {
+      if (shown) return;
+      shown = true;
+      // Count the showing now, so a user who ignores the popup still does not see it on every launch.
+      write({ shown: (read().shown ?? 0) + 1, until: Date.now() + 2 * DAY });
+      setMode(m);
+    };
+    const maybeReveal = () => {
+      if (!ready) return;
+      if (ios) reveal("ios");
+      else if (deferred.current) reveal("android");
+    };
+
+    const timer = setTimeout(() => {
+      ready = true;
+      maybeReveal();
+    }, SHOW_AFTER_MS);
+
+    const onPrompt = (e: Event) => {
+      e.preventDefault(); // keep the browser's own mini-bar away; we show our popup instead
+      deferred.current = e as BeforeInstallPromptEvent;
+      maybeReveal();
+    };
+    const onInstalled = () => {
+      write({ installed: true, until: FOREVER });
+      deferred.current = null;
+      setMode(null);
+    };
+
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
   }, []);
 
-  if (!deferredPrompt && !showIosHint) return null;
+  const close = useCallback(() => {
+    setLeaving(true);
+    setTimeout(() => {
+      setMode(null);
+      setLeaving(false);
+    }, 260);
+  }, []);
 
-  async function handleInstall() {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    setDeferredPrompt(null);
-  }
+  const dismiss = useCallback(() => {
+    recordDismissal();
+    close();
+  }, [close]);
 
-  function handleDismiss() {
-    sessionStorage.setItem(DISMISSED_KEY, "1");
-    setDeferredPrompt(null);
-    setShowIosHint(false);
-  }
+  // While the popup is open: the page behind does not scroll, and Escape closes it.
+  useEffect(() => {
+    if (!mode) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && dismiss();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mode, dismiss]);
+
+  if (!mode) return null;
+
+  const install = async () => {
+    const evt = deferred.current;
+    deferred.current = null; // an event can be used only once
+    if (!evt) return dismiss();
+    await evt.prompt();
+    const { outcome } = await evt.userChoice;
+    if (outcome === "accepted") {
+      write({ installed: true, until: FOREVER });
+      close();
+    } else {
+      dismiss();
+    }
+  };
 
   return (
     <div
-      className="sticky z-20 mx-3 mb-2 flex items-center gap-2.5 rounded-lg bg-brand-dark px-3.5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,.25)]"
-      style={{ bottom: "calc(64px + env(safe-area-inset-bottom, 0px))" }}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="install-title"
+      className={cn("fixed inset-0 z-[90] flex items-center justify-center px-6", jakarta.className)}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white">
-        {deferredPrompt ? <Download size={15} /> : <Share size={15} />}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="text-[12.5px] font-semibold text-white">Install Tritorc App</div>
-        <div className="text-[10.5px] text-white/60">
-          {deferredPrompt ? (
-            "Faster access, works like a native app"
-          ) : (
-            <>
-              Tap <span className="font-semibold text-white/80">Share</span>, then{" "}
-              <span className="font-semibold text-white/80">Add to Home Screen</span>
-            </>
-          )}
-        </div>
-      </div>
-      {deferredPrompt && (
-        <button
-          onClick={handleInstall}
-          className="shrink-0 rounded-md bg-brand-red px-3 py-1.5 text-[11.5px] font-semibold text-white"
-        >
-          Install
-        </button>
-      )}
+      {/* Dims and blurs the app; a tap outside the card counts as "not now". */}
       <button
-        onClick={handleDismiss}
-        aria-label="Dismiss"
-        className="shrink-0 text-white/50"
+        type="button"
+        tabIndex={-1}
+        aria-label="Close"
+        onClick={dismiss}
+        className={cn(
+          "absolute inset-0 cursor-default bg-black/30 backdrop-blur-md",
+          leaving ? "install-fade-out" : "install-fade-in"
+        )}
+      />
+
+      <div
+        className={cn(
+          "relative w-full max-w-[340px] rounded-[32px] border border-white/70 bg-white/90 px-6 pb-5 pt-7 text-center shadow-[0_24px_70px_rgba(0,0,0,0.3)] backdrop-blur-2xl",
+          leaving ? "install-card-out" : "install-card-in"
+        )}
       >
-        <X size={16} />
-      </button>
+        <Image
+          src="/icon-192.png"
+          alt=""
+          width={76}
+          height={76}
+          className="mx-auto h-[76px] w-[76px] rounded-[20px] shadow-[0_10px_26px_rgba(0,0,0,0.25)]"
+        />
+        <h2 id="install-title" className="mt-4 text-[21px] font-bold leading-tight tracking-[-0.02em] text-brand-dark">
+          Install the Tritorc app
+        </h2>
+        <p className="mt-1.5 text-[13.5px] leading-snug text-brand-text-secondary">
+          Open products, services and catalogues straight from your home screen, full screen.
+        </p>
+
+        {mode === "android" ? (
+          <>
+            <button
+              type="button"
+              autoFocus
+              onClick={install}
+              className="press mt-5 h-12 w-full rounded-full bg-[#0f0f10] text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(0,0,0,0.6)]"
+            >
+              Install
+            </button>
+            <button
+              type="button"
+              onClick={dismiss}
+              className="press mt-1 w-full py-2.5 text-[13px] font-medium text-brand-text-tertiary"
+            >
+              Not now
+            </button>
+          </>
+        ) : (
+          <>
+            <ol className="mt-5 space-y-2 text-left text-[13.5px] text-brand-dark">
+              <li className="flex items-center gap-3 rounded-2xl bg-black/[0.04] px-3.5 py-2.5">
+                <Share aria-hidden size={19} strokeWidth={2} className="shrink-0" />
+                <span>
+                  Tap <span className="font-semibold">Share</span> in the browser bar
+                </span>
+              </li>
+              <li className="flex items-center gap-3 rounded-2xl bg-black/[0.04] px-3.5 py-2.5">
+                <PlusSquare aria-hidden size={19} strokeWidth={2} className="shrink-0" />
+                <span>
+                  Choose <span className="font-semibold">Add to Home Screen</span>
+                </span>
+              </li>
+            </ol>
+            <button
+              type="button"
+              autoFocus
+              onClick={dismiss}
+              className="press mt-4 h-12 w-full rounded-full bg-[#0f0f10] text-[15px] font-semibold text-white shadow-[0_8px_20px_-8px_rgba(0,0,0,0.6)]"
+            >
+              Got it
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }

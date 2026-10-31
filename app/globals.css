@@ -243,6 +243,24 @@
 @keyframes splash-fade-out {
   to { opacity: 0; visibility: hidden; }
 }
+/* "Install the app" popup (components/app/InstallPrompt.tsx): the card rises in, the backdrop fades */
+@keyframes install-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes install-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(14px); }
+}
+@keyframes install-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes install-fade-out { from { opacity: 1; } to { opacity: 0; } }
+.install-card-in { animation: install-in 450ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.install-card-out { animation: install-out 240ms ease-in both; }
+.install-fade-in { animation: install-fade-in 400ms ease-out both; }
+.install-fade-out { animation: install-fade-out 240ms ease-in both; }
+@media (prefers-reduced-motion: reduce) {
+  .install-card-in, .install-card-out, .install-fade-in, .install-fade-out { animation-duration: 1ms; }
+}
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }

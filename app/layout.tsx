@@ -5,6 +5,7 @@ import { Splash } from "@/components/app/Splash";
 import { SPLASH_GUARD_SCRIPT } from "@/components/app/splashGuard";
 import { ServiceWorkerRegister } from "@/components/app/ServiceWorkerRegister";
 import { InboxProvider } from "@/components/app/InboxProvider";
+import { InstallPrompt } from "@/components/app/InstallPrompt";
 
 // Resolves relative URLs in metadata (OG images, canonical links) against the
 // real deployment origin. Vercel sets VERCEL_PROJECT_PRODUCTION_URL/VERCEL_URL
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             {children}
           </div>
           <BottomNav />
+          <InstallPrompt />
         </InboxProvider>
         <ServiceWorkerRegister />
       </body>
