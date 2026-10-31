@@ -206,7 +206,7 @@ export function DetailSheetView({
             {heroImage ? (
               <div className="absolute inset-x-5 bottom-14 top-1 overflow-hidden rounded-[28px] bg-white shadow-[0_10px_30px_-12px_rgba(0,0,0,0.2)] tablet:relative tablet:inset-auto tablet:aspect-[4/5] tablet:w-full tablet:max-w-[460px]">
                 {heroVideo ? (
-                  <HeroVideo src={heroVideo.src} poster={heroVideo.poster ?? heroImage} label={name} />
+                  <HeroVideo src={heroVideo.src} youtubeId={heroVideo.youtubeId} poster={heroVideo.poster ?? heroImage} label={name} />
                 ) : (
                   <Image
                     src={heroImage}

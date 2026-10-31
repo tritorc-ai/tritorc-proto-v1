@@ -188,8 +188,9 @@ export interface ServiceSection {
 
 // Real taxonomy confirmed directly from tritorc.com/services (live page) and
 // the official site's own repo fallback content (lib/servicesContent.ts) —
-// 7 categories, ~19 real sub-services. "Onsite Controlled Bolting" is intentionally
-// not listed on the Services page (its detail page still exists); same for "Tool Dry Rental". Not an invented structure.
+// 7 categories, ~19 real sub-services. Services that had no photo yet (Dewatering, Hydro Testing,
+// Nitrogen Helium Leak Testing, Pneumatic Testing, Calibration, Dry Rental) were removed from the app;
+// Onsite Controlled Bolting took Calibration's place. Not an invented structure.
 export const SERVICE_SECTIONS: ServiceSection[] = [
   {
     name: "Specialised Engineering Services",
@@ -204,33 +205,21 @@ export const SERVICE_SECTIONS: ServiceSection[] = [
   {
     name: "Process & Pipeline Services",
     color: "#0d9488",
-    categories: [
-      "Dewatering & Dry Air Flushing Services",
-      "Hydro Testing Services",
-      "Nitrogen Helium Leak Testing Services",
-      "Nitrogen Purging Preservation Services",
-      "Pneumatic Testing",
-    ],
+    categories: ["Nitrogen Purging Preservation Services"],
   },
-  { name: "Tool Calibration Services", color: "#db2777", categories: ["Calibration Services"] },
+  { name: "Controlled Bolting Services", color: "#db2777", categories: ["Onsite Controlled Bolting"] },
 ];
 
 export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { name: "Onsite Controlled Bolting", imageKey: "productTorqueHero" },
   { name: "Pipeline Coldcutting & Bevelling", imageKey: "catPipeColdCutting" },
   { name: "Flange Facing", imageKey: "catFlangeFacing" },
-  { name: "Dewatering & Dry Air Flushing Services", imageKey: "svcDewatering" },
-  { name: "Hydro Testing Services", imageKey: "svcHydroTesting" },
-  { name: "Nitrogen Helium Leak Testing Services", imageKey: "svcNitrogenHeliumLeak" },
   { name: "Nitrogen Purging Preservation Services", imageKey: "svcNitrogenPurging" },
-  { name: "Pneumatic Testing", imageKey: "svcPneumaticTesting" },
   {
     name: "Retubing Services",
     directImageUrl: "https://www.tritorc.com/assets/services/Retubing.jpg",
   },
   { name: "Hot Tapping & Line Stopping", imageKey: "svcHotTapping" },
-  { name: "Calibration Services", imageKey: "svcCalibration" },
-  { name: "Dry Rental", imageKey: "svcDryRental" },
 ];
 
 const HOT_TAPPING_CATALOGUE = {
@@ -277,37 +266,6 @@ export const SERVICES: Service[] = [
     directImageUrl: "/services/flange-facing-photo.webp",
   },
   {
-    slug: "dewatering-dry-air-flushing",
-    name: "Dewatering & Dry Air Flushing Services",
-    category: "Dewatering & Dry Air Flushing Services",
-    tagline: "Pipeline commissioning support",
-    description: "Complete dewatering and dry air flushing solutions for pipeline commissioning.",
-    imageKey: "svcDewatering",
-    media: [],
-    catalogue: PIPELINE_PROCESS_CATALOGUE,
-  },
-  {
-    slug: "hydro-testing-services",
-    name: "Hydro Testing Services",
-    category: "Hydro Testing Services",
-    tagline: "Verifying pipeline integrity and safety",
-    description:
-      "Comprehensive hydrostatic testing services to verify pipeline integrity and safety, up to 6,400 bar. Air-driven — no electricity required. MRS testing per ISO 9080/ASTM D2837, with ISO/ASTM/ASME-compliant reporting.",
-    imageKey: "svcHydroTesting",
-    media: [],
-    catalogue: PIPELINE_PROCESS_CATALOGUE,
-  },
-  {
-    slug: "nitrogen-helium-leak-testing",
-    name: "Nitrogen Helium Leak Testing Services",
-    category: "Nitrogen Helium Leak Testing Services",
-    tagline: "Advanced leak detection",
-    description: "Advanced leak detection services using nitrogen and helium testing methods.",
-    imageKey: "svcNitrogenHeliumLeak",
-    media: [],
-    catalogue: PIPELINE_PROCESS_CATALOGUE,
-  },
-  {
     slug: "nitrogen-purging-preservation",
     name: "Nitrogen Purging Preservation Services",
     category: "Nitrogen Purging Preservation Services",
@@ -317,16 +275,6 @@ export const SERVICES: Service[] = [
     media: [],
     catalogue: PIPELINE_PROCESS_CATALOGUE,
     directImageUrl: "/services/nitrogen-purging-preservation-photo.webp",
-  },
-  {
-    slug: "pneumatic-testing",
-    name: "Pneumatic Testing",
-    category: "Pneumatic Testing",
-    tagline: "Pressure vessel and pipeline validation",
-    description: "Reliable pneumatic testing services for pressure vessel and pipeline validation.",
-    imageKey: "svcPneumaticTesting",
-    media: [],
-    catalogue: PIPELINE_PROCESS_CATALOGUE,
   },
   {
     slug: "retubing-services",
@@ -349,24 +297,6 @@ export const SERVICES: Service[] = [
     media: [],
     catalogue: HOT_TAPPING_CATALOGUE,
     directImageUrl: "/services/hot-tapping-line-stopping-photo.webp",
-  },
-  {
-    slug: "calibration-services",
-    name: "Calibration Services",
-    category: "Calibration Services",
-    tagline: "Accuracy and compliance, verified",
-    description: "Precision tool calibration services to ensure accuracy and compliance.",
-    imageKey: "svcCalibration",
-    media: [],
-  },
-  {
-    slug: "dry-rental",
-    name: "Dry Rental",
-    category: "Dry Rental",
-    tagline: "Equipment, when and where you need it",
-    description: "Equipment rental services with comprehensive dry rental solutions.",
-    imageKey: "svcDryRental",
-    media: [],
   },
 ];
 

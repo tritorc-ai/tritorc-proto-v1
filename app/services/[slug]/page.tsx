@@ -20,7 +20,6 @@ const EXTRA_GALLERY_KEYS: Record<string, ImageKey[]> = {
     "hotTappingGallery5",
     "hotTappingOngc",
   ],
-  "dry-rental": ["dryRentalEquipment"],
   "lube-oil-flushing-services": ["lubeOilGallery1", "lubeOilGallery2", "lubeOilGallery3"],
   "nitrogen-purging-preservation": [
     "nitrogenPurgingGallery1",

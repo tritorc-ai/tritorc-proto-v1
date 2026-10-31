@@ -63,7 +63,9 @@ export function FrontAndList({
         )}
       >
         {/* Page 1: the front card (narrower than the screen so the list peeks in) */}
-        <div className={cn("shrink-0 snap-start tablet:w-auto", hasList ? "w-[88%]" : "w-full")}>
+        {/* With a list beside it the card sizes to its grid column; alone it must keep the full width of
+            its (420px max) track, or it collapses to nothing on a tablet. */}
+        <div className={cn("shrink-0 snap-start", hasList ? "w-[88%] tablet:w-auto" : "w-full")}>
           <OverlayCard
             href={front.href}
             title={front.title}

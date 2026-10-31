@@ -942,18 +942,14 @@
       "name": "Process & Pipeline Services",
       "color": "#0d9488",
       "categories": [
-        "Dewatering & Dry Air Flushing Services",
-        "Hydro Testing Services",
-        "Nitrogen Helium Leak Testing Services",
-        "Nitrogen Purging Preservation Services",
-        "Pneumatic Testing"
+        "Nitrogen Purging Preservation Services"
       ]
     },
     {
-      "name": "Tool Calibration Services",
+      "name": "Controlled Bolting Services",
       "color": "#db2777",
       "categories": [
-        "Calibration Services"
+        "Onsite Controlled Bolting"
       ]
     }
   ],
@@ -989,48 +985,6 @@
       "directImageUrl": "/services/flange-facing-photo.webp"
     },
     {
-      "slug": "dewatering-dry-air-flushing",
-      "name": "Dewatering & Dry Air Flushing Services",
-      "category": "Dewatering & Dry Air Flushing Services",
-      "tagline": "Pipeline commissioning support",
-      "description": "Complete dewatering and dry air flushing solutions for pipeline commissioning.",
-      "imageKey": "svcDewatering",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
-      "slug": "hydro-testing-services",
-      "name": "Hydro Testing Services",
-      "category": "Hydro Testing Services",
-      "tagline": "Verifying pipeline integrity and safety",
-      "description": "Comprehensive hydrostatic testing services to verify pipeline integrity and safety, up to 6,400 bar. Air-driven — no electricity required. MRS testing per ISO 9080/ASTM D2837, with ISO/ASTM/ASME-compliant reporting.",
-      "imageKey": "svcHydroTesting",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
-      "slug": "nitrogen-helium-leak-testing",
-      "name": "Nitrogen Helium Leak Testing Services",
-      "category": "Nitrogen Helium Leak Testing Services",
-      "tagline": "Advanced leak detection",
-      "description": "Advanced leak detection services using nitrogen and helium testing methods.",
-      "imageKey": "svcNitrogenHeliumLeak",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
-    },
-    {
       "slug": "nitrogen-purging-preservation",
       "name": "Nitrogen Purging Preservation Services",
       "category": "Nitrogen Purging Preservation Services",
@@ -1044,20 +998,6 @@
         "url": "#"
       },
       "directImageUrl": "/services/nitrogen-purging-preservation-photo.webp"
-    },
-    {
-      "slug": "pneumatic-testing",
-      "name": "Pneumatic Testing",
-      "category": "Pneumatic Testing",
-      "tagline": "Pressure vessel and pipeline validation",
-      "description": "Reliable pneumatic testing services for pressure vessel and pipeline validation.",
-      "imageKey": "svcPneumaticTesting",
-      "media": [],
-      "catalogue": {
-        "title": "Pipeline Process Services",
-        "meta": "Updated Aug 2026",
-        "url": "#"
-      }
     },
     {
       "slug": "retubing-services",
@@ -1082,24 +1022,6 @@
         "url": "#"
       },
       "directImageUrl": "/services/hot-tapping-line-stopping-photo.webp"
-    },
-    {
-      "slug": "calibration-services",
-      "name": "Calibration Services",
-      "category": "Calibration Services",
-      "tagline": "Accuracy and compliance, verified",
-      "description": "Precision tool calibration services to ensure accuracy and compliance.",
-      "imageKey": "svcCalibration",
-      "media": []
-    },
-    {
-      "slug": "dry-rental",
-      "name": "Dry Rental",
-      "category": "Dry Rental",
-      "tagline": "Equipment, when and where you need it",
-      "description": "Equipment rental services with comprehensive dry rental solutions.",
-      "imageKey": "svcDryRental",
-      "media": []
     }
   ],
   "caseStudies": [
