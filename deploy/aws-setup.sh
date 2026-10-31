@@ -214,6 +214,7 @@ aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
 aws ec2 associate-address --instance-id "$INSTANCE_ID" --allocation-id "$ALLOC" >/dev/null
 
 # ---------------------------------------------------------------- IAM: GitHub deploy role (OIDC)
+# GitHub orgs with "immutable subject" send repo:<owner>@<ownerId>/<repo>@<repoId>:..., others send repo:<owner>/<repo>:...; accept both.
 OIDC_ARN="arn:aws:iam::${ACCOUNT}:oidc-provider/token.actions.githubusercontent.com"
 aws iam get-open-id-connect-provider --open-id-connect-provider-arn "$OIDC_ARN" >/dev/null 2>&1 || \
   aws iam create-open-id-connect-provider --url https://token.actions.githubusercontent.com \
@@ -221,8 +222,11 @@ aws iam get-open-id-connect-provider --open-id-connect-provider-arn "$OIDC_ARN" 
 cat > /tmp/gh-trust.json <<JSON
 { "Version": "2012-10-17", "Statement": [ { "Effect": "Allow", "Principal": { "Federated": "${OIDC_ARN}" },
   "Action": "sts:AssumeRoleWithWebIdentity",
-  "Condition": { "StringEquals": { "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-    "token.actions.githubusercontent.com:sub": "repo:${GITHUB_REPO}:environment:production" } } } ] }
+  "Condition": {
+    "StringEquals": { "token.actions.githubusercontent.com:aud": "sts.amazonaws.com" },
+    "StringLike": { "token.actions.githubusercontent.com:sub": [
+      "repo:${GITHUB_REPO}:environment:production",
+      "repo:${GITHUB_REPO%%/*}@*/${GITHUB_REPO##*/}@*:environment:production" ] } } } ] }
 JSON
 aws iam get-role --role-name "${NAME}-deploy" >/dev/null 2>&1 && \
   aws iam update-assume-role-policy --role-name "${NAME}-deploy" --policy-document file:///tmp/gh-trust.json || \
