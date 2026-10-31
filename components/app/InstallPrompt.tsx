@@ -1,105 +1,231 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Download, Share, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Share } from "lucide-react";
+import { jakarta } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 
-// Chrome/Edge/Android only — Safari and Firefox never fire this event, so
-// the button simply never appears there (installing is manual via each
-// browser's own share/menu UI, same as before this component existed).
+/**
+ * "Add Tritorc to your home screen" card, for phones and tablets only.
+ *
+ * - Android (Chrome, Edge, Samsung Internet): shown once the browser says the app is installable
+ *   (`beforeinstallprompt`), with an Install button that opens the browser's own install dialog.
+ * - iPhone / iPad (Safari): there is no install API, so the card shows the two taps instead.
+ * - A few seconds after launch (the splash is over), as a small floating card above the tab bar;
+ *   it never covers content for good and is not a modal.
+ * - Never when the app is already installed (opened from the home screen, or the browser reported
+ *   an install), and never nags: see `Stored` for how often it comes back.
+ */
+
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
-const DISMISSED_KEY = "tritorc-install-dismissed";
+type Mode = "android" | "ios";
 
-// iOS never fires beforeinstallprompt — there's no programmatic install API,
-// only the user manually tapping Share -> Add to Home Screen. Detected via
-// UA (including iPadOS 13+, which reports as a touch-capable "MacIntel"),
-// excluding other iOS browser shells (Chrome/Firefox/Edge/Opera) that share
-// Safari's engine but don't expose the same Share-sheet instructions.
+const STORE_KEY = "tritorc-install-v1";
+const SHOW_AFTER_MS = 6000; // the 3.6 s splash plus a short settle
+const DAY = 86_400_000;
+const FOREVER = Number.MAX_SAFE_INTEGER;
+const MAX_IMPRESSIONS = 5;
+
+/** What is remembered between visits (per browser). */
+interface Stored {
+  installed?: boolean;
+  /** how many times the card was shown */
+  shown?: number;
+  /** how many times it was dismissed */
+  dismissed?: number;
+  /** not before this time (ms since epoch) */
+  until?: number;
+}
+
+function read(): Stored {
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY) ?? "{}") as Stored;
+  } catch {
+    return {};
+  }
+}
+
+function write(patch: Stored) {
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify({ ...read(), ...patch }));
+  } catch {
+    // private mode or storage blocked: the card just may show again next visit
+  }
+}
+
+function isStandalone(): boolean {
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (navigator as Navigator & { standalone?: boolean }).standalone === true
+  );
+}
+
+/** A phone or tablet (a touch laptop is not one: its pointer is fine, not coarse). */
+function isMobileDevice(): boolean {
+  const ua = navigator.userAgent;
+  return (
+    /Android|iPhone|iPad|iPod|Mobile/i.test(ua) ||
+    (navigator.maxTouchPoints > 1 && window.matchMedia("(pointer: coarse)").matches)
+  );
+}
+
+/**
+ * Safari on iPhone/iPad (iPadOS 13+ reports itself as a touch "MacIntel"). Other iOS browsers and the
+ * in-app browsers of Instagram, Facebook, Line and the like are left out: their share sheet differs
+ * or cannot add to the home screen at all, so the instructions would be wrong.
+ */
 function isIosSafari(): boolean {
   const ua = navigator.userAgent;
-  const isIos = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const isOtherBrowser = /CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
-  return isIos && !isOtherBrowser;
+  const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const other = /CriOS|FxiOS|EdgiOS|OPiOS|GSA|FBAN|FBAV|Instagram|Line\/|MicroMessenger|Snapchat/.test(ua);
+  return ios && /Safari\//.test(ua) && !other;
 }
 
 export function InstallPrompt() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showIosHint, setShowIosHint] = useState(false);
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [leaving, setLeaving] = useState(false);
+  const deferred = useRef<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const dismissed = sessionStorage.getItem(DISMISSED_KEY) === "1";
-    if (isStandalone || dismissed) return;
-
-    // Deliberately deferred to an effect rather than computed during render:
-    // navigator/matchMedia/sessionStorage aren't available during SSR, and
-    // computing this synchronously on the client's first render would mismatch
-    // the server-rendered (null) output and trigger a hydration error.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (isIosSafari()) setShowIosHint(true);
-
-    function handler(e: Event) {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    if (!isMobileDevice()) return;
+    if (isStandalone()) {
+      // Opened from the home screen: it is installed, so remember that for good.
+      write({ installed: true });
+      return;
     }
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+    const saved = read();
+    if (saved.installed) return;
+    if ((saved.shown ?? 0) >= MAX_IMPRESSIONS) return;
+    if (Date.now() < (saved.until ?? 0)) return;
+
+    const ios = isIosSafari();
+    let ready = false;
+    let shown = false;
+
+    const reveal = (m: Mode) => {
+      if (shown) return;
+      shown = true;
+      // Count the showing now, so a user who ignores the card still does not see it on every launch.
+      write({ shown: (read().shown ?? 0) + 1, until: Date.now() + 2 * DAY });
+      setMode(m);
+    };
+    const maybeReveal = () => {
+      if (!ready) return;
+      if (ios) reveal("ios");
+      else if (deferred.current) reveal("android");
+    };
+
+    const timer = setTimeout(() => {
+      ready = true;
+      maybeReveal();
+    }, SHOW_AFTER_MS);
+
+    const onPrompt = (e: Event) => {
+      e.preventDefault(); // keep the browser's own mini-bar away; we show our card instead
+      deferred.current = e as BeforeInstallPromptEvent;
+      maybeReveal();
+    };
+    const onInstalled = () => {
+      write({ installed: true, until: FOREVER });
+      deferred.current = null;
+      setMode(null);
+    };
+
+    window.addEventListener("beforeinstallprompt", onPrompt);
+    window.addEventListener("appinstalled", onInstalled);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("beforeinstallprompt", onPrompt);
+      window.removeEventListener("appinstalled", onInstalled);
+    };
   }, []);
 
-  if (!deferredPrompt && !showIosHint) return null;
+  if (!mode) return null;
 
-  async function handleInstall() {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    setDeferredPrompt(null);
-  }
+  const close = () => {
+    setLeaving(true);
+    setTimeout(() => {
+      setMode(null);
+      setLeaving(false);
+    }, 260);
+  };
 
-  function handleDismiss() {
-    sessionStorage.setItem(DISMISSED_KEY, "1");
-    setDeferredPrompt(null);
-    setShowIosHint(false);
-  }
+  /** "Not now": back after 2 weeks, then 6 weeks, then never. */
+  const dismiss = () => {
+    const dismissed = (read().dismissed ?? 0) + 1;
+    write({ dismissed, until: dismissed >= 3 ? FOREVER : Date.now() + (dismissed === 1 ? 14 : 45) * DAY });
+    close();
+  };
+
+  const install = async () => {
+    const evt = deferred.current;
+    deferred.current = null; // an event can be used only once
+    if (!evt) return dismiss();
+    await evt.prompt();
+    const { outcome } = await evt.userChoice;
+    if (outcome === "accepted") {
+      write({ installed: true, until: FOREVER });
+      close();
+    } else {
+      dismiss();
+    }
+  };
 
   return (
     <div
-      className="sticky z-20 mx-3 mb-2 flex items-center gap-2.5 rounded-lg bg-brand-dark px-3.5 py-2.5 shadow-[0_10px_24px_rgba(0,0,0,.25)]"
-      style={{ bottom: "calc(64px + env(safe-area-inset-bottom, 0px))" }}
+      role="dialog"
+      aria-label="Install the Tritorc app"
+      className={cn("pointer-events-none fixed inset-x-0 z-[45] mx-auto max-w-md px-4", jakarta.className)}
+      // above the floating tab bar (about 56 px tall, 12 px off the bottom) plus a small gap
+      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 84px)" }}
     >
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15 text-white">
-        {deferredPrompt ? <Download size={15} /> : <Share size={15} />}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="text-[12.5px] font-semibold text-white">Install Tritorc App</div>
-        <div className="text-[10.5px] text-white/60">
-          {deferredPrompt ? (
-            "Faster access, works like a native app"
-          ) : (
-            <>
-              Tap <span className="font-semibold text-white/80">Share</span>, then{" "}
-              <span className="font-semibold text-white/80">Add to Home Screen</span>
-            </>
+      <div
+        className={cn(
+          "pointer-events-auto flex items-center gap-3 rounded-[22px] border border-white/70 bg-white/80 p-3 shadow-[0_10px_36px_rgba(0,0,0,0.16)] backdrop-blur-2xl backdrop-saturate-[1.8]",
+          leaving ? "install-card-out" : "install-card-in"
+        )}
+      >
+        <Image src="/icon-192.png" alt="" width={44} height={44} className="h-11 w-11 shrink-0 rounded-[12px]" />
+        <div className="min-w-0 flex-1">
+          <div className="text-[13.5px] font-bold leading-tight text-brand-dark">Install the Tritorc app</div>
+          <div className="mt-0.5 text-[11.5px] leading-snug text-brand-text-secondary">
+            {mode === "android" ? (
+              "One tap from your home screen, full screen."
+            ) : (
+              <>
+                Tap <Share aria-label="Share" size={12} strokeWidth={2.2} className="-mt-0.5 inline text-brand-dark" />{" "}
+                then <span className="font-semibold text-brand-dark">Add to Home Screen</span>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-col items-stretch gap-1">
+          {mode === "android" && (
+            <button
+              type="button"
+              onClick={install}
+              className="press rounded-full bg-[#0f0f10] px-4 py-1.5 text-[12px] font-semibold text-white"
+            >
+              Install
+            </button>
           )}
+          <button
+            type="button"
+            onClick={dismiss}
+            className={cn(
+              "press rounded-full px-3 text-[11.5px] font-medium text-brand-text-tertiary",
+              mode === "android" ? "py-0.5" : "bg-black/5 py-1.5 font-semibold text-brand-dark"
+            )}
+          >
+            {mode === "android" ? "Not now" : "Got it"}
+          </button>
         </div>
       </div>
-      {deferredPrompt && (
-        <button
-          onClick={handleInstall}
-          className="shrink-0 rounded-md bg-brand-red px-3 py-1.5 text-[11.5px] font-semibold text-white"
-        >
-          Install
-        </button>
-      )}
-      <button
-        onClick={handleDismiss}
-        aria-label="Dismiss"
-        className="shrink-0 text-white/50"
-      >
-        <X size={16} />
-      </button>
     </div>
   );
 }
