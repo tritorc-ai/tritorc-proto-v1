@@ -122,9 +122,14 @@ export function LibraryView({ assets }: { assets: LibraryAssetWithImage[] }) {
                 !canPreview && "cursor-default"
               )}
             >
-              <div className="relative aspect-[4/3] overflow-hidden">
+              <div className={cn("relative overflow-hidden", a.type === "Catalogue" ? "aspect-[3/4] bg-[#ececec]" : "aspect-[4/3]")}>
                 {a.imageUrl ? (
-                  <Image src={a.imageUrl} alt="" fill sizes="(max-width: 448px) 45vw, (max-width: 1024px) 30vw, 260px" className="object-cover" />
+                  <>
+                    {a.type === "Catalogue" && (
+                      <Image src={a.imageUrl} alt="" fill sizes="64px" aria-hidden className="scale-125 object-cover opacity-70 blur-2xl" />
+                    )}
+                    <Image src={a.imageUrl} alt="" fill sizes="(max-width: 448px) 45vw, (max-width: 1024px) 30vw, 260px" className={a.type === "Catalogue" ? "object-contain" : "object-cover"} />
+                  </>
                 ) : a.type === "Catalogue" ? (
                   <PdfThumbnail title={a.title} />
                 ) : (

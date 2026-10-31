@@ -1,0 +1,29 @@
+name: Web CI
+
+on:
+  pull_request:
+    paths-ignore: ["cms/**", "deploy/**", "**/*.md"]
+  push:
+    branches: [main]
+    paths-ignore: ["cms/**", "deploy/**", "**/*.md"]
+
+concurrency:
+  group: web-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Next generates the PageProps/LayoutProps types; a fresh checkout does not have them yet.
+      - run: npx next typegen
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      # Builds with no CMS configured, so the app uses its built-in sample content.
+      - run: npm run build

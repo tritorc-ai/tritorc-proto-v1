@@ -44,10 +44,10 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
               // Public address of the bucket or its CDN; stored image links start with it.
               baseUrl: env('S3_PUBLIC_URL') || undefined,
               s3Options: {
-                credentials: {
-                  accessKeyId: env('S3_ACCESS_KEY_ID'),
-                  secretAccessKey: env('S3_SECRET_ACCESS_KEY'),
-                },
+                // No keys set (EC2): the SDK falls back to the server's IAM role, so no keys are stored.
+                credentials: env('S3_ACCESS_KEY_ID')
+                  ? { accessKeyId: env('S3_ACCESS_KEY_ID'), secretAccessKey: env('S3_SECRET_ACCESS_KEY') }
+                  : undefined,
                 region: env('S3_REGION', 'us-east-1'),
                 endpoint: env('S3_ENDPOINT') || undefined,
                 forcePathStyle: env.bool('S3_FORCE_PATH_STYLE', false),
