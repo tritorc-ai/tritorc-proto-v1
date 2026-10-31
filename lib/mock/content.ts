@@ -217,7 +217,7 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
   { name: "Nitrogen Purging Preservation Services", imageKey: "svcNitrogenPurging" },
   {
     name: "Retubing Services",
-    directImageUrl: "https://www.tritorc.com/assets/services/Retubing.jpg",
+    directImageUrl: "/services/retubing-services-photo.webp",
   },
   { name: "Hot Tapping & Line Stopping", imageKey: "svcHotTapping" },
 ];
