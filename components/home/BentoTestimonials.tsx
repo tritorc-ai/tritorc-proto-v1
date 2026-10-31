@@ -77,7 +77,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
 
   // Animate stats as soon as the section scrolls into view
   const customersCount = useCountUp(100, 1400, inView);
-  const servicesCount = useCountUp(120, 1400, inView);
+  const servicesCount = useCountUp(30, 1400, inView);
 
   // Testimonial quote sets
   const quoteSlides = [
@@ -140,7 +140,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
         {/* Slide 0: Animated Stats (First Slide) */}
         {i === 0 ? (
           <div key="stats" className="grid grid-cols-2 gap-3 items-stretch animate-in fade-in slide-in-from-bottom-2 duration-500">
-            {/* Stat 1: 100+ Happy Customers */}
+            {/* Stat 1: 100+ Global EPC Customers */}
             <div className="flex h-[185px] tablet:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
               <div className="flex items-center justify-between">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#111112] shadow-[0_4px_12px_-4px_rgba(255,255,255,0.5)]">
@@ -155,7 +155,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
                   {customersCount}+
                 </div>
                 <div className="mt-1.5 text-[14px] font-semibold text-white/95">
-                  Happy Customers
+                  Global EPC Customers
                 </div>
               </div>
               <div className="flex items-center gap-2 text-[10px] text-white/55">
@@ -164,7 +164,7 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
               </div>
             </div>
 
-            {/* Stat 2: 120+ Services Provided */}
+            {/* Stat 2: 30+ Services Provided */}
             <div className="flex h-[185px] tablet:h-[215px] w-full flex-col justify-between rounded-[22px] border border-white/10 bg-gradient-to-b from-white/[0.10] to-white/[0.03] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.14)]">
               <div className="flex items-center justify-between">
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[#111112] shadow-[0_4px_12px_-4px_rgba(255,255,255,0.5)]">
