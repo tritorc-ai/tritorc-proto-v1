@@ -305,7 +305,7 @@ export async function getVideoUrls(): Promise<Partial<Record<VideoKey, string>>>
 // content (lib/mock/*) when Strapi is unreachable, errors, or has no entries.
 // ---------------------------------------------------------------------------
 
-type StrapiMedia = { url: string } | null | undefined;
+type StrapiMedia = { url: string; caption?: string | null } | null | undefined;
 
 /** Absolute URL of an uploaded Strapi image, if there is one. */
 function mediaUrl(m: StrapiMedia): string | undefined {
@@ -432,6 +432,18 @@ export async function getFounderMessage(): Promise<FounderContent> {
   };
 }
 
+// The five photos the first Strapi seed put in the Company slideshow (files taken out of the app on 2026-10-31 when
+// the supplied photos replaced them). A Strapi filled from that seed still lists them (the seed script only adds and
+// updates), so they are skipped here and the built-in photos show until someone replaces the slides in the Strapi
+// admin. A photo uploaded there, or any other picture set there, still shows.
+const OLD_COMPANY_SLIDES = new Set([
+  "/company/slide-1-tube-bundle.jpg",
+  "/company/slide-2-onsite-machining.jpg",
+  "/company/slide-3-offshore.webp",
+  "/company/slide-4-sharjah.jpg",
+  "/company/slide-5-wellhead.jpg",
+]);
+
 export async function getCompanyPage(): Promise<CompanyPageContent> {
   const d = await strapiSingle<{
     overviewText?: string | null; overviewLines?: unknown;
@@ -446,16 +458,23 @@ export async function getCompanyPage(): Promise<CompanyPageContent> {
     "populate[certificationBadges][populate][0]": "image",
   });
   if (!d) return COMPANY_PAGE;
+  const slides = (d.slides ?? [])
+    .map((s, i) => {
+      const src = mediaUrl(s.image) ?? s.imageUrl ?? COMPANY_PAGE.slides[i]?.src ?? "";
+      return {
+        src,
+        position: s.position ?? "50% 50%",
+        // The caption of an uploaded photo (Strapi Media Library > the photo > Caption) is shown over it
+        // while it is on screen; a built-in photo keeps the caption written for it in siteContent.ts.
+        caption: s.image?.caption?.trim() || COMPANY_PAGE.slides.find((b) => b.src === src)?.caption,
+      };
+    })
+    .filter((s) => s.src && !OLD_COMPANY_SLIDES.has(s.src));
   return {
     overviewText: d.overviewText ?? COMPANY_PAGE.overviewText,
     overviewLines:
       Array.isArray(d.overviewLines) && d.overviewLines.length ? d.overviewLines.map(String) : COMPANY_PAGE.overviewLines,
-    slides: d.slides?.length
-      ? d.slides.map((s, i) => ({
-          src: mediaUrl(s.image) ?? s.imageUrl ?? COMPANY_PAGE.slides[i]?.src ?? "",
-          position: s.position ?? "50% 50%",
-        }))
-      : COMPANY_PAGE.slides,
+    slides: slides.length ? slides : COMPANY_PAGE.slides,
     stats: d.stats?.length ? d.stats.map((s) => ({ value: s.value, label: s.label })) : COMPANY_PAGE.stats,
     certifications: d.certificationBadges?.length
       ? d.certificationBadges.map((c, i) => ({
@@ -770,13 +789,15 @@ function stripExtension(filename: string): string {
  * particular project/subject; they read as noise in the default grid. Logos
  * and certification badges aren't project photography either. Real photos
  * (case studies, category heroes, named products) keep readable words in
- * their title and pass through fine.
+ * their title and pass through fine. The photos of the Company page slideshow
+ * are uploaded as "company-slide-<n>-<subject>" and stay out of the Library.
  */
 function isProjectPhoto(title: string): boolean {
   const t = title.toLowerCase();
   const withoutHash = t.replace(/-[a-f0-9]{8,}$/i, "");
   if (/^product(-[a-f0-9]+)+$/.test(withoutHash)) return false;
   if (/(logo|badge|-cert-|footer-)/i.test(t)) return false;
+  if (t.startsWith("company-slide-")) return false;
   return true;
 }
 
