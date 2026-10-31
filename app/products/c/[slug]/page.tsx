@@ -9,6 +9,13 @@ import { Carousel } from "@/components/app/Carousel";
 import { SectionHead, slugify } from "@/components/app/ui";
 import { ShowcaseCard } from "@/components/products/ShowcaseCard";
 
+// Built ahead and kept in the edge cache (see the product page).
+export const revalidate = 60;
+
+export function generateStaticParams() {
+  return PRODUCT_CATEGORIES.map((c) => ({ slug: slugify(c.name) }));
+}
+
 export default async function ProductCategoryPage(props: PageProps<"/products/c/[slug]">) {
   const { slug } = await props.params;
   const category = PRODUCT_CATEGORIES.find((c) => slugify(c.name) === slug);

@@ -21,6 +21,14 @@ function getHeaders(): Record<string, string> | null {
   return { Authorization: `Bearer ${token}` };
 }
 
+// A Strapi that does not answer used to cost every call its full timeout, and a detail page makes
+// several calls in two rounds, so one tap on a product could take 16 s. Now a call gives up after
+// READ_TIMEOUT_MS, and after a failure Strapi is skipped for DOWN_FOR_MS (per server instance), so
+// only the first request pays; the rest get the built-in content straight away.
+const READ_TIMEOUT_MS = 3000;
+const DOWN_FOR_MS = 60_000;
+let strapiDownUntil = 0;
+
 /**
  * Fetch from the Strapi REST API. Returns null on any failure (network,
  * timeout, missing config, non-2xx) — callers are expected to fall back to
@@ -42,6 +50,7 @@ export async function strapiFetch<T>(
   const baseUrl = getBaseUrl();
   const headers = getHeaders();
   if (!baseUrl || !headers) return null;
+  if (Date.now() < strapiDownUntil) return null;
 
   const url = new URL(`${baseUrl}${path}`);
   if (params) {
@@ -51,7 +60,7 @@ export async function strapiFetch<T>(
   }
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), READ_TIMEOUT_MS);
 
   try {
     const res = await fetch(url.toString(), {
@@ -63,11 +72,14 @@ export async function strapiFetch<T>(
     });
     if (!res.ok) {
       console.warn(`[strapi] ${path} -> HTTP ${res.status}`);
+      if (res.status >= 500) strapiDownUntil = Date.now() + DOWN_FOR_MS;
       return null;
     }
+    strapiDownUntil = 0;
     return (await res.json()) as T;
   } catch (err) {
     console.warn(`[strapi] ${path} failed:`, err instanceof Error ? err.message : err);
+    strapiDownUntil = Date.now() + DOWN_FOR_MS;
     return null;
   } finally {
     clearTimeout(timeout);

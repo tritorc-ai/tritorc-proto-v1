@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getCatalogueUrl, getImageUrls, getMediaByCaption, getService, getVideoUrls } from "@/lib/strapi";
+import { getCatalogueUrl, getImageUrls, getMediaByCaption, getService, getServices, getVideoUrls } from "@/lib/strapi";
 import { ServiceDetailView } from "@/components/app/ServiceDetailView";
 import type { ImageKey } from "@/lib/mock/images";
 import type { VideoKey } from "@/lib/mock/videos";
@@ -45,6 +45,13 @@ const EXTRA_GALLERY_KEYS: Record<string, ImageKey[]> = {
 const EXTRA_VIDEO_KEYS: Record<string, VideoKey[]> = {
   "hot-tapping-line-stopping": ["svcHotTapping"],
 };
+
+// Built ahead and kept in the edge cache (see the product page): a tap is served from cache, not from Strapi.
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return (await getServices()).map((s) => ({ slug: s.slug }));
+}
 
 export default async function ServiceDetailPage(props: PageProps<"/services/[slug]">) {
   const { slug } = await props.params;
