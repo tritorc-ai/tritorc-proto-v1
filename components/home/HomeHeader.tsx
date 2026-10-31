@@ -23,7 +23,7 @@ export function HomeHeader() {
             width={2736}
             height={371}
             priority
-            className="h-[13px] w-auto shrink-0 brightness-0"
+            className="h-[13px] w-auto shrink-0"
           />
         </Link>
 
