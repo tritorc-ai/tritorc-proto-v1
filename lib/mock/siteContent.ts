@@ -176,5 +176,5 @@ export const COMPANY_PAGE: CompanyPageContent = {
   mission: "50X",
   missionNote: "Growth for all, Limits on none.",
   profileTitle: "Company Profile",
-  profileMeta: "6.4 MB · Updated Jul 2026",
+  profileMeta: "2.0 MB · Updated Oct 2026",
 };

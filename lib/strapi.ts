@@ -152,7 +152,7 @@ const CATALOGUE_REAL_NAMES: Record<string, string> = {
   "Hot Tapping Cata": "Hot Tapping Cata 2025 (Both)",
   "In Situ Machining Catalogue": "In Situ Machining Catalogue - 2026 (A4)",
   "Tube Tool Catalogue Final": "A5 - Tube Tools (Madhav T) Extracted",
-  "Company Profile (Final)": "Company Profile 2026 New Layout (FZC)",
+  "Company Profile (Final)": "Company Profile",
 };
 
 /**
