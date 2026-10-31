@@ -6,7 +6,7 @@
 // are cached so the app can be added to the home screen.
 
 // Bump this whenever a cached file below changes (the icons are served from this cache first).
-const CACHE_NAME = "tritorc-shell-v5";
+const CACHE_NAME = "tritorc-shell-v6";
 // /offline.html (self-contained, inline styles) and the logo it shows are cached so a page
 // request made without a network gets a friendly screen instead of the browser's error page.
 const OFFLINE_URL = "/offline.html";
