@@ -147,12 +147,12 @@ export const COMPANY_PAGE: CompanyPageContent = {
   // that fade into one another behind the text. The vertical position only matters on a tablet, where the frame
   // is a wide 2:1 or 5:2 band: it keeps the sign, the machine or the crew inside it.
   slides: [
-    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%", caption: "New 30,000 sq ft facility in Pune, bolting systems division coming online soon" },
-    { src: "/company/slide-2-heat-exchanger-crew.webp", position: "50% 25%", caption: "In-house manufacturing of bolting and machining tools since 2013." },
-    { src: "/company/slide-3-red-machine-crew.webp", position: "50% 3%", caption: "Live pipelines hot-tapped with zero downtime." },
-    { src: "/company/slide-4-refinery-flange-lift.webp", position: "50% 47%", caption: "500+ projects delivered by 100+ expert engineers." },
-    { src: "/company/slide-5-desert-pipeline.webp", position: "50% 50%", caption: "Pipeline integrity solutions across 11 countries." },
-    { src: "/company/slide-6-team-workshop.webp", position: "50% 57%", caption: "Founded in 1989, with more than 35 years of experience." },
+    { src: "/company/slide-1-factory-floor.webp", position: "50% 34%", caption: "New 30,000 sq ft manufacturing facility in Pune" },
+    { src: "/company/slide-2-heat-exchanger-crew.webp", position: "50% 25%", caption: "In-house tube tools and reliable on-site retubing services" },
+    { src: "/company/slide-3-red-machine-crew.webp", position: "50% 3%", caption: "Live pipelines tapped with zero downtime" },
+    { src: "/company/slide-4-refinery-flange-lift.webp", position: "50% 47%", caption: "ISO certified quality management and QHSE compliant practices" },
+    { src: "/company/slide-5-desert-pipeline.webp", position: "50% 50%", caption: "Process equipment and pipeline services for pre-commissioning and commissioning projects" },
+    { src: "/company/slide-6-team-workshop.webp", position: "50% 57%", caption: "ECITB trained technicians and certified facilities in Qatar, UAE and Oman" },
   ],
   stats: [
     { value: "500+", label: "Oil & gas projects" },
