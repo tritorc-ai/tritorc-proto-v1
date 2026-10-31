@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -38,15 +38,30 @@ export function PhotoSlideshow({
   sizes?: string;
 }) {
   const [index, setIndex] = useState(0);
+  // a swiped photo changes faster than the unhurried automatic cross-fade
+  const [fade, setFade] = useState(fadeMs);
+  const [tick, setTick] = useState(0);
   const reduced = useSyncExternalStore(subscribeMotion, getReducedMotion, () => false);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
+  // Fixed order, one after the other; the timer restarts after every change, so a swipe gets a full hold.
   useEffect(() => {
     if (reduced || slides.length < 2) return;
-    const id = setInterval(() => {
-      if (!document.hidden) setIndex((i) => (i + 1) % slides.length);
+    const id = setTimeout(() => {
+      if (document.hidden) {
+        setTick((t) => t + 1); // tab hidden: stay on this photo and look again later
+        return;
+      }
+      setFade(fadeMs);
+      setIndex((i) => (i + 1) % slides.length);
     }, holdMs);
-    return () => clearInterval(id);
-  }, [reduced, slides.length, holdMs]);
+    return () => clearTimeout(id);
+  }, [index, tick, reduced, slides.length, holdMs, fadeMs]);
+
+  const go = (step: number) => {
+    setFade(500);
+    setIndex((i) => (i + step + slides.length) % slides.length);
+  };
 
   return (
     <>
@@ -63,11 +78,32 @@ export function PhotoSlideshow({
             style={{
               objectPosition: s.position,
               opacity: i === index ? 1 : 0,
-              transition: `opacity ${fadeMs}ms ease-in-out`,
+              transition: `opacity ${fade}ms ease-in-out`,
             }}
           />
         ))}
       </div>
+      {/* Swipe left / right (or drag) to change the photo; a vertical swipe still scrolls the page. */}
+      {slides.length > 1 && (
+        <div
+          aria-hidden
+          className="absolute inset-0 z-[5] touch-pan-y select-none"
+          onPointerDown={(e) => {
+            touchStart.current = { x: e.clientX, y: e.clientY };
+          }}
+          onPointerUp={(e) => {
+            const s = touchStart.current;
+            touchStart.current = null;
+            if (!s) return;
+            const dx = e.clientX - s.x;
+            const dy = e.clientY - s.y;
+            if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1);
+          }}
+          onPointerCancel={() => {
+            touchStart.current = null;
+          }}
+        />
+      )}
       {/* The caption of the photo on screen, at the bottom; it slides up as the next photo starts to fade in. */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-5 tablet:p-8">
         <div className="min-h-[2.7em]">
@@ -78,7 +114,7 @@ export function PhotoSlideshow({
             {slides[index]?.caption}
           </p>
         </div>
-        {slides.length > 1 && !reduced && (
+        {slides.length > 1 && (
           <div aria-hidden className="mt-2.5 flex gap-1">
             {slides.map((s, i) => (
               <span

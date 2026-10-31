@@ -89,7 +89,7 @@ export default async function CompanyPage() {
               Mission
             </span>
             <div className="relative">
-              <p className="mb-1.5 text-[10.5px] font-semibold leading-tight text-brand-text-secondary tablet:mb-2.5 tablet:text-[15px]">
+              <p className="mb-1.5 text-[13px] font-semibold leading-tight text-brand-text-secondary tablet:mb-2.5 tablet:text-[18px]">
                 {company.missionNote.includes(",") ? (
                   <>
                     {company.missionNote.slice(0, company.missionNote.indexOf(",") + 1)}
