@@ -38,7 +38,9 @@ function useCountUp(target: number, duration: number = 1400, start: boolean = fa
   return count;
 }
 
-/** Dark "What clients say" & impact panel: auto-scrolls every 1.5s, stats slide first */
+const SLIDE_MS = 4000;
+
+/** Dark "What clients say" & impact panel: auto-scrolls every 4s, stats slide first */
 export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
   const [i, setI] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
@@ -48,14 +50,15 @@ export function BentoTestimonials({ items }: { items: BentoQuote[] }) {
   const totalSlides = 3;
   const go = (d: number) => setI((a) => (a + d + totalSlides) % totalSlides);
 
-  // Auto-scroll every 1.5 seconds (1500ms)
+  // Each slide stays for 4 seconds; the timer restarts after every change, so tapping an arrow
+  // also gives the next slide its full 4 seconds.
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = setTimeout(() => {
       setI((prev) => (prev + 1) % totalSlides);
-    }, 1500);
+    }, SLIDE_MS);
 
-    return () => clearInterval(timer);
-  }, [totalSlides]);
+    return () => clearTimeout(timer);
+  }, [i, totalSlides]);
 
   useEffect(() => {
     const el = sectionRef.current;
