@@ -43,3 +43,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Upload bundles made by hand (for example deploy.zip for AWS CloudShell); not part of the project
+/*.zip
